@@ -15,13 +15,24 @@ struct view_data;
 struct npc_timerevent_list {
 	int timer,pos;
 };
+
 struct npc_label_list {
 	char name[NAME_LENGTH];
 	int pos;
 };
+
+/// Item list for NPC sell/buy list
 struct npc_item_list {
 	unsigned short nameid;
 	unsigned int value;
+#if PACKETVER >= 20131223
+	unsigned int qty; ///< Market shop, stock counter
+#endif
+};
+
+struct npc_market_item_list {
+	unsigned short nameid;
+	unsigned int qty;
 };
 
 struct npc_data {
@@ -126,8 +137,9 @@ int npc_click(struct map_session_data* sd, struct npc_data* nd);
 int npc_scriptcont(struct map_session_data* sd, int id, bool closing);
 struct npc_data* npc_checknear(struct map_session_data* sd, struct block_list* bl);
 int npc_buysellsel(struct map_session_data* sd, int id, int type);
-int npc_buylist(struct map_session_data* sd,int n, unsigned short* item_list);
+int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list);
 int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list);
+uint8 npc_market_buylist(struct map_session_data* sd, uint8 n, struct npc_market_item_list *item_list);
 void npc_parse_mob2(struct spawn_data* mob);
 bool npc_viewisid(const char * viewid);
 struct npc_data* npc_add_warp(char* name, short from_mapid, short from_x, short from_y, short xs, short ys, unsigned short to_mapindex, short to_x, short to_y);
