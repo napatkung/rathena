@@ -1858,8 +1858,9 @@ void clif_selllist(struct map_session_data *sd)
 void clif_npc_market_open(struct map_session_data *sd, struct npc_data *nd) {
 #if PACKETVER >= 20131223
 	struct npc_item_list *shop = nd->u.shop.shop_item;
-	unsigned short shop_size = nd->u.shop.count, i, c;
+	unsigned short shop_size = nd->u.shop.count, i, c, cmd = 0x9d5;
 	struct item_data *id = NULL;
+	struct s_packet_db *info;
 	int fd;
 
 	nullpo_retv(sd);
@@ -1867,10 +1868,14 @@ void clif_npc_market_open(struct map_session_data *sd, struct npc_data *nd) {
 	if (sd->state.trading)
 		return;
 
+	info = &packet_db[sd->packet_ver][cmd];
+	if (!info || info->len == 0)
+		return;
+
 	fd = sd->fd;
 
 	WFIFOHEAD(fd, 4 + shop_size * 13);
-	WFIFOW(fd,0) = 0x9d5;
+	WFIFOW(fd,0) = cmd;
 
 	for (i = 0, c = 0; i < shop_size; i++) {
 		if (shop[i].nameid && (id = itemdb_exists(shop[i].nameid))) {
@@ -1885,6 +1890,7 @@ void clif_npc_market_open(struct map_session_data *sd, struct npc_data *nd) {
 
 	WFIFOW(fd,2) = 4 + c*13;
 	WFIFOSET(fd,WFIFOW(fd,2));
+	sd->state.trading = 1;
 #endif
 }
 
@@ -1892,11 +1898,12 @@ void clif_npc_market_open(struct map_session_data *sd, struct npc_data *nd) {
 /// Closes the Market shop window.
 void clif_parse_NPCMarketClosed(int fd, struct map_session_data *sd) {
 	sd->npc_shopid = 0;
+	sd->state.trading = 0;
 }
 
 
 /// Purchase item from Market shop.
-void clif_npc_market_purchase_ack(struct map_session_data *sd, uint8 res, uint8 n, struct npc_market_item_list *list) {
+void clif_npc_market_purchase_ack(struct map_session_data *sd, uint8 res, uint8 n, struct npc_buysell_list *list) {
 #if PACKETVER >= 20131223
 	unsigned char buf[5 + 8*MAX_INVENTORY]; // Just assume the max item list is MAX_INVENTORY
 	unsigned short cmd = 0x9d7;
@@ -1920,7 +1927,7 @@ void clif_npc_market_purchase_ack(struct map_session_data *sd, uint8 res, uint8 
 
 		for (i = 0; i < n; i++) {
 			WBUFW(buf, 5+i*8) = list[i].nameid;
-			WBUFW(buf, 7+i*8) = (uint16)list[i].qty;
+			WBUFW(buf, 7+i*8) = list[i].qty;
 
 			ARR_FIND(0, count, j, list[i].nameid == shop[j].nameid);
 			WBUFL(buf, 9+i*8) = (j != count) ? shop[j].value : 0;
@@ -1938,7 +1945,7 @@ void clif_npc_market_purchase_ack(struct map_session_data *sd, uint8 res, uint8 
 void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd) {
 #if PACKETVER >= 20131223
 	struct s_packet_db* info;
-	struct npc_market_item_list *list;
+	struct npc_buysell_list *item_list;
 	uint16 cmd = RFIFOW(fd,0), len = 0, i = 0;
 	uint8 res = 0, n = 0;
 
@@ -1953,15 +1960,15 @@ void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd) {
 	len = RFIFOW(fd,info->pos[0]);
 	n = (len-4) / 6;
 
-	CREATE(list, struct npc_market_item_list, n);
+	CREATE(item_list, struct npc_buysell_list, n);
 	for (i = 0; i < n; i++) {
-		list[i].nameid = RFIFOW(fd,info->pos[1]+i*6);
-		list[i].qty    = RFIFOL(fd,info->pos[2]+i*6);
+		item_list[i].nameid = RFIFOW(fd,info->pos[1]+i*6);
+		item_list[i].qty    = RFIFOL(fd,info->pos[2]+i*6);
 	}
 
-	res = npc_market_buylist(sd, n, list);
-	clif_npc_market_purchase_ack(sd, res, n, list);
-	aFree(list);
+	res = npc_market_buylist(sd, n, item_list);
+	clif_npc_market_purchase_ack(sd, res, n, item_list);
+	aFree(item_list);
 #endif
 }
 
@@ -11036,17 +11043,24 @@ void clif_npc_buy_result(struct map_session_data* sd, unsigned char result)
 void clif_parse_NpcBuyListSend(int fd, struct map_session_data* sd)
 {
 	struct s_packet_db* info = &packet_db[sd->packet_ver][RFIFOW(fd,0)];
-	int n = (RFIFOW(fd,info->pos[0])-4) /4;
-	unsigned short* item_list = (unsigned short*)RFIFOP(fd,info->pos[1]);
+	uint16 n = (RFIFOW(fd,info->pos[0])-4) /4;
+	struct npc_buysell_list *item_list;
 	int result;
 
 	if( sd->state.trading || !sd->npc_shopid )
 		result = 1;
-	else
+	else {
+		uint16 i;
+		CREATE(item_list, struct npc_buysell_list, n);
+		for (i = 0; i < n; i++) {
+			item_list[i].qty    = RFIFOW(fd,info->pos[1]  +i*4);
+			item_list[i].nameid = RFIFOW(fd,info->pos[1]+2+i*4);
+		}
 		result = npc_buylist(sd, n, item_list);
+	}
 
 	sd->npc_shopid = 0; //Clear shop data.
-
+	aFree(item_list);
 	clif_npc_buy_result(sd, result);
 }
 

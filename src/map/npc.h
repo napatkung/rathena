@@ -26,13 +26,14 @@ struct npc_item_list {
 	unsigned short nameid;
 	unsigned int value;
 #if PACKETVER >= 20131223
-	unsigned int qty; ///< Market shop, stock counter
+	unsigned short qty; ///< Market shop, stock counter
 #endif
 };
 
-struct npc_market_item_list {
-	unsigned short nameid;
-	unsigned int qty;
+/// List of bought/sold item for NPC shops
+struct npc_buysell_list {
+	unsigned short nameid;	///< Item ID or inventory index for 'selllist'
+	unsigned short qty;		///< Quantity of item will be bought/sold
 };
 
 struct npc_data {
@@ -137,9 +138,9 @@ int npc_click(struct map_session_data* sd, struct npc_data* nd);
 int npc_scriptcont(struct map_session_data* sd, int id, bool closing);
 struct npc_data* npc_checknear(struct map_session_data* sd, struct block_list* bl);
 int npc_buysellsel(struct map_session_data* sd, int id, int type);
-int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list);
+int npc_buylist(struct map_session_data* sd, uint16 n, struct npc_buysell_list *item_list);
 int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list);
-uint8 npc_market_buylist(struct map_session_data* sd, uint8 n, struct npc_market_item_list *item_list);
+uint8 npc_market_buylist(struct map_session_data* sd, uint8 n, struct npc_buysell_list *item_list);
 void npc_parse_mob2(struct spawn_data* mob);
 bool npc_viewisid(const char * viewid);
 struct npc_data* npc_add_warp(char* name, short from_mapid, short from_x, short from_y, short xs, short ys, unsigned short to_mapindex, short to_x, short to_y);
@@ -190,6 +191,9 @@ extern struct npc_data* fake_nd;
 
 int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, unsigned short* item_list);
 bool npc_shop_discount(enum npc_subtype type, bool discount);
+
+void npc_market_tosql(const char *exname, uint16 nameid, uint16 qty);
+void npc_market_delfromsql_(const char *exname, unsigned short nameid, bool clear);
 
 #ifdef SECURE_NPCTIMEOUT
 	int npc_rr_secure_timeout_timer(int tid, unsigned int tick, int id, intptr_t data);
