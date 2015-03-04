@@ -41,6 +41,7 @@ static int npc_delay_mob=0;
 static int npc_cache_mob=0;
 
 // Market Shop
+#if PACKETVER >= 20131223
 struct s_npc_market {
 	struct s_npc_buy_list *list;
 	char exname[NAME_LENGTH+1];
@@ -51,6 +52,7 @@ static void npc_market_checkall(void);
 static void npc_market_fromsql(void);
 #define npc_market_delfromsql(exname,nameid) (npc_market_delfromsql_((exname), (nameid), false))
 #define npc_market_clearfromsql(exname) (npc_market_delfromsql_((exname), 0, true))
+#endif
 
 /// Returns a new npc id that isn't being used in id_db.
 /// Fatal error if nothing is available.
@@ -1602,11 +1604,13 @@ uint8 npc_buylist(struct map_session_data* sd, uint16 n, struct s_npc_buy_list *
 		if( j == nd->u.shop.count )
 			return 3; // no such item in shop
 
+#if PACKETVER >= 20131223
 		if (nd->subtype == NPCTYPE_MARKETSHOP) {
 			if (item_list[i].qty > shop[j].qty)
 				return 3;
 			stock_index[i] = j;
 		}
+#endif
 
 		amount = item_list[i].qty;
 		nameid = item_list[i].nameid = shop[j].nameid; //item_avail replacement
@@ -1721,6 +1725,7 @@ uint8 npc_buylist(struct map_session_data* sd, uint16 n, struct s_npc_buy_list *
 		unsigned short amount = item_list[i].qty;
 		struct item item_tmp;
 
+#if PACKETVER >= 20131223
 		if (nd->subtype == NPCTYPE_MARKETSHOP) {
 			j = stock_index[i];
 			if (amount > shop[j].qty)
@@ -1728,6 +1733,7 @@ uint8 npc_buylist(struct map_session_data* sd, uint16 n, struct s_npc_buy_list *
 			shop[j].qty -= amount;
 			npc_market_tosql(nd->exname, item_list[i].nameid, shop[j].qty);
 		}
+#endif
 
 		if (itemdb_type(nameid) == IT_PETEGG)
 			pet_create_egg(sd, nameid);
@@ -3201,6 +3207,7 @@ void npc_market_delfromsql_(const char *exname, unsigned short nameid, bool clea
 /**
  * Check NPC Market Shop for each entry
  **/
+#if PACKETVER >= 20131223
 static int npc_market_checkall_sub(DBKey key, DBData *data, va_list ap) {
 	struct s_npc_market *market = (struct s_npc_market *)db_data2ptr(data);
 	struct npc_data *nd = NULL;
@@ -3287,7 +3294,6 @@ static void npc_market_checkall(void) {
  * Loads persistent NPC Market Data from SQL, use the records after NPCs init'd to reuse the stock values.
  **/
 static void npc_market_fromsql(void) {
-#if PACKETVER >= 20131223
 	SqlStmt *stmt = SqlStmt_Malloc(mmysql_handle), *stmt_;
 	char name[NAME_LENGTH+1];
 	unsigned short count = 0, nameid, qty;
@@ -3343,8 +3349,8 @@ static void npc_market_fromsql(void) {
 
 	SqlStmt_Free(stmt);
 	SqlStmt_Free(stmt_);
-#endif
 }
+#endif
 
 //Set mapcell CELL_NPC to trigger event later
 void npc_setcells(struct npc_data* nd)
@@ -4344,7 +4350,9 @@ int npc_reload(void) {
 
 	//Remove all npcs/mobs. [Skotlex]
 
+#if PACKETVER >= 20131223
 	npc_market_fromsql();
+#endif
 
 	iter = mapit_geteachiddb();
 	for( bl = (struct block_list*)mapit_first(iter); mapit_exists(iter); bl = (struct block_list*)mapit_next(iter) ) {
@@ -4415,7 +4423,9 @@ int npc_reload(void) {
 
 	do_reload_instance();
 
+#if PACKETVER >= 20131223
 	npc_market_checkall();
+#endif
 
 	// Execute rest of the startup events if connected to char-server. [Lance]
 	if(!CheckForCharServer()){
@@ -4461,7 +4471,9 @@ void do_final_npc(void) {
 	ev_db->destroy(ev_db, NULL);
 	npcname_db->destroy(npcname_db, NULL);
 	npc_path_db->destroy(npc_path_db, NULL);
+#if PACKETVER >= 20131223
 	NPCMarketDB->destroy(NPCMarketDB, npc_market_free);
+#endif
 	ers_destroy(timer_event_ers);
 	npc_clearsrcfile();
 }
@@ -4518,8 +4530,10 @@ void do_init_npc(void){
 	ev_db = strdb_alloc((DBOptions)(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA),2*NAME_LENGTH+2+1);
 	npcname_db = strdb_alloc(DB_OPT_BASE,NAME_LENGTH);
 	npc_path_db = strdb_alloc(DB_OPT_BASE|DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA,80);
+#if PACKETVER >= 20131223
 	NPCMarketDB = strdb_alloc(DB_OPT_BASE, NAME_LENGTH+1);
 	npc_market_fromsql();
+#endif
 
 	timer_event_ers = ers_new(sizeof(struct timer_event_data),"clif.c::timer_event_ers",ERS_OPT_NONE);
 
@@ -4542,7 +4556,9 @@ void do_init_npc(void){
 	memset(script_event, 0, sizeof(script_event));
 	npc_read_event_script();
 
+#if PACKETVER >= 20131223
 	npc_market_checkall();
+#endif
 
 	//Debug function to locate all endless loop warps.
 	if (battle_config.warp_point_debug)

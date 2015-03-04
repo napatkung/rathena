@@ -15644,10 +15644,12 @@ BUILDIN_FUNC(npcshopitem)
 		return 0;
 	}
 
+#if PACKETVER >= 20131223
 	if (nd->subtype == NPCTYPE_MARKETSHOP) {
 		offs = 3;
 		npc_market_delfromsql_(nd->exname, 0, true);
 	}
+#endif
 
 	// get the count of new entries
 	amount = (script_lastdata(st)-2)/offs;
@@ -15657,10 +15659,12 @@ BUILDIN_FUNC(npcshopitem)
 	for( n = 0, i = 3; n < amount; n++, i+=offs ) {
 		nd->u.shop.shop_item[n].nameid = script_getnum(st,i);
 		nd->u.shop.shop_item[n].value = script_getnum(st,i+1);
+#if PACKETVER >= 20131223
 		if (nd->subtype == NPCTYPE_MARKETSHOP) {
 			nd->u.shop.shop_item[n].qty = script_getnum(st,i+2);
 			npc_market_tosql(nd->exname, nd->u.shop.shop_item[n].nameid, nd->u.shop.shop_item[n].qty);
 		}
+#endif
 	}
 	nd->u.shop.count = n;
 
@@ -15693,10 +15697,12 @@ BUILDIN_FUNC(npcshopadditem)
 	{
 		nd->u.shop.shop_item[n].nameid = script_getnum(st,i);
 		nd->u.shop.shop_item[n].value = script_getnum(st,i+1);
+#if PACKETVER >= 20131223
 		if (nd->subtype == NPCTYPE_MARKETSHOP) {
 			nd->u.shop.shop_item[n].qty = script_getnum(st,i+2);
 			npc_market_tosql(nd->exname, nd->u.shop.shop_item[n].nameid, nd->u.shop.shop_item[n].qty);
 		}
+#endif
 	}
 	nd->u.shop.count = n;
 
@@ -15728,8 +15734,10 @@ BUILDIN_FUNC(npcshopdelitem)
 		if( n < size ) {
 			if (n+1 != size)
 				memmove(&nd->u.shop.shop_item[n], &nd->u.shop.shop_item[n+1], sizeof(nd->u.shop.shop_item[0])*(size-n));
+#if PACKETVER >= 20131223
 			if (nd->subtype == NPCTYPE_MARKETSHOP)
 				npc_market_delfromsql_(nd->exname, nameid, false);
+#endif
 			size--;
 		}
 	}
@@ -19260,10 +19268,12 @@ BUILDIN_FUNC(npcshopupdate) {
 			//ShowInfo("Shop '%s' updated. Item: %d, Price: %d, Stock: %d\n", nd->exname, nameid, price, stock);
 			if (price != 0)
 				nd->u.shop.shop_item[i].value = price;
+#if PACKETVER >= 20131223
 			if (nd->subtype == NPCTYPE_MARKETSHOP) {
 				nd->u.shop.shop_item[i].qty = stock;
 				npc_market_tosql(nd->exname, nameid, stock);
 			}
+#endif
 		}
 	}
 

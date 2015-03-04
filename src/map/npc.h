@@ -191,8 +191,10 @@ extern struct npc_data* fake_nd;
 int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, unsigned short* item_list);
 bool npc_shop_discount(enum npc_subtype type, bool discount);
 
+#if PACKETVER >= 20131223
 void npc_market_tosql(const char *exname, uint16 nameid, uint16 qty);
 void npc_market_delfromsql_(const char *exname, unsigned short nameid, bool clear);
+#endif
 
 #ifdef SECURE_NPCTIMEOUT
 	int npc_rr_secure_timeout_timer(int tid, unsigned int tick, int id, intptr_t data);
