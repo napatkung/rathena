@@ -31,9 +31,9 @@ struct npc_item_list {
 };
 
 /// List of bought/sold item for NPC shops
-struct npc_buysell_list {
-	unsigned short nameid;	///< Item ID or inventory index for 'selllist'
-	unsigned short qty;		///< Quantity of item will be bought/sold
+struct s_npc_buy_list {
+	unsigned short qty;		///< Amount of item will be bought
+	unsigned short nameid;	///< ID of item will be bought
 };
 
 struct npc_data {
@@ -138,9 +138,8 @@ int npc_click(struct map_session_data* sd, struct npc_data* nd);
 int npc_scriptcont(struct map_session_data* sd, int id, bool closing);
 struct npc_data* npc_checknear(struct map_session_data* sd, struct block_list* bl);
 int npc_buysellsel(struct map_session_data* sd, int id, int type);
-int npc_buylist(struct map_session_data* sd, uint16 n, struct npc_buysell_list *item_list);
-int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list);
-uint8 npc_market_buylist(struct map_session_data* sd, uint8 n, struct npc_buysell_list *item_list);
+uint8 npc_buylist(struct map_session_data* sd, uint16 n, struct s_npc_buy_list *item_list);
+uint8 npc_selllist(struct map_session_data* sd, int n, unsigned short *item_list);
 void npc_parse_mob2(struct spawn_data* mob);
 bool npc_viewisid(const char * viewid);
 struct npc_data* npc_add_warp(char* name, short from_mapid, short from_x, short from_y, short xs, short ys, unsigned short to_mapindex, short to_x, short to_y);
