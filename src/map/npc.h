@@ -26,7 +26,8 @@ struct npc_item_list {
 	unsigned short nameid;
 	unsigned int value;
 #if PACKETVER >= 20131223
-	unsigned short qty; ///< Market shop, stock counter
+	unsigned short qty; ///< Stock counter (Market shop)
+	uint8 flag; ///< 1: Item added by npcshopitem/npcshopadditem, force load! (Market shop)
 #endif
 };
 
@@ -192,7 +193,7 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 bool npc_shop_discount(enum npc_subtype type, bool discount);
 
 #if PACKETVER >= 20131223
-void npc_market_tosql(const char *exname, uint16 nameid, uint16 qty);
+void npc_market_tosql(const char *exname, struct npc_item_list *list);
 void npc_market_delfromsql_(const char *exname, unsigned short nameid, bool clear);
 #endif
 

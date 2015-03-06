@@ -15662,8 +15662,10 @@ BUILDIN_FUNC(npcshopitem)
 #if PACKETVER >= 20131223
 		if (nd->subtype == NPCTYPE_MARKETSHOP) {
 			nd->u.shop.shop_item[n].qty = script_getnum(st,i+2);
-			npc_market_tosql(nd->exname, nd->u.shop.shop_item[n].nameid, nd->u.shop.shop_item[n].qty);
+			nd->u.shop.shop_item[n].flag = 1;
+			npc_market_tosql(nd->exname, &nd->u.shop.shop_item[n]);
 		}
+		ShowInfo("npcshopitem: %s: Added %hu %hu %d\n", npcname, nd->u.shop.shop_item[n].nameid, nd->u.shop.shop_item[n].qty, nd->u.shop.shop_item[n].value);
 #endif
 	}
 	nd->u.shop.count = n;
@@ -15691,18 +15693,39 @@ BUILDIN_FUNC(npcshopadditem)
 	// get the count of new entries
 	amount = (script_lastdata(st)-2)/offs;
 
+#if PACKETVER >= 20131223
+	if (nd->subtype == NPCTYPE_MARKETSHOP) {
+		for (n = 0, i = 3; n < amount; n++, i += offs) {
+			uint16 nameid = script_getnum(st,i), j;
+
+			// Check existing entries
+			ARR_FIND(0, nd->u.shop.count, j, nd->u.shop.shop_item[j].nameid == nameid);
+			if (j == nd->u.shop.count) {
+				RECREATE(nd->u.shop.shop_item, struct npc_item_list, nd->u.shop.count+1);
+				j = nd->u.shop.count;
+				nd->u.shop.shop_item[j].flag = 1;
+				nd->u.shop.count++;
+				ShowInfo("npcshopadditem: New entry @%d\n", j);
+			}
+			else
+				ShowInfo(": Updated @%d\n", j);
+			nd->u.shop.shop_item[j].nameid = nameid;
+			nd->u.shop.shop_item[j].value = script_getnum(st,i+1);
+			nd->u.shop.shop_item[j].qty = script_getnum(st,i+2);
+			ShowInfo("   %s %hu %hu %d\n", npcname, nd->u.shop.shop_item[j].nameid, nd->u.shop.shop_item[j].qty, nd->u.shop.shop_item[j].value);
+			npc_market_tosql(nd->exname, &nd->u.shop.shop_item[j]);
+		}
+		script_pushint(st,1);
+		return SCRIPT_CMD_SUCCESS;
+	}
+#endif
+
 	// append new items to existing shop item list
 	RECREATE(nd->u.shop.shop_item, struct npc_item_list, nd->u.shop.count+amount);
 	for( n = nd->u.shop.count, i = 3; n < nd->u.shop.count+amount; n++, i+=offs )
 	{
 		nd->u.shop.shop_item[n].nameid = script_getnum(st,i);
 		nd->u.shop.shop_item[n].value = script_getnum(st,i+1);
-#if PACKETVER >= 20131223
-		if (nd->subtype == NPCTYPE_MARKETSHOP) {
-			nd->u.shop.shop_item[n].qty = script_getnum(st,i+2);
-			npc_market_tosql(nd->exname, nd->u.shop.shop_item[n].nameid, nd->u.shop.shop_item[n].qty);
-		}
-#endif
 	}
 	nd->u.shop.count = n;
 
@@ -19271,7 +19294,7 @@ BUILDIN_FUNC(npcshopupdate) {
 #if PACKETVER >= 20131223
 			if (nd->subtype == NPCTYPE_MARKETSHOP) {
 				nd->u.shop.shop_item[i].qty = stock;
-				npc_market_tosql(nd->exname, nameid, stock);
+				npc_market_tosql(nd->exname, &nd->u.shop.shop_item[i]);
 			}
 #endif
 		}
