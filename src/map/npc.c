@@ -2522,8 +2522,13 @@ static const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const 
 			break;
 		}
 		case NPCTYPE_MARKETSHOP:
+#if PACKETVER < 20131223
+			ShowError("npc_parse_shop: (MARKETSHOP) Feature is disabled, need client 20131223 or newer. Ignoring file '%s', line '%d\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer, start - buffer), w1, w2, w3, w4);
+			return strchr(start, '\n'); // skip and continue
+#else
 			is_discount = 0;
 			break;
+#endif
 		default:
 			is_discount = 1;
 			break;
@@ -2543,6 +2548,7 @@ static const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const 
 			case NPCTYPE_SHOP:
 				if (sscanf(p, ",%hu:%d", &nameid2, &value) != 2) {
 					ShowError("npc_parse_shop: (SHOP) Invalid item definition in file '%s', line '%d'. Ignoring the rest of the line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer, start - buffer), w1, w2, w3, w4);
+					aFree(nd);
 					return strchr(start, '\n'); // skip and continue
 				}
 				break;
@@ -2550,11 +2556,9 @@ static const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const 
 #if PACKETVER >= 20131223
 				if (sscanf(p, ",%hu:%d:%hu", &nameid2, &value, &qty) != 3) {
 					ShowError("npc_parse_shop: (MARKETSHOP) Invalid item definition in file '%s', line '%d'. Ignoring the rest of the line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer, start - buffer), w1, w2, w3, w4);
+					aFree(nd);
 					return strchr(start, '\n'); // skip and continue
 				}
-#else
-				ShowError("npc_parse_shop: (MARKETSHOP) Feature is disabled, need client 20131223 or newer. Ignoring the rest of the line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer, start - buffer), w1, w2, w3, w4);
-				return strchr(start, '\n'); // skip and continue
 #endif
 				break;
 		}
