@@ -2541,6 +2541,7 @@ static const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const 
 		unsigned short nameid2, qty = 0;
 		int value, i = 0;
 		struct item_data* id;
+		bool skip = false;
 
 		if( p == NULL )
 			break;
@@ -2548,20 +2549,21 @@ static const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const 
 			case NPCTYPE_SHOP:
 				if (sscanf(p, ",%hu:%d", &nameid2, &value) != 2) {
 					ShowError("npc_parse_shop: (SHOP) Invalid item definition in file '%s', line '%d'. Ignoring the rest of the line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer, start - buffer), w1, w2, w3, w4);
-					aFree(nd);
-					return strchr(start, '\n'); // skip and continue
+					skip = true;
 				}
 				break;
 			case NPCTYPE_MARKETSHOP:
 #if PACKETVER >= 20131223
 				if (sscanf(p, ",%hu:%d:%hu", &nameid2, &value, &qty) != 3) {
 					ShowError("npc_parse_shop: (MARKETSHOP) Invalid item definition in file '%s', line '%d'. Ignoring the rest of the line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer, start - buffer), w1, w2, w3, w4);
-					aFree(nd);
-					return strchr(start, '\n'); // skip and continue
+					skip = true;
 				}
 #endif
 				break;
 		}
+
+		if (skip)
+			break;
 
 		if( (id = itemdb_exists(nameid2)) == NULL ) {
 			ShowWarning("npc_parse_shop: Invalid sell item in file '%s', line '%d' (id '%hu').\n", filepath, strline(buffer,start-buffer), nameid2);
