@@ -3220,6 +3220,10 @@ static int npc_market_checkall_sub(DBKey key, DBData *data, va_list ap) {
 	struct s_npc_market *market = (struct s_npc_market *)db_data2ptr(data);
 	struct npc_data *nd = NULL;
 	uint16 i;
+	uint16 *added = va_arg(ap, uint16 *);
+	uint16 *replaced = va_arg(ap, uint16 *);
+	uint16 *deleted = va_arg(ap, uint16 *);
+	uint16 *removed = va_arg(ap, uint16 *);
 
 	if (!market)
 		return 1;
@@ -3227,11 +3231,13 @@ static int npc_market_checkall_sub(DBKey key, DBData *data, va_list ap) {
 	nd = npc_name2id(market->exname);
 	if (!nd) {
 		ShowInfo("npc_market_checkall_sub: NPC '%s' not found, removing...\n", market->exname);
+		*removed = *removed+1;
 		npc_market_clearfromsql(market->exname);
 		return 1;
 	}
 	else if (nd->subtype != NPCTYPE_MARKETSHOP || !nd->u.shop.shop_item || !nd->u.shop.count ) {
 		ShowError("npc_market_checkall_sub: NPC '%s' is not proper for market, removing...\n", nd->exname);
+		*removed = *removed+1;
 		npc_market_clearfromsql(nd->exname);
 		return 1;
 	}
@@ -3245,6 +3251,7 @@ static int npc_market_checkall_sub(DBKey key, DBData *data, va_list ap) {
 
 		if (!list->nameid || !itemdb_exists(list->nameid)) {
 			ShowError("npc_market_checkall_sub: NPC '%s' sells invalid item '%hu', deleting...\n", nd->exname, list->nameid);
+			*deleted = *deleted+1;
 			npc_market_delfromsql(nd->exname, list->nameid);
 			continue;
 		}
@@ -3252,10 +3259,10 @@ static int npc_market_checkall_sub(DBKey key, DBData *data, va_list ap) {
 		// Reloading stock from `market` table
 		ARR_FIND(0, nd->u.shop.count, j, nd->u.shop.shop_item[j].nameid == list->nameid);
 		if (j != nd->u.shop.count) {
-			ShowInfo("Shop: '%s'. ID %hu. Price: %d -> %d. Qty: %hu -> %hu\n", nd->exname, list->nameid, nd->u.shop.shop_item[j].value, list->value, nd->u.shop.shop_item[j].qty, list->qty);
 			nd->u.shop.shop_item[j].value = list->value;
 			nd->u.shop.shop_item[j].qty = list->qty;
 			nd->u.shop.shop_item[j].flag = list->flag;
+			*replaced = *replaced+1;
 			npc_market_tosql(nd->exname, &nd->u.shop.shop_item[j]);
 			continue;
 		}
@@ -3267,11 +3274,12 @@ static int npc_market_checkall_sub(DBKey key, DBData *data, va_list ap) {
 			nd->u.shop.shop_item[j].qty = list->qty;
 			nd->u.shop.shop_item[j].flag = list->flag;
 			nd->u.shop.count++;
-			ShowInfo("PersisEntry: Shop: '%s'. ID %hu. Price: %d. Qty: %hu\n", nd->exname, nd->u.shop.shop_item[j].nameid, nd->u.shop.shop_item[j].value, nd->u.shop.shop_item[j].qty);
+			*added = *added+1;
 			npc_market_tosql(nd->exname, &nd->u.shop.shop_item[j]);
 		}
 		else { // Removing "out-of-date" entry
 			ShowError("npc_market_checkall_sub: NPC '%s' does not sell item %hu (qty %hu), deleting...\n", nd->exname, list->nameid, list->qty);
+			*deleted = *deleted+1;
 			npc_market_delfromsql(nd->exname, list->nameid);
 		}
 	}
@@ -3299,81 +3307,54 @@ static int npc_market_free(DBKey key, DBData *data, va_list ap) {
  * Overwrite stocks from NPC by using stock entries from `market` table.
  **/
 static void npc_market_checkall(void) {
-	ShowInfo("Checking '"CL_WHITE"%d"CL_RESET"' NPC Markets...\n", db_size(NPCMarketDB));
-
-	NPCMarketDB->foreach(NPCMarketDB, npc_market_checkall_sub);
-
-	ShowStatus("Done checking '"CL_WHITE"%d"CL_RESET"' NPC Markets.\n", db_size(NPCMarketDB));
-
-	NPCMarketDB->clear(NPCMarketDB, npc_market_free);
+	if (!db_size(NPCMarketDB))
+		return;
+	else {
+		uint16 added = 0, replaced = 0, deleted = 0, removed = 0;
+		ShowInfo("Checking '"CL_WHITE"%d"CL_RESET"' NPC Markets...\n", db_size(NPCMarketDB));
+		NPCMarketDB->foreach(NPCMarketDB, npc_market_checkall_sub, &added, &replaced, &deleted, &removed);
+		ShowStatus("Done checking '"CL_WHITE"%d"CL_RESET"' NPC Markets (%hu/%hu/%hu/%hu).\n", db_size(NPCMarketDB), added, replaced, deleted, removed);
+		NPCMarketDB->clear(NPCMarketDB, npc_market_free);
+	}
 }
 
 /**
  * Loads persistent NPC Market Data from SQL, use the records after NPCs init'd to reuse the stock values.
  **/
 static void npc_market_fromsql(void) {
-	SqlStmt *stmt = SqlStmt_Malloc(mmysql_handle), *stmt_;
-	char name[NAME_LENGTH+1];
-	unsigned short count = 0, nameid, qty;
-	unsigned int price;
-	uint8 flag;
+	uint32 count = 0;
 
-	if (SQL_ERROR == SqlStmt_Prepare(stmt, "SELECT DISTINCT(`name`) FROM `%s`", market_table) ||
-		SQL_ERROR == SqlStmt_Execute(stmt) ||
-		SQL_ERROR == SqlStmt_BindColumn(stmt, 0, SQLDT_STRING, &name[0], sizeof(name), NULL, NULL)
-		)
-	{
-		SqlStmt_ShowDebug(stmt);
-		SqlStmt_Free(stmt);
+	if (SQL_ERROR == Sql_Query(mmysql_handle, "SELECT `name`,`nameid`,`price`,`amount`,`flag` FROM `%s` ORDER BY `name`", market_table)) {
+		Sql_ShowDebug(mmysql_handle);
 		return;
 	}
 
-	if (!(count = (uint16)SqlStmt_NumRows(stmt))) {
-		SqlStmt_Free(stmt);
-		return;
-	}
+	while (SQL_SUCCESS == Sql_NextRow(mmysql_handle)) {
+		char *data;
+		struct s_npc_market *market;
+		struct npc_item_list list;
 
-	stmt_ = SqlStmt_Malloc(mmysql_handle);
-	while (SQL_SUCCESS == SqlStmt_NextRow(stmt)) {
-		struct s_npc_market *market = NULL;
+		Sql_GetData(mmysql_handle, 0, &data, NULL);
 
-		CREATE(market, struct s_npc_market, 1);
-		safestrncpy(market->exname, name, sizeof(market->exname));
-		strdb_put(NPCMarketDB, name, market);
-		ShowInfo("Load NPC '%s'\n", market->exname);
-
-		if (SQL_ERROR == SqlStmt_Prepare(stmt_, "SELECT `nameid`, `price`, `amount`, `flag` FROM `%s` WHERE `name` = '%s'", market_table, name) ||
-			SQL_ERROR == SqlStmt_Execute(stmt_) ||
-			SQL_ERROR == SqlStmt_BindColumn(stmt_, 0, SQLDT_UINT16, &nameid, 0, NULL, NULL) ||
-			SQL_ERROR == SqlStmt_BindColumn(stmt_, 1, SQLDT_UINT32, &price,  0, NULL, NULL) ||
-			SQL_ERROR == SqlStmt_BindColumn(stmt_, 2, SQLDT_UINT16, &qty,    0, NULL, NULL) ||
-			SQL_ERROR == SqlStmt_BindColumn(stmt_, 3, SQLDT_UINT8,  &flag,   0, NULL, NULL)
-			)
-		{
-			SqlStmt_ShowDebug(stmt_);
-			continue;
+		if (!(market = (struct s_npc_market *)strdb_get(NPCMarketDB,data))) {
+			CREATE(market, struct s_npc_market, 1);
+			market->count = 0;
+			safestrncpy(market->exname, data, strlen(data)+1);
+			strdb_put(NPCMarketDB, market->exname, market);
 		}
 
-		if (!SqlStmt_NumRows(stmt_))
-			continue;
+		Sql_GetData(mmysql_handle, 1, &data, NULL); list.nameid = atoi(data);
+		Sql_GetData(mmysql_handle, 2, &data, NULL); list.value = atoi(data);
+		Sql_GetData(mmysql_handle, 3, &data, NULL); list.qty = atoi(data);
+		Sql_GetData(mmysql_handle, 4, &data, NULL); list.flag = atoi(data);
 
-		while (SQL_SUCCESS == SqlStmt_NextRow(stmt_)) {
-			RECREATE(market->list, struct npc_item_list, market->count+1);
-			market->list[market->count].nameid = nameid;
-			market->list[market->count].value  = price;
-			market->list[market->count].qty    = qty;
-			market->list[market->count].flag   = flag;
-			ShowInfo("   %d. %hu %d %hu %"PRIu8"\n", market->count,
-				market->list[market->count].nameid, market->list[market->count].value, market->list[market->count].qty, market->list[market->count].flag);
-			market->count++;
-		}
-		SqlStmt_FreeResult(stmt_);
+		RECREATE(market->list, struct npc_item_list, market->count+1);
+		market->list[market->count++] = list;
+		count++;
 	}
+	Sql_FreeResult(mmysql_handle);
 
-	ShowStatus("Done loading '"CL_WHITE"%d"CL_RESET"' NPC Markets from '"CL_WHITE"%s"CL_RESET"' table.\n", db_size(NPCMarketDB), market_table);
-
-	SqlStmt_Free(stmt);
-	SqlStmt_Free(stmt_);
+	ShowStatus("Done loading '"CL_WHITE"%d"CL_RESET"' entries for '"CL_WHITE"%d"CL_RESET"' NPC Markets from '"CL_WHITE"%s"CL_RESET"' table.\n", count, db_size(NPCMarketDB), market_table);
 }
 #endif
 

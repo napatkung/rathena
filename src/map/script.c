@@ -15665,7 +15665,6 @@ BUILDIN_FUNC(npcshopitem)
 			nd->u.shop.shop_item[n].flag = 1;
 			npc_market_tosql(nd->exname, &nd->u.shop.shop_item[n]);
 		}
-		ShowInfo("npcshopitem: %s: Added %hu %hu %d\n", npcname, nd->u.shop.shop_item[n].nameid, nd->u.shop.shop_item[n].qty, nd->u.shop.shop_item[n].value);
 #endif
 	}
 	nd->u.shop.count = n;
@@ -15705,14 +15704,12 @@ BUILDIN_FUNC(npcshopadditem)
 				j = nd->u.shop.count;
 				nd->u.shop.shop_item[j].flag = 1;
 				nd->u.shop.count++;
-				ShowInfo("npcshopadditem: New entry @%d\n", j);
 			}
-			else
-				ShowInfo(": Updated @%d\n", j);
+
 			nd->u.shop.shop_item[j].nameid = nameid;
 			nd->u.shop.shop_item[j].value = script_getnum(st,i+1);
 			nd->u.shop.shop_item[j].qty = script_getnum(st,i+2);
-			ShowInfo("   %s %hu %hu %d\n", npcname, nd->u.shop.shop_item[j].nameid, nd->u.shop.shop_item[j].qty, nd->u.shop.shop_item[j].value);
+
 			npc_market_tosql(nd->exname, &nd->u.shop.shop_item[j]);
 		}
 		script_pushint(st,1);
