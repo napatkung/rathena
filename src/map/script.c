@@ -20096,6 +20096,66 @@ BUILDIN_FUNC(getattachedrid) {
 	return SCRIPT_CMD_SUCCESS;
 }
 
+/**
+ * getquestdata <quest_id>{,<type>{,<char_id>}};
+ * @author [Cydh]
+ **/
+BUILDIN_FUNC(getquestdata) {
+	uint16 id = script_getnum(st,2);
+	uint8 type = 0, i = 0;
+	struct quest_db *q = quest_search(id);
+
+	if (!q) {
+		ShowError("buildin_getquestinfo: Quest with id '%d' is not found.\n", id);
+		script_pushint(st, 0);
+		return SCRIPT_CMD_SUCCESS;
+	}
+
+#define getquestinfo_addtime(val)    { setd_sub(st, NULL, ".@QuestTimeLimit", 0, (void *)__64BPRTSIZE((val)), NULL); }
+#define getquestinfo_addmob(val,idx) { setd_sub(st, NULL, ".@QuestTargetID", (idx), (void *)__64BPRTSIZE((val)), NULL); }
+#define getquestinfo_addnum(val,idx) { setd_sub(st, NULL, ".@QuestTargetNum", (idx), (void *)__64BPRTSIZE((val)), NULL); }
+
+	FETCH(3, type);
+	switch (type) {
+		case 0:
+			getquestinfo_addtime(q->time);
+			for (i = 0; i < q->num_objectives; i++) {
+				getquestinfo_addmob(q->mob[i],i);
+				getquestinfo_addnum(q->count[i],i);
+			}
+			script_pushint(st, 1);
+			break;
+		case 1:
+			{
+				struct map_session_data *sd;
+				if (script_charid2sd(3,sd)) {
+					int j;
+
+					ARR_FIND(0, sd->num_quests, j, sd->quest_log[j].quest_id == id);
+					if (j == sd->num_quests) {
+						//ShowError("buildin_getquestinfo: Player with char id '%d' doesn't have quest '%d'.\n", sd->status.char_id, id);
+						break;
+					}
+
+					getquestinfo_addtime(sd->quest_log[j].time);
+					for (i = 0; i < q->num_objectives; i++) {
+						getquestinfo_addmob(q->mob[i],i);
+						getquestinfo_addnum(sd->quest_log[j].count[i],i);
+					}
+					script_pushint(st, 1);
+				}
+			}
+			break;
+	}
+
+#undef getquestinfo_addtime
+#undef getquestinfo_addmob
+#undef getquestinfo_addnum
+
+	script_pushint(st, 0);
+	return SCRIPT_CMD_SUCCESS;
+}
+
 #include "../custom/script.inc"
 
 // declarations that were supposed to be exported from npc_chat.c
@@ -20647,6 +20707,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(mergeitem,"??"),
 	BUILDIN_DEF(npcshopupdate,"sii?"),
 	BUILDIN_DEF(getattachedrid,""),
+	BUILDIN_DEF(getquestdata,"i??"),
 
 #include "../custom/script_def.inc"
 

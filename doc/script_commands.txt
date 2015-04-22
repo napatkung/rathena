@@ -7903,6 +7903,24 @@ izlude,100,100,4	script	Test	844,{
 
 ---------------------------------------
 
+*getquestdata <quest_id>{,<type>{,<char_id>}};
+
+Get quest data from db/[pre-]re/quest_db.txt if 'type' is 0 or from
+player if 'type' is 1. If 'char_id' is not defined, will gets data from
+attached player.
+
+Returns 1 if quest is found, 0 if not found or failed to get player info.
+Also returns some variables, 'type' determines their usages:
+
+	.@QuestTimeLimit	- 0: Quest time limit.
+						  1: Quest deadline.
+	.@QuestTargetID[]	- 0: Monster ID as target.
+						  1: Monster ID as target.
+	.@QuestTargetNum[]	- 0: Number of monster as target.
+						  1: Number of target killed.
+
+---------------------------------------
+
 *setquest <ID>{,<char_id>};
 
 Place quest of <ID> in the users quest log, the state of which is "active".
