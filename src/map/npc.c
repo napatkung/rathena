@@ -4698,6 +4698,9 @@ static void npc_sql_add_normal(struct npc_data *nd) {
 
 	nullpo_retv(nd);
 
+	if (nd->class_ < 1)
+		return;
+
 	switch (nd->subtype) {
 		case NPCTYPE_SHOP:
 		case NPCTYPE_CASHSHOP:
