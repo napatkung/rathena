@@ -944,6 +944,7 @@ extern char *ATCOMMAND_CONF_FILENAME;
 extern char *SCRIPT_CONF_NAME;
 extern char *MSG_CONF_NAME_EN;
 extern char *GRF_PATH_FILENAME;
+extern bool MAKE_NPC_SQL;
 //Other languages supported
 char *MSG_CONF_NAME_RUS;
 char *MSG_CONF_NAME_SPN;

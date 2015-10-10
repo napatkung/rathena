@@ -24,6 +24,7 @@ extern "C" {
  extern char* ATCOMMAND_CONF_FILENAME;
  extern char* SCRIPT_CONF_NAME;
  extern char* GRF_PATH_FILENAME;
+ extern bool MAKE_NPC_SQL;
 //char
  extern char* CHAR_CONF_NAME;
  extern char* SQL_CONF_NAME;

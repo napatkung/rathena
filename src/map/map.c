@@ -4198,6 +4198,7 @@ void display_helpscreen(bool do_exit)
 	ShowInfo("  --grf-path <file>\t\tAlternative GRF path configuration.\n");
 	ShowInfo("  --inter-config <file>\t\tAlternative inter-server configuration.\n");
 	ShowInfo("  --log-config <file>\t\tAlternative logging configuration.\n");
+	ShowInfo("  --make-shop-sql ....\n");
 	if( do_exit )
 		exit(EXIT_SUCCESS);
 }

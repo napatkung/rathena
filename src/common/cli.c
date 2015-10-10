@@ -29,6 +29,7 @@ char* BATTLE_CONF_FILENAME;
 char* ATCOMMAND_CONF_FILENAME;
 char* SCRIPT_CONF_NAME;
 char* GRF_PATH_FILENAME;
+bool MAKE_NPC_SQL;
 //char confs
 char* CHAR_CONF_NAME;
 char* SQL_CONF_NAME;
@@ -171,6 +172,10 @@ int cli_get_options(int argc, char ** argv) {
 				else if (strcmp(arg, "log-config") == 0) {
 					if (opt_has_next_value(arg, i, argc))
 						LOG_CONF_NAME = argv[++i];
+				}
+				else if (strcmp(arg, "make-npc-sql") == 0) {
+					runflag = CORE_ST_STOP;
+					MAKE_NPC_SQL = true;
 				}
 				else {
 					ShowError("Unknown option '%s'.\n", argv[i]);

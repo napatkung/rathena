@@ -54,6 +54,30 @@ static void npc_market_fromsql(void);
 #define npc_market_clearfromsql(exname) (npc_market_delfromsql_((exname), 0, true))
 #endif
 
+#ifndef RENEWAL
+// Shop NPCs
+const char *npc_sqlshop_file = "./sql-files/npc_shops.sql";
+const char *npc_sqlshop_table1 = "npc_shop";
+const char *npc_sqlshop_table2 = "npc_shop_list";
+// Normal NPCs
+const char *npc_sql_file = "./sql-files/npcs.sql";
+const char *npc_sql_table = "npc";
+#else
+// Shop NPCs
+const char *npc_sqlshop_file = "./sql-files/npc_shops_re.sql";
+const char *npc_sqlshop_table1 = "npc_shop_re";
+const char *npc_sqlshop_table2 = "npc_shop_list_re";
+// Normal NPCs
+const char *npc_sql_file = "./sql-files/npcs_re.sql";
+const char *npc_sql_table = "npc_re";
+#endif
+
+static FILE *npcshopsqlfile = NULL, *npcsqlfile = NULL;
+static unsigned int npc_sqlshop_id = 0, npc_sqlshop_count = 0;
+static unsigned int npc_sql_id = 0;
+static void npc_sql_createfile(void);
+static void npc_sql_add(struct npc_data *nd);
+
 /// Returns a new npc id that isn't being used in id_db.
 /// Fatal error if nothing is available.
 int npc_get_new_npc_id(void) {
@@ -2668,6 +2692,7 @@ static const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const 
 		map_addiddb(&nd->bl);
 	}
 	strdb_put(npcname_db, nd->exname, nd);
+	npc_sql_add(nd);
 	return strchr(start,'\n');// continue
 }
 
@@ -2921,6 +2946,7 @@ static const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, cons
 	}
 
 	nd->u.scr.timerid = INVALID_TIMER;
+	npc_sql_add(nd);
 
 	if( runOnInit ) {
 		char evname[EVENT_NAME_LENGTH];
@@ -3023,6 +3049,7 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 			nd->u.scr.script = dnd->u.scr.script;
 			nd->u.scr.label_list = dnd->u.scr.label_list;
 			nd->u.scr.label_list_num = dnd->u.scr.label_list_num;
+			npc_sql_add(nd);
 			break;
 
 		case NPCTYPE_SHOP:
@@ -3033,6 +3060,7 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 			++npc_shop;
 			nd->u.shop.shop_item = dnd->u.shop.shop_item;
 			nd->u.shop.count = dnd->u.shop.count;
+			npc_sql_add(nd);
 			break;
 
 		case NPCTYPE_WARP:
@@ -4474,6 +4502,10 @@ void do_final_npc(void) {
 #endif
 	ers_destroy(timer_event_ers);
 	npc_clearsrcfile();
+	if (npcshopsqlfile)
+		fclose(npcshopsqlfile);
+	if (npcsqlfile)
+		fclose(npcsqlfile);
 }
 
 static void npc_debug_warps_sub(struct npc_data* nd)
@@ -4510,6 +4542,211 @@ static void npc_debug_warps(void)
 			npc_debug_warps_sub(map[m].npc[i]);
 }
 
+/**
+ * Write NPC SQL file.
+ * @author [Cydh]
+ **/
+static void npc_sql_createfile(void) {
+	StringBuf buf;
+	StringBuf_Init(&buf);
+	
+	// NPC Shop File
+	npcshopsqlfile = fopen(npc_sqlshop_file, "w+");
+	if (!npcshopsqlfile) {
+		ShowError("Cannot open file '%s' to make SQL Shops.\n", npc_sqlshop_file);
+	}
+	else {
+
+		ShowStatus("File '"CL_WHITE"%s"CL_RESET"' is ready.\n", npc_sqlshop_file);
+
+		StringBuf_Printf(&buf,
+			"DROP TABLE IF EXISTS `%s`;\n"
+			"\n"
+			"CREATE TABLE `%s` (\n"
+			"\t`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,\n"
+			"\t`name` TEXT,\n"
+			"\t`scriptname` TEXT,\n"
+			"\t`sprite` SMALLINT(5) UNSIGNED NOT NULL,\n"
+			"\t`map` VARCHAR(30) NOT NULL,\n"
+			"\t`x` SMALLINT(3) NOT NULL,\n"
+			"\t`y` SMALLINT(3) NOT NULL,\n"
+			"\t`type` TINYINT(1) NOT NULL DEFAULT '0', -- 1: Shop, 3: Cashshop, 4: Item Shop, 5: Point Shop, 7: Market Shop\n"
+			"\t`currency` TEXT,\n"
+			"\t`discount` TINYINT(1) NOT NULL DEFAULT '1',\n"
+			"\tPRIMARY KEY(`id`)\n"
+			") ENGINE = MyISAM;\n"
+			"\n"
+			"\n"
+			"DROP TABLE IF EXISTS `%s`;\n"
+			"\n"
+			"CREATE TABLE `%s` (\n"
+			"\t`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,\n"
+			"\t`npc_shop_id` INT(11) UNSIGNED NOT NULL,\n"
+			"\t`itemid` SMALLINT(5) UNSIGNED NOT NULL,\n"
+			"\t`price` INT(11) NOT NULL,\n"
+			"\t`stock` INT(11) NOT NULL DEFAULT '-1',\n"
+			"\tPRIMARY KEY(`id`)\n"
+			") ENGINE = MyISAM;\n"
+			"\n"
+			"\n", npc_sqlshop_table1, npc_sqlshop_table1, npc_sqlshop_table2, npc_sqlshop_table2);
+
+		fputs(StringBuf_Value(&buf), npcshopsqlfile);
+	}
+
+	StringBuf_Clear(&buf);
+
+	// Normal NPCs
+	npcsqlfile = fopen(npc_sql_file, "w+");
+	if (!npcsqlfile) {
+		ShowError("Cannot open file '%s' to make SQL NPC.\n", npc_sql_file);
+	}
+	else {
+
+		ShowStatus("File '"CL_WHITE"%s"CL_RESET"' is ready.\n", npc_sql_file);
+
+		StringBuf_Printf(&buf,
+			"DROP TABLE IF EXISTS `%s`;\n"
+			"\n"
+			"CREATE TABLE `%s` (\n"
+			"\t`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,\n"
+			"\t`name` TEXT,\n"
+			"\t`scriptname` TEXT,\n"
+			"\t`sprite` SMALLINT(5) UNSIGNED NOT NULL,\n"
+			"\t`map` VARCHAR(30) NOT NULL,\n"
+			"\t`x` SMALLINT(3) NOT NULL,\n"
+			"\t`y` SMALLINT(3) NOT NULL,\n"
+			"\tPRIMARY KEY(`id`)\n"
+			") ENGINE = MyISAM;\n"
+			"\n"
+			"\n", npc_sql_table, npc_sql_table);
+
+		fputs(StringBuf_Value(&buf), npcsqlfile);
+	}
+
+	StringBuf_Destroy(&buf);
+}
+
+/**
+ * Write entries for NPC Shop SQL file
+ * @param nd NPC Data
+ * @author [Cydh]
+ **/
+static void npc_sql_add_shop(struct npc_data *nd) {
+	char *qnpc = "INSERT INTO `%s` VALUES('%d','%s','%s','%d','%s','%d','%d','%d','%s','%d');\n";
+	char *qitem = "INSERT INTO `%s` VALUES('%d','%d','%d','%d','%d');\n";
+	char itemid[64], esc_name1[256], esc_name2[256];
+	StringBuf buf;
+	uint16 i = 0;
+	struct npc_item_list *l = NULL;
+
+	nullpo_retv(nd);
+
+	switch (nd->subtype) {
+		case NPCTYPE_SHOP:
+		case NPCTYPE_CASHSHOP:
+		case NPCTYPE_POINTSHOP:
+		case NPCTYPE_MARKETSHOP:
+			break;
+		case NPCTYPE_ITEMSHOP:
+			sprintf(itemid, "%s", nd->u.shop.itemshop_nameid);
+			break;
+		default:
+			return;
+	}
+
+	Sql_EscapeString(mmysql_handle, esc_name1, nd->name);
+	Sql_EscapeString(mmysql_handle, esc_name2, nd->exname);
+	StringBuf_Init(&buf);
+
+	StringBuf_Printf(&buf, qnpc, npc_sqlshop_table1, ++npc_sqlshop_id, esc_name1, esc_name2, nd->class_,
+		map_mapid2mapname(nd->bl.m), nd->bl.x, nd->bl.y, nd->subtype,
+		((nd->subtype == NPCTYPE_SHOP || nd->subtype == NPCTYPE_MARKETSHOP) ? "Zeny" :
+		(nd->subtype == NPCTYPE_CASHSHOP ? "Cash" : (nd->subtype == NPCTYPE_POINTSHOP ? nd->u.shop.pointshop_str : itemid))),
+		(nd->u.shop.discount || nd->subtype == NPCTYPE_SHOP) ? 1 : 0);
+
+	fputs(StringBuf_Value(&buf), npcshopsqlfile);
+	StringBuf_Clear(&buf);
+
+	for (i = 0; i < nd->u.shop.count; i++) {
+		if (!(l = &nd->u.shop.shop_item[i]))
+			continue;
+
+		StringBuf_Printf(&buf, qitem, npc_sqlshop_table2, ++npc_sqlshop_count, npc_sqlshop_id, l->nameid, l->value,
+#if PACKETVER >= 20131223
+			(nd->subtype == NPCTYPE_MARKETSHOP ? l->qty : -1)
+#else
+			-1
+#endif
+			);
+		fputs(StringBuf_Value(&buf), npcshopsqlfile);
+		StringBuf_Clear(&buf);
+	}
+
+	fputs("\n", npcshopsqlfile);
+	StringBuf_Destroy(&buf);
+}
+
+/**
+ * Write entries for nprmal NPC SQL file
+ * @param nd NPC Data
+ * @author [Cydh]
+ **/
+static void npc_sql_add_normal(struct npc_data *nd) {
+	char *qnpc = "INSERT INTO `%s` VALUES('%d','%s','%s','%d','%s','%d','%d');\n";
+	char esc_name1[256], esc_name2[256];
+	StringBuf buf;
+
+	nullpo_retv(nd);
+
+	switch (nd->subtype) {
+		case NPCTYPE_SHOP:
+		case NPCTYPE_CASHSHOP:
+		case NPCTYPE_POINTSHOP:
+		case NPCTYPE_MARKETSHOP:
+		case NPCTYPE_ITEMSHOP:
+			return;
+	}
+
+	Sql_EscapeString(mmysql_handle, esc_name1, nd->name);
+	Sql_EscapeString(mmysql_handle, esc_name2, nd->exname);
+	StringBuf_Init(&buf);
+
+	StringBuf_Printf(&buf, qnpc, npc_sql_table, ++npc_sql_id, esc_name1, esc_name2, nd->class_,
+		map_mapid2mapname(nd->bl.m), nd->bl.x, nd->bl.y);
+
+	fputs(StringBuf_Value(&buf), npcsqlfile);
+	StringBuf_Destroy(&buf);
+}
+
+/**
+ * Attempt to add NPC to file
+ * @param nd
+ * @author [Cydh]
+ **/
+static void npc_sql_add(struct npc_data *nd) {
+	nullpo_retv(nd);
+
+	if (nd->bl.m < 0)
+		return;
+
+	switch (nd->subtype) {
+		case NPCTYPE_SHOP:
+		case NPCTYPE_CASHSHOP:
+		case NPCTYPE_POINTSHOP:
+		case NPCTYPE_MARKETSHOP:
+		case NPCTYPE_ITEMSHOP:
+			if (!npcshopsqlfile)
+				return;
+			npc_sql_add_shop(nd);
+			break;
+		default:
+			if (!npcsqlfile)
+				return;
+			npc_sql_add_normal(nd);
+			return;
+	}
+}
+
 /*==========================================
  * npc initialization
  *------------------------------------------*/
@@ -4535,6 +4772,9 @@ void do_init_npc(void){
 
 	timer_event_ers = ers_new(sizeof(struct timer_event_data),"clif.c::timer_event_ers",ERS_OPT_NONE);
 
+	if (MAKE_NPC_SQL)
+		npc_sql_createfile();
+
 	// process all npc files
 	ShowStatus("Loading NPCs...\r");
 	for( file = npc_src_files; file != NULL; file = file->next ) {
@@ -4549,6 +4789,11 @@ void do_init_npc(void){
 		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Cached\n"
 		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Not Cached\n",
 		npc_id - START_NPC_NUM, npc_warp, npc_shop, npc_script, npc_mob, npc_cache_mob, npc_delay_mob);
+
+	ShowStatus("Done writting '"CL_WHITE"%d/%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n",
+		npc_sqlshop_id, npc_sqlshop_count, npc_sqlshop_file);
+	ShowStatus("Done writting '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n",
+		npc_sql_id, npc_sql_file);
 
 	// set up the events cache
 	memset(script_event, 0, sizeof(script_event));
