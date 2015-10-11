@@ -4349,7 +4349,7 @@ char pc_additem(struct map_session_data *sd,struct item *item,int amount,e_log_p
 		return ADDITEM_STACKLIMIT;
 	}
 
-	w = id->weight*amount;
+	w = itemdb_get_weight(item, amount, id);
 	if(sd->weight + w > sd->max_weight)
 		return ADDITEM_OVERWEIGHT;
 
@@ -4442,7 +4442,7 @@ char pc_delitem(struct map_session_data *sd,int n,int amount,int type, short rea
 	log_pick_pc(sd, log_type, -amount, &sd->status.inventory[n]);
 
 	sd->status.inventory[n].amount -= amount;
-	sd->weight -= sd->inventory_data[n]->weight*amount ;
+	sd->weight -= itemdb_get_weight(&sd->status.inventory[n], amount, sd->inventory_data[n]);
 	if( sd->status.inventory[n].amount <= 0 ){
 		if(sd->status.inventory[n].equip)
 			pc_unequipitem(sd,n,3);
@@ -4894,7 +4894,8 @@ unsigned char pc_cart_additem(struct map_session_data *sd,struct item *item,int 
 		return 1;
 	}
 
-	if( (w = data->weight*amount) + sd->cart_weight > sd->cart_weight_max )
+	w = itemdb_get_weight(item, amount, data);
+	if( w + sd->cart_weight > sd->cart_weight_max )
 		return 1;
 
 	// ID no longer points to inventory/kafra ID. While we get a new one we don't want to mess up vending creation.

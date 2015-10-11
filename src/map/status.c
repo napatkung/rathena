@@ -2984,14 +2984,14 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 		for(i=0;i<MAX_INVENTORY;i++) {
 			if(sd->status.inventory[i].nameid==0 || sd->inventory_data[i] == NULL)
 				continue;
-			sd->weight += sd->inventory_data[i]->weight*sd->status.inventory[i].amount;
+			sd->weight += itemdb_get_weight(&sd->status.inventory[i], sd->status.inventory[i].amount, sd->inventory_data[i]);
 		}
 		sd->cart_weight=0;
 		sd->cart_num=0;
 		for(i=0;i<MAX_CART;i++) {
 			if(sd->status.cart[i].nameid==0)
 				continue;
-			sd->cart_weight+=itemdb_weight(sd->status.cart[i].nameid)*sd->status.cart[i].amount;
+			sd->cart_weight += itemdb_get_weight(&sd->status.cart[i], sd->status.cart[i].amount, NULL);
 			sd->cart_num++;
 		}
 	}

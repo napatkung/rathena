@@ -1564,6 +1564,25 @@ bool itemdb_is_spellbook2(unsigned short nameid) {
 }
 
 /**
+ * Get total item weight
+ * @param it Item info from inventory/cart
+ * @param id Item data
+ **/
+int itemdb_get_weight(struct item *it, unsigned short amount, struct item_data *id) {
+	struct item_data *data = NULL;
+
+	if (!it)
+		return 0;
+
+	data = id ? id : itemdb_exists(it->nameid);
+
+	if (battle_config.item_weight_0 && (it->expire_time || it->bound == BOUND_CHAR || data->flag.trade_restriction&32))
+		return 0;
+
+	return amount * data->weight;
+}
+
+/**
 * Read all item-related databases
 */
 static void itemdb_read(void) {

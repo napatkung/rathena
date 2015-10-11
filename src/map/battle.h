@@ -591,6 +591,7 @@ extern struct Battle_Config
 	int homunculus_evo_intimacy_reset;
 	int monster_loot_search_type;
 	int feature_roulette;
+	int item_weight_0;
 } battle_config;
 
 void do_init_battle(void);
