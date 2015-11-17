@@ -665,6 +665,21 @@ struct map_session_data {
 		short prizeStage;
 		bool claimPrize;
 	} roulette;
+
+	/// Holds skill level that frequently used mostly in battle calculations. [Cydh]
+	struct s_skill_temp {
+		uint8 tf_double; ///< TF_DOUBLE
+		uint8 al_demonbane; ///< AL_DEMONBANE
+		uint8 ac_vulture; ///< AC_VULTURE
+		uint8 ht_beastbane; ///< HT_BEASTBANE
+		uint8 bs_weaponresearch; ///< BS_WEAPONRESEARCH
+		uint8 bs_hiltbinding; ///< BS_WEAPONRESEARCH
+		uint8 mo_tripleattack; ///< MO_TRIPLEATTACK
+		uint8 ra_rangermain; ///< RA_RANGERMAIN
+		uint8 ra_researchtrap; ///< RA_RESEARCHTRAP
+		uint8 nc_researchfe; ///< NC_RESEARCHFE
+		uint8 nc_madolicense; ///< NC_MADOLICENCE
+	} skill_temp;
 };
 
 struct eri *pc_sc_display_ers; /// Player's SC display table

@@ -3119,6 +3119,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 	);
 
 	memset (&sd->bonus, 0, sizeof(sd->bonus));
+	memset(&sd->skill_temp, 0, sizeof(sd->skill_temp));
 
 	// Autobonus
 	pc_delautobonus(sd,sd->autobonus,ARRAYLENGTH(sd->autobonus),true);
@@ -3763,6 +3764,19 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 			sd->magic_addele[ELE_EARTH] += 25;
 	}
 	status_cpy(&sd->battle_status, base_status);
+
+	// Skill level commonly used
+	sd->skill_temp.tf_double = pc_checkskill(sd, TF_DOUBLE);
+	sd->skill_temp.al_demonbane = pc_checkskill(sd, AL_DEMONBANE);
+	sd->skill_temp.ac_vulture = pc_checkskill(sd, AC_VULTURE);
+	sd->skill_temp.ht_beastbane = pc_checkskill(sd, HT_BEASTBANE);
+	sd->skill_temp.bs_weaponresearch = pc_checkskill(sd, BS_WEAPONRESEARCH);
+	sd->skill_temp.bs_hiltbinding = pc_checkskill(sd, BS_HILTBINDING);
+	sd->skill_temp.mo_tripleattack = pc_checkskill(sd, MO_TRIPLEATTACK);
+	sd->skill_temp.ra_rangermain = pc_checkskill(sd, RA_RANGERMAIN);
+	sd->skill_temp.ra_researchtrap = pc_checkskill(sd, RA_RESEARCHTRAP);
+	sd->skill_temp.nc_researchfe = pc_checkskill(sd, NC_RESEARCHFE);
+	sd->skill_temp.nc_madolicense = pc_checkskill(sd, NC_MADOLICENCE);
 
 // ----- CLIENT-SIDE REFRESH -----
 	if(!sd->bl.prev) {

@@ -1668,18 +1668,18 @@ int64 battle_addmastery(struct map_session_data *sd,struct block_list *target,in
 
 	nullpo_ret(sd);
 
-	if((skill = pc_checkskill(sd,AL_DEMONBANE)) > 0 &&
+	if((skill = sd->skill_temp.al_demonbane) > 0 &&
 		target->type == BL_MOB && //This bonus doesn't work against players.
 		(battle_check_undead(status->race,status->def_ele) || status->race == RC_DEMON) )
 		damage += (skill*(int)(3+(sd->status.base_level+1)*0.05));	// submitted by orn
-	if( (skill = pc_checkskill(sd, RA_RANGERMAIN)) > 0 && (status->race == RC_BRUTE || status->race == RC_PLANT || status->race == RC_FISH) )
+	if( (skill = sd->skill_temp.ra_rangermain) > 0 && (status->race == RC_BRUTE || status->race == RC_PLANT || status->race == RC_FISH) )
 		damage += (skill * 5);
-	if( (skill = pc_checkskill(sd,NC_RESEARCHFE)) > 0 && (status->def_ele == ELE_FIRE || status->def_ele == ELE_EARTH) )
+	if( (skill = sd->skill_temp.nc_researchfe) > 0 && (status->def_ele == ELE_FIRE || status->def_ele == ELE_EARTH) )
 		damage += (skill * 10);
 
-	damage += (15 * pc_checkskill(sd, NC_MADOLICENCE)); // Attack bonus is granted even without the Madogear
+	damage += (15 * sd->skill_temp.nc_madolicense); // Attack bonus is granted even without the Madogear
 
-	if((skill = pc_checkskill(sd,HT_BEASTBANE)) > 0 && (status->race == RC_BRUTE || status->race == RC_INSECT) ) {
+	if((skill = sd->skill_temp.ht_beastbane) > 0 && (status->race == RC_BRUTE || status->race == RC_INSECT) ) {
 		damage += (skill * 4);
 		if (sd->sc.data[SC_SPIRIT] && sd->sc.data[SC_SPIRIT]->val2 == SL_HUNTER)
 			damage += sd->status.str;
@@ -1687,7 +1687,7 @@ int64 battle_addmastery(struct map_session_data *sd,struct block_list *target,in
 
 #ifdef RENEWAL
 	//Weapon Research bonus applies to all weapons
-	if((skill = pc_checkskill(sd,BS_WEAPONRESEARCH)) > 0)
+	if((skill = sd->skill_temp.bs_weaponresearch) > 0)
 		damage += (skill * 2);
 #endif
 
@@ -2455,7 +2455,7 @@ static bool is_attack_hitting(struct Damage wd, struct block_list *src, struct b
 
 #ifdef RENEWAL
 	if (sd) //in Renewal hit bonus from Vultures Eye is not anymore shown in status window
-		hitrate += pc_checkskill(sd,AC_VULTURE);
+		hitrate += sd->skill_temp.ac_vulture;
 #endif
 
 	if(skill_id) {
@@ -2519,14 +2519,14 @@ static bool is_attack_hitting(struct Damage wd, struct block_list *src, struct b
 				break;
 		}
 	} else if (sd && wd.type&DMG_MULTI_HIT && wd.div_ == 2) // +1 hit per level of Double Attack on a successful double attack (making sure other multi attack skills do not trigger this) [helvetica]
-		hitrate += pc_checkskill(sd,TF_DOUBLE);
+		hitrate += sd->skill_temp.tf_double;
 
 	if (sd) {
 		int skill = 0;
 
 #ifdef RENEWAL
 		// Weaponry Research hidden bonus
-		if ((skill = pc_checkskill(sd,BS_WEAPONRESEARCH)) > 0)
+		if ((skill = sd->skill_temp.bs_weaponresearch) > 0)
 			hitrate += hitrate * ( 2 * skill ) / 100;
 #endif
 
@@ -2827,7 +2827,7 @@ static struct Damage battle_calc_attack_masteries(struct Damage wd, struct block
 		//General skill masteries
 		if(skill_id == TF_POISON) //Additional ATK from Envenom is treated as mastery type damage [helvetica]
 			ATK_ADD(wd.masteryAtk, wd.masteryAtk2, 15 * skill_lv);
-		if (skill_id != MC_CARTREVOLUTION && pc_checkskill(sd, BS_HILTBINDING) > 0)
+		if (skill_id != MC_CARTREVOLUTION && sd->skill_temp.bs_hiltbinding > 0)
 			ATK_ADD(wd.masteryAtk, wd.masteryAtk2, 4);
 		if (skill_id != CR_SHIELDBOOMERANG)
 			ATK_ADD2(wd.masteryAtk, wd.masteryAtk2, ((wd.div_ < 1) ? 1 : wd.div_) * sd->right_weapon.star, ((wd.div_ < 1) ? 1 : wd.div_) * sd->left_weapon.star);
@@ -3206,7 +3206,7 @@ static struct Damage battle_calc_multi_attack(struct Damage wd, struct block_lis
 
 	if( sd && !skill_id ) {	// if no skill_id passed, check for double attack [helvetica]
 		short i;
-		if( ( ( skill_lv = pc_checkskill(sd,TF_DOUBLE) ) > 0 && sd->weapontype1 == W_DAGGER )
+		if( ( ( skill_lv = sd->skill_temp.tf_double ) > 0 && sd->weapontype1 == W_DAGGER )
 			|| ( sd->bonus.double_rate > 0 && sd->weapontype1 != W_FIST ) //Will fail bare-handed
 			|| ( sc && sc->data[SC_KAGEMUSYA] && sd->weapontype1 != W_FIST )) // Need confirmation
 		{	//Success chance is not added, the higher one is used [Skotlex]
@@ -4764,7 +4764,7 @@ struct Damage battle_calc_attack_left_right_hands(struct Damage wd, struct block
 			wd.damage = wd.damage2;
 			wd.damage2 = 0;
 		} else if(sd->status.weapon == W_KATAR && !skill_id) { //Katars (offhand damage only applies to normal attacks, tested on Aegis 10.2)
-			skill = pc_checkskill(sd,TF_DOUBLE);
+			skill = sd->skill_temp.tf_double;
 			wd.damage2 = (int64)wd.damage * (1 + (skill * 2))/100;
 		} else if(is_attack_right_handed(src, skill_id) && is_attack_left_handed(src, skill_id)) {	//Dual-wield
 			if (wd.damage) {
@@ -5307,13 +5307,13 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 #ifndef RENEWAL
 		uint16 skill;
 
-		if ((skill = pc_checkskill(sd, BS_WEAPONRESEARCH)) > 0)
+		if ((skill = sd->skill_temp.bs_weaponresearch) > 0)
 			ATK_ADD(wd.damage, wd.damage2, skill * 2);
 		if (skill_id == TF_POISON)
 			ATK_ADD(wd.damage, wd.damage2, 15 * skill_lv);
 		if (skill_id != CR_SHIELDBOOMERANG) //Only Shield boomerang doesn't takes the Star Crumbs bonus.
 			ATK_ADD2(wd.damage, wd.damage2, ((wd.div_ < 1) ? 1 : wd.div_) * sd->right_weapon.star, ((wd.div_ < 1) ? 1 : wd.div_) * sd->left_weapon.star);
-		if (skill_id != MC_CARTREVOLUTION && pc_checkskill(sd, BS_HILTBINDING) > 0)
+		if (skill_id != MC_CARTREVOLUTION && sd->skill_temp.bs_hiltbinding > 0)
 			ATK_ADD(wd.damage, wd.damage2, 4);
 		if (skill_id == MO_FINGEROFFENSIVE) { //The finger offensive spheres on moment of attack do count. [Skotlex]
 			ATK_ADD(wd.damage, wd.damage2, ((wd.div_ < 1) ? 1 : wd.div_) * sd->spiritball_old * 3);
@@ -6258,7 +6258,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 		case HT_CLAYMORETRAP:
 			md.damage = skill_lv * sstatus->dex * (3 + status_get_lv(src) / 100) * (1 + sstatus->int_ / 35);
 			md.damage += md.damage * (rnd()%20 - 10) / 100;
-			md.damage += (sd ? pc_checkskill(sd,RA_RESEARCHTRAP) * 40 : 0);
+			md.damage += (sd ? sd->skill_temp.ra_researchtrap * 40 : 0);
 			break;
 #else
 		case HT_LANDMINE:
@@ -6445,9 +6445,8 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 			md.damage = skill_lv * status_get_dex(src) + status_get_int(src) * 5 ;
 			RE_LVL_TMDMOD();
 			if(sd) {
-				int researchskill_lv = pc_checkskill(sd,RA_RESEARCHTRAP);
-				if(researchskill_lv)
-					md.damage = md.damage * 20 * researchskill_lv / (skill_id == RA_CLUSTERBOMB ? 50 : 100);
+				if(sd->skill_temp.ra_researchtrap)
+					md.damage = md.damage * 20 * sd->skill_temp.ra_researchtrap / (skill_id == RA_CLUSTERBOMB ? 50 : 100);
 				else
 					md.damage = 0;
 			} else
@@ -6509,7 +6508,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 			hitrate += sstatus->hit - flee;
 #ifdef RENEWAL
 			if( sd ) //in Renewal hit bonus from Vultures Eye is not shown anymore in status window
-				hitrate += pc_checkskill(sd,AC_VULTURE);
+				hitrate += sd->skill_temp.ac_vulture;
 #endif
 			hitrate = cap_value(hitrate, battle_config.min_hitrate, battle_config.max_hitrate);
 
@@ -6982,7 +6981,7 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 		}
 	}
 
-	if(sd && (skillv = pc_checkskill(sd,MO_TRIPLEATTACK)) > 0) {
+	if(sd && (skillv = sd->skill_temp.mo_tripleattack) > 0) {
 		int triple_rate= 30 - skillv; //Base Rate
 		if (sc && sc->data[SC_SKILLRATE_UP] && sc->data[SC_SKILLRATE_UP]->val1 == MO_TRIPLEATTACK) {
 			triple_rate+= triple_rate*(sc->data[SC_SKILLRATE_UP]->val2)/100;
