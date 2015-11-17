@@ -694,14 +694,45 @@ typedef enum sc_type {
 	SC_QUEST_BUFF1,
 	SC_QUEST_BUFF2,
 	SC_QUEST_BUFF3,
-	
+
 	SC_ALL_RIDING,
 
 	SC_TEARGAS_SOB,
 	SC__FEINTBOMB,
 	SC__CHAOS,
-	SC_ELEMENTAL_SHIELD,
 	SC_CHASEWALK2,
+	SC_VACUUM_EXTREME_POSTDELAY,
+
+	SC_MTF_ASPD2,
+	SC_MTF_RANGEATK2,
+	SC_MTF_MATK2,
+	SC_2011RWC_SCROLL,
+	SC_JP_EVENT04,
+
+	// 2014 Halloween Event
+	SC_MTF_MHP,
+	SC_MTF_MSP,
+	SC_MTF_PUMPKIN,
+	SC_MTF_HITFLEE,
+
+	SC_CRIFOOD,
+	SC_ATTHASTE_CASH,
+
+	// Item Reuse Limits
+	SC_REUSE_LIMIT_A,
+	SC_REUSE_LIMIT_B,
+	SC_REUSE_LIMIT_C,
+	SC_REUSE_LIMIT_D,
+	SC_REUSE_LIMIT_E,
+	SC_REUSE_LIMIT_F,
+	SC_REUSE_LIMIT_G,
+	SC_REUSE_LIMIT_H,
+	SC_REUSE_LIMIT_MTF,
+	SC_REUSE_LIMIT_ASPD_POTION,
+	SC_REUSE_MILLENNIUMSHIELD,
+	SC_REUSE_CRUSHSTRIKE,
+	SC_REUSE_STORMBLAST,
+	SC_ALL_RIDING_REUSE_LIMIT,
 
 #ifdef RENEWAL
 	SC_EXTREMITYFIST2, //! NOTE: This SC should be right before SC_MAX, so it doesn't disturb if RENEWAL is disabled
@@ -1015,14 +1046,14 @@ enum si_type {
 	SI_ATKER_BLOOD = 300,
 	SI_TARGET_BLOOD = 301,
 	SI_ARMOR_PROPERTY = 302,
-//	SI_REUSE_LIMIT_A = 303,
+	SI_REUSE_LIMIT_A = 303,
 	SI_HELLPOWER = 304,
 	SI_STEAMPACK = 305,
-//	SI_REUSE_LIMIT_B = 306,
-//	SI_REUSE_LIMIT_C = 307,
-//	SI_REUSE_LIMIT_D = 308,
-//	SI_REUSE_LIMIT_E = 309,
-//	SI_REUSE_LIMIT_F = 310,
+	SI_REUSE_LIMIT_B = 306,
+	SI_REUSE_LIMIT_C = 307,
+	SI_REUSE_LIMIT_D = 308,
+	SI_REUSE_LIMIT_E = 309,
+	SI_REUSE_LIMIT_F = 310,
 	SI_INVINCIBLE = 311,
 	SI_CASH_PLUSONLYJOBEXP = 312,
 	SI_PARTYFLEE = 313,
@@ -1345,8 +1376,8 @@ enum si_type {
 	SI_SET_NUM_MDEF = 639,
 	SI_SET_PER_DEF = 640,
 	SI_SET_PER_MDEF = 641,
-	SI_PARTYBOOKING_SEARCH_DEALY = 642,
-	SI_PARTYBOOKING_REGISTER_DEALY = 643,
+	SI_PARTYBOOKING_SEARCH_DELAY = 642,
+	SI_PARTYBOOKING_REGISTER_DELAY = 643,
 	SI_PERIOD_TIME_CHECK_DETECT_SKILL = 644,
 	SI_KO_JYUMONJIKIRI = 645,
 	SI_MEIKYOUSISUI = 646,
@@ -1520,25 +1551,120 @@ enum si_type {
 	SI_GET_MAILBOX = 814,
 	SI_JUMPINGCLAN = 815,
 	SI_JP_OTP = 816,
+	SI_HANDICAPTOLERANCE_LEVELGAP = 817,
+	SI_MTF_RANGEATK2 = 818,
+	SI_MTF_ASPD2 = 819,
+	SI_MTF_MATK2 = 820,
+	SI_SHOW_NPCHPBAR = 821,
+	SI_FLOWERSMOKE = 822,
+	SI_FSTONE = 823,
+	SI_DAILYSENDMAILCNT = 824,
+	SI_QSCARABA = 825,
+	SI_LJOSALFAR = 826,
+	SI_PAD_READER_KNIGHT = 827,
+	SI_PAD_READER_CRUSADER = 828,
+	SI_PAD_READER_BLACKSMITH = 829,
+	SI_PAD_READER_ALCHEMIST = 830,
+	SI_PAD_READER_ASSASSIN = 831,
+	SI_PAD_READER_ROGUE = 832,
+	SI_PAD_READER_WIZARD = 833,
+	SI_PAD_READER_SAGE = 834,
+	SI_PAD_READER_PRIEST = 835,
+	SI_PAD_READER_MONK = 836,
+	SI_PAD_READER_HUNTER = 837,
+	SI_PAD_READER_BARD = 838,
+	SI_PAD_READER_DANCER = 839,
+	SI_PAD_READER_TAEKWON = 840,
+	SI_PAD_READER_NINJA = 841,
+	SI_PAD_READER_GUNSLINGER = 842,
+	SI_PAD_READER_SUPERNOVICE = 843,
+	SI_ESSENCE_OF_TIME = 844,
+	SI_MINIGAME_ROULETTE = 845,
+	SI_MINIGAME_GOLD_POINT = 846,
+	SI_MINIGAME_SILVER_POINT = 847,
+	SI_MINIGAME_BRONZE_POINT = 848,
+	SI_HAPPINESS_STAR = 849,
+	SI_SUMMEREVENT01 = 850,
+	SI_SUMMEREVENT02 = 851,
+	SI_SUMMEREVENT03 = 852,
+	SI_SUMMEREVENT04 = 853,
+	SI_SUMMEREVENT05 = 854,
+	SI_MINIGAME_ROULETTE_BONUS_ITEM = 855,
+	SI_DRESS_UP = 856,
+	SI_MAPLE_FALLS = 857,
+	SI_ALL_NIFLHEIM_RECALL = 858,
+	SI_MTF_MARIONETTE = 860,
+	SI_MTF_LUDE = 861,
+	SI_MTF_CRUISER = 862,
+	SI_DRACULA_CARD = 865,
+	SI_LIMIT_POWER_BOOSTER = 867,
+	SI_TIME_ACCESSORY = 872,
+	SI_EP16_DEF = 873,
+	SI_BODYSTATE_STONECURSE = 875,
+	SI_BODYSTATE_FREEZING = 876,
+	SI_BODYSTATE_STUN = 877,
+	SI_BODYSTATE_SLEEP = 878,
+	SI_BODYSTATE_UNDEAD = 879,
+	SI_BODYSTATE_STONECURSE_ING = 880,
+	SI_BODYSTATE_BURNNING = 881,
+	SI_BODYSTATE_IMPRISON = 882,
+	SI_HEALTHSTATE_POISON = 883,
+	SI_HEALTHSTATE_CURSE = 884,
+	SI_HEALTHSTATE_SILENCE = 885,
+	SI_HEALTHSTATE_CONFUSION = 886,
+	SI_HEALTHSTATE_BLIND = 887,
+	SI_HEALTHSTATE_ANGELUS = 888,
+	SI_HEALTHSTATE_BLOODING = 889,
+	SI_HEALTHSTATE_HEAVYPOISON = 890,
+	SI_HEALTHSTATE_FEAR = 891,
+	SI_ATTACK_PROPERTY_NOTHING = 897,
+	SI_ATTACK_PROPERTY_WATER = 898,
+	SI_ATTACK_PROPERTY_GROUND = 899,
+	SI_ATTACK_PROPERTY_FIRE = 900,
+	SI_ATTACK_PROPERTY_WIND = 901,
+	SI_ATTACK_PROPERTY_POISON = 902,
+	SI_ATTACK_PROPERTY_SAINT = 903,
+	SI_ATTACK_PROPERTY_DARKNESS = 904,
+	SI_ATTACK_PROPERTY_TELEKINESIS = 905,
+	SI_ATTACK_PROPERTY_UNDEAD = 906,
+	SI_RESIST_PROPERTY_NOTHING = 907,
+	SI_RESIST_PROPERTY_WATER = 908,
+	SI_RESIST_PROPERTY_GROUND = 909,
+	SI_RESIST_PROPERTY_FIRE = 910,
+	SI_RESIST_PROPERTY_WIND = 911,
+	SI_RESIST_PROPERTY_POISON = 912,
+	SI_RESIST_PROPERTY_SAINT = 913,
+	SI_RESIST_PROPERTY_DARKNESS = 914,
+	SI_RESIST_PROPERTY_TELEKINESIS = 915,
+	SI_RESIST_PROPERTY_UNDEAD = 916,
+	SI_RUNEHELM = 925,
+	SI_HELM_VERKANA = 926,
+	SI_HELM_RHYDO = 927,
+	SI_HELM_TURISUS = 928,
+	SI_HELM_HAGALAS = 929,
+	SI_HELM_ISIA = 930,
+	SI_HELM_ASIR = 931,
+	SI_HELM_URJ = 932,
 	SI_MAX,
 };
 
-// JOINTBEAT stackable ailments
+/// JOINTBEAT stackable ailments
 enum e_joint_break
 {
-	BREAK_ANKLE	= 0x01, // MoveSpeed reduced by 50%
-	BREAK_WRIST	= 0x02, // ASPD reduced by 25%
-	BREAK_KNEE	= 0x04, // MoveSpeed reduced by 30%, ASPD reduced by 10%
-	BREAK_SHOULDER	= 0x08, // DEF reduced by 50%
-	BREAK_WAIST	= 0x10, // DEF reduced by 25%, ATK reduced by 25%
-	BREAK_NECK	= 0x20, // current attack does 2x damage, inflicts 'bleeding' for 30 seconds
+	BREAK_ANKLE	= 0x01, ///< MoveSpeed reduced by 50%
+	BREAK_WRIST	= 0x02, ///< ASPD reduced by 25%
+	BREAK_KNEE	= 0x04, ///< MoveSpeed reduced by 30%, ASPD reduced by 10%
+	BREAK_SHOULDER	= 0x08, ///< DEF reduced by 50%
+	BREAK_WAIST	= 0x10, ///< DEF reduced by 25%, ATK reduced by 25%
+	BREAK_NECK	= 0x20, ///< current attack does 2x damage, inflicts 'bleeding' for 30 seconds
 	BREAK_FLAGS	= BREAK_ANKLE | BREAK_WRIST | BREAK_KNEE | BREAK_SHOULDER | BREAK_WAIST | BREAK_NECK,
 };
 
 extern short current_equip_item_index;
+extern unsigned int current_equip_combo_pos;
 extern int current_equip_card_id;
 
-//Mode definitions to clear up code reading. [Skotlex]
+/// Mode definitions to clear up code reading. [Skotlex]
 enum e_mode {
 	MD_CANMOVE				= 0x000001,
 	MD_LOOTER				= 0x000002,
@@ -1556,12 +1682,14 @@ enum e_mode {
 	MD_CHANGETARGET_CHASE	= 0x002000,
 	MD_TARGETWEAK			= 0x004000,
 	MD_RANDOMTARGET			= 0x008000,
-	MD_IGNOREMELEE			= 0x010000, //! TODO: Unused yet
+	MD_IGNOREMELEE			= 0x010000,
 	MD_IGNOREMAGIC			= 0x020000,
-	MD_IGNORERANGED			= 0x040000, //! TODO: Unused yet
+	MD_IGNORERANGED			= 0x040000,
 	MD_MVP					= 0x080000,
 	MD_IGNOREMISC			= 0x100000,
 	MD_KNOCKBACK_IMMUNE		= 0x200000,
+	MD_NORANDOM_WALK		= 0x400000,
+	MD_NOCAST_SKILL			= 0x800000,
 };
 #define MD_MASK 0x00FFFF
 #define ATR_MASK 0xFF0000
@@ -1569,25 +1697,26 @@ enum e_mode {
 //Status change option definitions (options are what makes status changes visible to chars
 //who were not on your field of sight when it happened)
 
-///opt1: Non stackable status changes.
+///opt1: (BODYSTATE_*) Non stackable status changes.
 enum sc_opt1 {
 	OPT1_STONE = 1, //Petrified
 	OPT1_FREEZE,
 	OPT1_STUN,
 	OPT1_SLEEP,
 	//Aegis uses OPT1 = 5 to identify undead enemies (which also grants them immunity to the other opt1 changes)
-	OPT1_STONEWAIT=6, //Petrifying
+	OPT1_STONEWAIT = 6, //Petrifying
 	OPT1_BURNING,
+	OPT1_FREEZING,
 	OPT1_IMPRISON,
 	OPT1_CRYSTALIZE,
 };
 
-///opt2: Stackable status changes.
+///opt2: (HEALTHSTATE_*) Stackable status changes.
 enum sc_opt2 {
 	OPT2_POISON		= 0x0001,
 	OPT2_CURSE		= 0x0002,
 	OPT2_SILENCE		= 0x0004,
-	OPT2_SIGNUMCRUCIS	= 0x0008,
+	OPT2_SIGNUMCRUCIS	= 0x0008, //Confusion
 	OPT2_BLIND		= 0x0010,
 	OPT2_ANGELUS		= 0x0020,
 	OPT2_BLEEDING		= 0x0040,
@@ -1618,7 +1747,7 @@ enum sc_opt3 {
 	OPT3_CONTRACT		= 0x00020000,
 };
 
-///Option
+///Option (EFFECTSTATE_*)
 enum e_option {
 	OPTION_NOTHING		= 0x00000000,
 	OPTION_SIGHT		= 0x00000001,
@@ -1653,7 +1782,7 @@ enum e_option {
 	OPTION_CART4	= 0x00000200,
 	OPTION_CART5	= 0x00000400,
 
-	/*  compound constant for older carts */
+	// compound constant for older carts
 	OPTION_CART	= OPTION_CART1|OPTION_CART2|OPTION_CART3|OPTION_CART4|OPTION_CART5,
 #endif
 
@@ -1672,18 +1801,18 @@ enum manner_flags
 	MANNER_NOROOM		= 0x10,
 };
 
-/* Status Change State Flags */
+/// Status Change State Flags
 enum scs_flag {
-	SCS_NOMOVECOND		= 0x00000001, /* cond flag for nomove */
-	SCS_NOMOVE			= 0x00000002, /* unit unable to move */
-	SCS_NOPICKITEMCOND	= 0x00000004, /* cond flag for nopickitem */
-	SCS_NOPICKITEM		= 0x00000008, /* player unable to pick up items */
-	SCS_NODROPITEMCOND	= 0x00000010, /* cond flag for nodropitem */
-	SCS_NODROPITEM		= 0x00000020, /* player unable to drop items */
-	SCS_NOCASTCOND		= 0x00000040, /* cond flag for nocast */
-	SCS_NOCAST			= 0x00000080, /* unit unable to cast skills */
-	SCS_NOCHAT			= 0x00000100, /* unit can't talk */
-	SCS_NOCHATCOND		= 0x00000200, /* cond flag for notalk */
+	SCS_NOMOVECOND		= 0x00000001, ///< cond flag for nomove
+	SCS_NOMOVE			= 0x00000002, ///< unit unable to move
+	SCS_NOPICKITEMCOND	= 0x00000004, ///< cond flag for nopickitem
+	SCS_NOPICKITEM		= 0x00000008, ///< player unable to pick up items
+	SCS_NODROPITEMCOND	= 0x00000010, ///< cond flag for nodropitem
+	SCS_NODROPITEM		= 0x00000020, ///< player unable to drop items
+	SCS_NOCASTCOND		= 0x00000040, ///< cond flag for nocast
+	SCS_NOCAST			= 0x00000080, ///< unit unable to cast skills
+	SCS_NOCHAT			= 0x00000100, ///< unit can't talk
+	SCS_NOCHATCOND		= 0x00000200, ///< cond flag for notalk
 };
 
 ///Define flags for the status_calc_bl function. [Skotlex]
@@ -1728,29 +1857,41 @@ enum scb_flag
 
 enum e_status_calc_opt {
 	SCO_NONE  = 0x0,
-	SCO_FIRST = 0x1, /* Trigger the calculations that should take place only onspawn/once */
-	SCO_FORCE = 0x2, /* Only relevant to BL_PC types, ensures call bypasses the queue caused by delayed damage */
+	SCO_FIRST = 0x1, ///< Trigger the calculations that should take place only onspawn/once, process base status initialization code
+	SCO_FORCE = 0x2, ///< Only relevant to BL_PC types, ensures call bypasses the queue caused by delayed damage
+};
+
+/// Flags for status_change_start and status_get_sc_def
+enum e_status_change_start_flags {
+	SCSTART_NONE       = 0x00,
+	SCSTART_NOAVOID    = 0x01, /// Cannot be avoided (it has to start)
+	SCSTART_NOTICKDEF  = 0x02, /// Tick should not be reduced (by statuses or bonuses)
+	SCSTART_LOADED     = 0x04, /// When sc_data loaded (fetched from table), no values (val1 ~ val4) have to be altered/recalculate
+	SCSTART_NORATEDEF  = 0x08, /// Rate should not be reduced (by statuses or bonuses)
+	SCSTART_NOICON     = 0x10, /// Status icon won't be sent to client
 };
 
 ///Enum for bonus_script's flag [Cydh]
 enum e_bonus_script_flags {
-	BSF_REM_ON_DEAD				= 0x001, ///Removed when dead
-	BSF_REM_ON_DISPELL			= 0x002, ///Removed by Dispell
-	BSF_REM_ON_CLEARANCE		= 0x004, ///Removed by Clearance
-	BSF_REM_ON_LOGOUT			= 0x008, ///Removed when player logged out
-	BSF_REM_ON_BANISHING_BUSTER	= 0x010, ///Removed by Banishing Buster
-	BSF_REM_ON_REFRESH			= 0x020, ///Removed by Refresh
-	BSF_REM_ON_LUXANIMA			= 0x040, ///Removed by Luxanima
-	BSF_REM_ON_MADOGEAR			= 0x080, ///Removed when Madogear is activated or deactivated
-	BSF_REM_ON_DAMAGED			= 0x100, ///Removed when receive damage
-	BSF_PERMANENT				= 0x200, ///Cannot be removed by sc_end SC_ALL
+	BSF_REM_ON_DEAD				= 0x001, ///< Removed when dead
+	BSF_REM_ON_DISPELL			= 0x002, ///< Removed by Dispell
+	BSF_REM_ON_CLEARANCE		= 0x004, ///< Removed by Clearance
+	BSF_REM_ON_LOGOUT			= 0x008, ///< Removed when player logged out
+	BSF_REM_ON_BANISHING_BUSTER	= 0x010, ///< Removed by Banishing Buster
+	BSF_REM_ON_REFRESH			= 0x020, ///< Removed by Refresh
+	BSF_REM_ON_LUXANIMA			= 0x040, ///< Removed by Luxanima
+	BSF_REM_ON_MADOGEAR			= 0x080, ///< Removed when Madogear is activated or deactivated
+	BSF_REM_ON_DAMAGED			= 0x100, ///< Removed when receive damage
+	BSF_PERMANENT				= 0x200, ///< Cannot be removed by sc_end SC_ALL
 
-	// These flags better in the last of everything
-	BSF_REM_BUFF	= 0x1000,	///Remove positive buff
-	BSF_REM_DEBUFF	= 0x2000,	///Remove negative buff
+	// These flags cannot be stacked, BSF_FORCE_REPLACE has highest priority to check if YOU force to add both
+	BSF_FORCE_REPLACE			= 0x400, ///< Force to replace duplicated script by expanding the duration
+	BSF_FORCE_DUPLICATE			= 0x800, ///< Force to add duplicated script
 
-	BSF_ALL = 0x0FFF|BSF_REM_BUFF|BSF_REM_DEBUFF,
-	BSF_CLEARALL = BSF_ALL&~BSF_PERMANENT,
+	// These flags aren't part of 'bonus_script' scripting flags
+	BSF_REM_ALL		= 0x0,		///< Remove all bonus script
+	BSF_REM_BUFF	= 0x4000,	///< Remove positive buff if battle_config.debuff_on_logout&1
+	BSF_REM_DEBUFF	= 0x8000,	///< Remove negative buff if battle_config.debuff_on_logout&2
 };
 
 ///Enum for status_get_hpbonus and status_get_spbonus
@@ -1779,12 +1920,12 @@ struct weapon_atk {
 #endif
 };
 
-sc_type SkillStatusChangeTable[MAX_SKILL];   // skill  -> status
-int StatusIconChangeTable[SC_MAX];           // status -> "icon" (icon is a bit of a misnomer, since there exist values with no icon associated)
-unsigned int StatusChangeFlagTable[SC_MAX];  // status -> flags
-int StatusSkillChangeTable[SC_MAX];          // status -> skill
-int StatusRelevantBLTypes[SI_MAX];           // "icon" -> enum bl_type (for clif->status_change to identify for which bl types to send packets)
-unsigned int StatusChangeStateTable[SC_MAX]; // status -> flags
+sc_type SkillStatusChangeTable[MAX_SKILL];   /// skill  -> status
+int StatusIconChangeTable[SC_MAX];           /// status -> "icon" (icon is a bit of a misnomer, since there exist values with no icon associated)
+unsigned int StatusChangeFlagTable[SC_MAX];  /// status -> flags
+int StatusSkillChangeTable[SC_MAX];          /// status -> skill
+int StatusRelevantBLTypes[SI_MAX];           /// "icon" -> enum bl_type (for clif->status_change to identify for which bl types to send packets)
+unsigned int StatusChangeStateTable[SC_MAX]; /// status -> flags
 bool StatusDisplayType[SC_MAX];
 
 ///For holding basic status (which can be modified by status changes)
@@ -1792,8 +1933,9 @@ struct status_data {
 	unsigned int
 		hp, sp,  // see status_cpy before adding members before hp and sp
 		max_hp, max_sp;
+	short
+		str, agi, vit, int_, dex, luk;
 	unsigned short
-		str, agi, vit, int_, dex, luk,
 		batk,
 #ifdef RENEWAL
 		watk,
@@ -1835,27 +1977,25 @@ struct regen_data_sub {
 		unsigned int hp,sp;
 	} tick;
 
-	//Regen rates (where every 1 means +100% regen)
+	//Regen rates. n/100
 	struct {
-		unsigned char hp,sp;
+		unsigned short hp,sp;
 	} rate;
 };
 
 ///Regen data
 struct regen_data {
-	unsigned short flag; //Marks what stuff you may heal or not.
-	unsigned short
-		hp,sp,shp,ssp;
+	unsigned char flag; //Marks what stuff you may heal or not.
+	unsigned short hp,sp,shp,ssp;
 
 	//tick accumulation before healing.
 	struct {
 		unsigned int hp,sp,shp,ssp;
 	} tick;
 
-	//Regen rates (where every 1 means +100% regen)
+	//Regen rates. n/100
 	struct {
-		unsigned char
-		hp,sp,shp,ssp;
+		unsigned short hp, sp, shp, ssp;
 	} rate;
 
 	struct {
@@ -1924,15 +2064,18 @@ int status_damage(struct block_list *src,struct block_list *target,int64 dhp,int
 #define status_zap(bl, hp, sp) status_damage(NULL, bl, hp, sp, 0, 1)
 //Define for standard HP/SP skill-related cost triggers (mobs require no HP/SP to use skills)
 int64 status_charge(struct block_list* bl, int64 hp, int64 sp);
-int status_percent_change(struct block_list *src,struct block_list *target,signed char hp_rate, signed char sp_rate, int flag);
+int status_percent_change(struct block_list *src, struct block_list *target, int8 hp_rate, int8 sp_rate, uint8 flag);
 //Easier handling of status_percent_change
 #define status_percent_heal(bl, hp_rate, sp_rate) status_percent_change(NULL, bl, -(hp_rate), -(sp_rate), 0)
+/// Deals % damage from 'src' to 'target'. If rate is > 0 is % of current HP/SP, < 0 % of MaxHP/MaxSP
 #define status_percent_damage(src, target, hp_rate, sp_rate, kill) status_percent_change(src, target, hp_rate, sp_rate, (kill)?1:2)
 //Instant kill with no drops/exp/etc
 #define status_kill(bl) status_percent_damage(NULL, bl, 100, 0, true)
 //Used to set the hp/sp of an object to an absolute value (can't kill)
 int status_set_hp(struct block_list *bl, unsigned int hp, int flag);
+int status_set_maxhp(struct block_list *bl, unsigned int hp, int flag);
 int status_set_sp(struct block_list *bl, unsigned int sp, int flag);
+int status_set_maxsp(struct block_list *bl, unsigned int hp, int flag);
 int status_heal(struct block_list *bl,int64 hhp,int64 hsp, int flag);
 int status_revive(struct block_list *bl, unsigned char per_hp, unsigned char per_sp);
 
@@ -1982,6 +2125,14 @@ unsigned char status_calc_attack_element(struct block_list *bl, struct status_ch
 #define status_get_class_(bl) status_get_status_data(bl)->class_
 #define status_get_size(bl) status_get_status_data(bl)->size
 #define status_get_mode(bl) status_get_status_data(bl)->mode
+
+#define status_get_homstr(bl) (status->str + ((TBL_HOM*)bl)->homunculus.str_value)
+#define status_get_homagi(bl) (status->agi + ((TBL_HOM*)bl)->homunculus.agi_value)
+#define status_get_homvit(bl) (status->vit + ((TBL_HOM*)bl)->homunculus.vit_value)
+#define status_get_homint(bl) (status->int_ + ((TBL_HOM*)bl)->homunculus.int_value)
+#define status_get_homdex(bl) (status->dex + ((TBL_HOM*)bl)->homunculus.dex_value)
+#define status_get_homluk(bl) (status->luk + ((TBL_HOM*)bl)->homunculus.luk_value)
+
 int status_get_party_id(struct block_list *bl);
 int status_get_guild_id(struct block_list *bl);
 int status_get_emblem_id(struct block_list *bl);
@@ -1995,13 +2146,13 @@ struct status_change *status_get_sc(struct block_list *bl);
 int status_isdead(struct block_list *bl);
 int status_isimmune(struct block_list *bl);
 
-int status_get_sc_def(struct block_list *src,struct block_list *bl, enum sc_type type, int rate, int tick, int flag);
+int status_get_sc_def(struct block_list *src,struct block_list *bl, enum sc_type type, int rate, int tick, unsigned char flag);
 //Short version, receives rate in 1->100 range, and does not uses a flag setting.
-#define sc_start(src, bl, type, rate, val1, tick) status_change_start(src,bl,type,100*(rate),val1,0,0,0,tick,0)
-#define sc_start2(src, bl, type, rate, val1, val2, tick) status_change_start(src,bl,type,100*(rate),val1,val2,0,0,tick,0)
-#define sc_start4(src, bl, type, rate, val1, val2, val3, val4, tick) status_change_start(src,bl,type,100*(rate),val1,val2,val3,val4,tick,0)
+#define sc_start(src, bl, type, rate, val1, tick) status_change_start(src,bl,type,100*(rate),val1,0,0,0,tick,SCSTART_NONE)
+#define sc_start2(src, bl, type, rate, val1, val2, tick) status_change_start(src,bl,type,100*(rate),val1,val2,0,0,tick,SCSTART_NONE)
+#define sc_start4(src, bl, type, rate, val1, val2, val3, val4, tick) status_change_start(src,bl,type,100*(rate),val1,val2,val3,val4,tick,SCSTART_NONE)
 
-int status_change_start(struct block_list* src, struct block_list* bl,enum sc_type type,int rate,int val1,int val2,int val3,int val4,int tick,int flag);
+int status_change_start(struct block_list* src, struct block_list* bl,enum sc_type type,int rate,int val1,int val2,int val3,int val4,int tick,unsigned char flag);
 int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const char* file, int line);
 #define status_change_end(bl,type,tid) status_change_end_(bl,type,tid,__FILE__,__LINE__)
 int kaahi_heal_timer(int tid, unsigned int tick, int id, intptr_t data);
@@ -2021,7 +2172,7 @@ void status_change_clear_buffs(struct block_list* bl, int type);
 
 void status_calc_bl_(struct block_list *bl, enum scb_flag flag, enum e_status_calc_opt opt);
 int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt);
-int status_calc_pet_(struct pet_data* pd, enum e_status_calc_opt opt);
+void status_calc_pet_(struct pet_data* pd, enum e_status_calc_opt opt);
 int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt);
 int status_calc_homunculus_(struct homun_data *hd, enum e_status_calc_opt opt);
 int status_calc_mercenary_(struct mercenary_data *md, enum e_status_calc_opt opt);
@@ -2032,19 +2183,22 @@ void status_calc_misc(struct block_list *bl, struct status_data *status, int lev
 void status_calc_regen(struct block_list *bl, struct status_data *status, struct regen_data *regen);
 void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, struct status_change *sc);
 
-int status_check_skilluse(struct block_list *src, struct block_list *target, uint16 skill_id, int flag); // [Skotlex]
-int status_check_visibility(struct block_list *src, struct block_list *target); //[Skotlex]
+bool status_check_skilluse(struct block_list *src, struct block_list *target, uint16 skill_id, int flag);
+int status_check_visibility(struct block_list *src, struct block_list *target);
 
-int status_change_spread( struct block_list *src, struct block_list *bl );
+int status_change_spread(struct block_list *src, struct block_list *bl, bool type);
 
 #ifndef RENEWAL
 	unsigned short status_base_matk_min(const struct status_data* status);
 	unsigned short status_base_matk_max(const struct status_data* status);
 #else
 	unsigned int status_weapon_atk(struct weapon_atk wa, struct status_data *status);
-	unsigned short status_base_matk(const struct status_data* status, int level);
+	unsigned short status_base_matk(struct block_list *bl, const struct status_data* status, int level);
 #endif
 
+unsigned short status_base_atk(const struct block_list *bl, const struct status_data *status);
+
+void initChangeTables(void);
 int status_readdb(void);
 int do_init_status(void);
 void do_final_status(void);

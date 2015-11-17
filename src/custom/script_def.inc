@@ -9,3 +9,11 @@
  **/
 
 //BUILDIN_DEF(example,""),
+
+	// Guild related [Cydh]
+	BUILDIN_DEF(guild_info,"vi"),
+	BUILDIN_DEF(guild_create,"s?"),
+	BUILDIN_DEF(guild_addmember,"i?"),
+	BUILDIN_DEF(guild_delmember,"i???"),
+	BUILDIN_DEF(guild_changegm,"ii"),
+	BUILDIN_DEF(guild_break,"?"),

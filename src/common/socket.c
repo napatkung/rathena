@@ -1,31 +1,24 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h"
-#include "../common/timer.h"
-#include "../common/malloc.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../config/core.h"
+#include "cbasetypes.h"
+#include "mmo.h"
+#include "timer.h"
+#include "malloc.h"
+#include "showmsg.h"
+#include "strlib.h"
 #include "socket.h"
 
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
 
 #ifdef WIN32
-	#include "../common/winapi.h"
+	#include "winapi.h"
 #else
 	#include <errno.h>
-	#include <sys/socket.h>
-	#include <netinet/in.h>
-	#include <netinet/tcp.h>
+#include <netinet/tcp.h>
 	#include <net/if.h>
 	#include <unistd.h>
-	#include <sys/time.h>
-	#include <sys/ioctl.h>
+#include <sys/ioctl.h>
 	#include <netdb.h>
 	#include <arpa/inet.h>
 

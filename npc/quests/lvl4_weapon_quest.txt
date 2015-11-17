@@ -1960,7 +1960,7 @@ niflheim,240,193,3	script	Kayron#lv4	794,{
 		if (.@shobu > 1) {
 			mes "[Kayron]";
 			mes "Let's see...";
-			mes "You won " + shobu + " times.";
+			mes "You won " + .@shobu + " times.";
 			mes "You must be really";
 			mes "Without a doubt, you've";
 			mes "got some pretty good luck~";
@@ -2809,13 +2809,13 @@ niflheim,187,280,3	script	Hein#lv4	795,{
 		mes "[Hein]";
 		mes "Ready? This is";
 		mes "what I wrote down...";
-		if (.@npchand == 1) {
+		if (.@npchand1 == 1) {
 			mes "Scissors";
 		}
-		else if (.@npchand == 2) {
+		else if (.@npchand1 == 2) {
 			mes "Rock";
 		}
-		else if (.@npchand == 3) {
+		else if (.@npchand1 == 3) {
 			mes "Paper";
 		}
 		if (.@npchand2 == 1) {
@@ -3275,13 +3275,13 @@ niflheim,331,72,3	script	Waltboughst#lv4	795,{
 		mes "[Waltboughst]";
 		mes "Okay...";
 		mes "I wrote down...";
-		if (.@npchand == 1) {
+		if (.@npchand1 == 1) {
 			mes "Scissors";
 		}
-		else if (.@npchand == 2) {
+		else if (.@npchand1 == 2) {
 			mes "Rock";
 		}
-		else if (.@npchand == 3) {
+		else if (.@npchand1 == 3) {
 			mes "Paper";
 		}
 		if (.@npchand2 == 1) {

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
-# checking-doc original script by trojal
-# modified by lighta
+# Documentation Checker
+# by trojal (modified by lighta)
 
 use strict;
 use File::Basename;
@@ -24,8 +24,8 @@ Main($sCmd,$sTarget);
 
 sub GetArgs {
     GetOptions(
-    'cmd=s' => \$sCmd,	 # wich command to run
-    'atcf=s' => \$sAtcf, #atc doc file
+    'cmd=s' => \$sCmd,	 # which command to run
+    'atcf=s' => \$sAtcf, #atcommand doc file
     'scriptf=s' => \$sSctf, #script doc file
     'inc_atcf=s' => \$sInc_atcf, #include script doc file (for customs doc)
     'inc_scrtf=s' => \$sInc_scrtf, #include script doc file (for customs doc)
@@ -35,7 +35,7 @@ sub GetArgs {
     ) or $sHelp=1; #display help if invalid option	
 	
     if( $sHelp ) {
-	print "Incorect option specified, available option are:\n"
+	print "Incorrect option specified, available options are:\n"
 	    ."\t --atcf filename => file (specify atcommand doc to use)\n"
 	    ."\t --inc_atcf filename => include file (specify atcommand doc to use)\n"
 	    ."\t --scriptf filename => file (specify script doc to use)\n"
@@ -46,12 +46,12 @@ sub GetArgs {
 	exit;
     }
     unless($sTarget =~ /$sValidTarget/i){
-    	print "Incorect target specified, available target are:\n"
+    	print "Incorrect target specified. Available targets:\n"
 	    ."\t --target => target (specify wich check to run [(default)$sValidTarget])\n";
 		exit;
     }
     unless($sCmd =~ /$sValidCmd/i){
-    	print "Incorect command specified, available command are:\n"
+    	print "Incorrect command specified. Available commands:\n"
 	    ."\t --cmd => cmd (specify wich command to run [(default)$sValidCmd])\n";
 		exit;
     }
@@ -65,14 +65,14 @@ sub Main { my ($sCmd,$sTarget) = @_;
 	if($sTarget=~/script/i){ #find which script commands are missing from doc/script_commands.txt
 		my $raSct_cmd = Script_GetCmd();
 		if($sCmd =~ /ls/i) {
-			print "The list of script-command found are = \n[ @$raSct_cmd ] \n\n";
+			print "The list of script-commands found are = \n[ @$raSct_cmd ] \n\n";
 		}
 		if($sCmd =~ /chk/i) { Script_Chk($raSct_cmd); }
 	}
 	if($sTarget=~/atc/i){ #find which atcommands are missing from doc/atcommands.txt
 		my $raAct_cmd = Atc_GetCmd();
 		if($sCmd =~ /ls/i) {
-			print "The list of atcommand found are = \n[ @$raAct_cmd ] \n\n";
+			print "The list of atcommands found are = \n[ @$raAct_cmd ] \n\n";
 		}
 		if($sCmd =~ /chk/i) { Atc_Chk($raAct_cmd); }
 	}
@@ -97,7 +97,7 @@ sub Script_GetCmd {
 	my @aDef_sct = ();
 	foreach my $sSct_srcf (@aSct_src){
 		unless(open FILE_SRC, "<$sSct_srcf") { 
-			print "couldn't open file $sSct_srcf \n";
+			print "Couldn't open file '$sSct_srcf'.\n";
 			next;
 		}
 		while(<FILE_SRC>){
@@ -128,7 +128,7 @@ sub Script_Chk { my ($raDef_sct) = @_;
 
 	foreach my $sSct_docf (@aSct_docf){
 		unless(open FILE_DOC, "$sSct_docf"){
-			print "couldn't open file $sSct_docf \n";
+			print "Couldn't open file '$sSct_docf'.\n";
 			next;
 		}
 		while(<FILE_DOC>){
@@ -157,18 +157,18 @@ sub Script_Chk { my ($raDef_sct) = @_;
 		}
 		print "}\n\n";
 	}
-	else { print "All script command in Src are documented, no issues found\n"; }
+	else { print "All script commands in src are documented, no issues found.\n"; }
 	
 	if($sLeftOverChk){
 		my $raLeftover_sct = Chk(\@aDoc_sct,$raDef_sct); #we just inverse the chk for leftover
 		if(scalar(@$raLeftover_sct)){
-			print "Those script command was found in doc but no source associated, leftover ? :{\n";
+			print "These script commands were found in doc with no associated source:{\n";
 			foreach(@$raLeftover_sct){
 				print "\t$_ \n";
 			}
 			print "}\n\n";
 		}
-		else { print "All script command in documentation match a source BUILDIN, no leftover found\n"; }
+		else { print "All script commands in documentation match a source BUILDIN, no leftovers found.\n"; }
 	}
 }
 
@@ -177,7 +177,7 @@ sub Atc_GetCmd {
 	my @aDef_act = ();
 	foreach my $sAct_srcf (@aAct_src){
 		unless(open FILE_SRC, "<$sAct_srcf"){
-			print "couldn't open file $sAct_srcf \n";
+			print "Couldn't open file '$sAct_srcf'.\n";
 			next;
 		}
 		while(<FILE_SRC>){
@@ -210,7 +210,7 @@ sub Atc_Chk {  my ($raDef_act) = @_;
 	
 	foreach my $sAct_docf (@aAct_docf){
 		unless(open FILE_DOC, "$sAct_docf"){
-			print "couldn't open file $sAct_docf \n";
+			print "Couldn't open file '$sAct_docf'.\n";
 			next;
 		}
 		while(<FILE_DOC>){
@@ -235,17 +235,17 @@ sub Atc_Chk {  my ($raDef_act) = @_;
 		}
 		print "}\n\n";
 	}
-	else { print "All atcommand in Src are documented, no issues found\n"; }
+	else { print "All atcommands in src are documented, no issues found.\n"; }
 	
 	if($sLeftOverChk){
 		my $raLeftover_sct = Chk(\@aDoc_act,$raDef_act); #we just inverse the chk for leftover
 		if(scalar(@$raLeftover_sct)){
-			print "Those atcommand command was found in doc but no source associated, leftover ? : {\n";
+			print "These atcommands were found in doc with no associated source: {\n";
 			foreach(@$raLeftover_sct){
 				print "\t$_ \n";
 			}
 			print "}\n\n";
 		}
-		else { print "All atcommand in documentation match a source ATCMD, no leftover found\n"; }
+		else { print "All atcommands in documentation match a source ATCMD, no leftovers found.\n"; }
 	}
 }

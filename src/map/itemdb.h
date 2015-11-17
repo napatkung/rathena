@@ -25,6 +25,9 @@
 
 #define MAX_ITEMGROUP_RANDGROUP 4	///Max group for random item (increase this when needed). TODO: Remove this limit and use dynamic size if needed
 
+#define MAX_ROULETTE_LEVEL 7 /** client-defined value **/
+#define MAX_ROULETTE_COLUMNS 9 /** client-defined value **/
+
 #define CARD0_FORGE 0x00FF
 #define CARD0_CREATE 0x00FE
 #define CARD0_PET 0x0100
@@ -33,12 +36,15 @@
 #define itemdb_isspecial(i) (i == CARD0_FORGE || i == CARD0_CREATE || i == CARD0_PET)
 
 ///Enum of item id (for hardcoded purpose)
-enum item_itemid {
+enum item_itemid
+{
 	ITEMID_RED_POTION					= 501,
 	ITEMID_YELLOW_POTION				= 503,
 	ITEMID_WHITE_POTION					= 504,
 	ITEMID_BLUE_POTION					= 505,
+	ITEMID_APPLE						= 512,
 	ITEMID_HOLY_WATER					= 523,
+	ITEMID_PUMPKIN						= 535,
 	ITEMID_RED_SLIM_POTION				= 545,
 	ITEMID_YELLOW_SLIM_POTION			= 546,
 	ITEMID_WHITE_SLIM_POTION			= 547,
@@ -46,6 +52,7 @@ enum item_itemid {
 	ITEMID_WING_OF_BUTTERFLY			= 602,
 	ITEMID_ANODYNE						= 605,
 	ITEMID_ALOEBERA						= 606,
+	ITEMID_POISON_BOTTLE				= 678,
 	ITEMID_EMPTY_BOTTLE					= 713,
 	ITEMID_EMPERIUM						= 714,
 	ITEMID_YELLOW_GEMSTONE				= 715,
@@ -122,7 +129,8 @@ enum item_itemid {
 };
 
 ///Mercenary Scrolls
-enum mercenary_scroll_item_list {
+enum mercenary_scroll_item_list
+{
 	ITEMID_BOW_MERCENARY_SCROLL1 = 12153,
 	ITEMID_BOW_MERCENARY_SCROLL2,
 	ITEMID_BOW_MERCENARY_SCROLL3,
@@ -156,7 +164,8 @@ enum mercenary_scroll_item_list {
 };
 
 ///Rune Knight
-enum rune_item_list {
+enum rune_item_list
+{
 	ITEMID_NAUTHIZ		= 12725,
 	ITEMID_RAIDO,
 	ITEMID_BERKANA,
@@ -170,7 +179,8 @@ enum rune_item_list {
 };
 
 ///Mechanic
-enum mechanic_item_list {
+enum mechanic_item_list
+{
 	ITEMID_ACCELERATOR				= 2800,
 	ITEMID_HOVERING_BOOSTER,
 	ITEMID_SUICIDAL_DEVICE,
@@ -192,10 +202,11 @@ enum mechanic_item_list {
 };
 
 ///Genetic
-enum genetic_item_list {
+enum genetic_item_list
+{
 	ITEMID_SEED_OF_HORNY_PLANT			= 6210,
-	ITEMID_BLOODSUCK_PLANT_SEED			= 6211,
-	ITEMID_BOMB_MUSHROOM_SPORE			= 6212,
+	ITEMID_BLOODSUCK_PLANT_SEED,
+	ITEMID_BOMB_MUSHROOM_SPORE,
 	ITEMID_HP_INCREASE_POTION_SMALL		= 12422,
 	ITEMID_HP_INCREASE_POTION_MEDIUM,
 	ITEMID_HP_INCREASE_POTION_LARGE,
@@ -247,7 +258,8 @@ enum genetic_item_list {
 };
 
 ///Guillotine Cross
-enum poison_item_list {
+enum poison_item_list
+{
 	ITEMID_PARALYSE = 12717,
 	ITEMID_LEECHESEND,
 	ITEMID_OBLIVIONCURSE,
@@ -259,7 +271,8 @@ enum poison_item_list {
 };
 
 ///Spell Books
-enum spell_book_item_list {
+enum spell_book_item_list
+{
 	ITEMID_MAGIC_BOOK_FB = 6189,
 	ITEMID_MAGIC_BOOK_CB,
 	ITEMID_MAGIC_BOOK_LB,
@@ -280,7 +293,8 @@ enum spell_book_item_list {
 };
 
 ///Cash Food
-enum cash_food_item_list {
+enum cash_food_item_list
+{
 	ITEMID_STR_DISH10_  = 12202,
 	ITEMID_AGI_DISH10_,
 	ITEMID_INT_DISH10_,
@@ -290,12 +304,14 @@ enum cash_food_item_list {
 };
 
 ///Item No Use List
-enum item_nouse_list {
+enum item_nouse_list
+{
 	NOUSE_SITTING = 0x01,
 };
 
 ///Item job
-enum e_item_job {
+enum e_item_job
+{
 	ITEMJ_NORMAL      = 0x01,
 	ITEMJ_UPPER       = 0x02,
 	ITEMJ_BABY        = 0x04,
@@ -304,7 +320,8 @@ enum e_item_job {
 	ITEMJ_THIRD_BABY  = 0x20,
 };
 
-enum e_item_ammo {
+enum e_item_ammo
+{
 	AMMO_ARROW = 1,
 	AMMO_THROWABLE_DAGGER,
 	AMMO_BULLET,
@@ -314,10 +331,15 @@ enum e_item_ammo {
 	AMMO_KUNAI,
 	AMMO_CANNONBALL,
 	AMMO_THROWABLE_ITEM, ///Sling items
+
+	MAX_AMMO_TYPE,
 };
 
+#define AMMO_TYPE_ALL ((1<<MAX_AMMO_TYPE)-1)
+
 ///Item combo struct
-struct item_combo {
+struct item_combo
+{
 	struct script_code *script;
 	unsigned short *nameid;/* nameid array */
 	unsigned char count;
@@ -327,31 +349,44 @@ struct item_combo {
 
 
 /// Struct of item group entry
-struct s_item_group_entry {
+struct s_item_group_entry
+{
 	unsigned short nameid, /// Item ID
 		duration, /// Duration if item as rental item (in minutes)
 		amount; /// Amount of item will be obtained
 	bool isAnnounced, /// Broadcast if player get this item
+		GUID, /// Gives Unique ID for items in each box opened
 		isNamed; /// Named the item (if possible)
 	char bound; /// Makes the item as bound item (according to bound type)
 };
 
 /// Struct of random group
-struct s_item_group_random {
+struct s_item_group_random
+{
 	struct s_item_group_entry *data; /// Random group entry
 	unsigned short data_qty; /// Number of item in random group
 };
 
 /// Struct of item group that will be used for db
-struct s_item_group_db {
+struct s_item_group_db
+{
 	unsigned short id, /// Item Group ID
 		must_qty; /// Number of must item at this group
 	struct s_item_group_entry *must; /// Must item entry
 	struct s_item_group_random random[MAX_ITEMGROUP_RANDGROUP]; //! TODO: Move this fixed array to dynamic size if needed.
 };
 
+/// Struct of Roulette db
+struct s_roulette_db {
+	unsigned short *nameid[MAX_ROULETTE_LEVEL], /// Item ID
+		           *qty[MAX_ROULETTE_LEVEL]; /// Amount of Item ID
+	int *flag[MAX_ROULETTE_LEVEL]; /// Whether the item is for loss or win
+	int items[MAX_ROULETTE_LEVEL]; /// Number of items in the list for each
+} rd;
+
 ///Main item data struct
-struct item_data {
+struct item_data
+{
 	unsigned short nameid;
 	char name[ITEM_NAME_LENGTH],jname[ITEM_NAME_LENGTH];
 
@@ -371,9 +406,9 @@ struct item_data {
 	int elv;
 	int wlv;
 	int view_id;
+	int elvmax; ///< Maximum level for this item
 #ifdef RENEWAL
 	int matk;
-	int elvmax;/* maximum level for this item */
 #endif
 
 	int delay;
@@ -382,7 +417,7 @@ struct item_data {
 	unsigned int class_base[3];	//Specifies if the base can wear this item (split in 3 indexes per type: 1-1, 2-1, 2-2)
 	unsigned class_upper : 6; //Specifies if the class-type can equip it (0x01: normal, 0x02: trans, 0x04: baby, 0x08:third, 0x10:trans-third, 0x20-third-baby)
 	struct {
-		unsigned short chance;
+		int chance;
 		int id;
 	} mob[MAX_SEARCH]; //Holds the mobs that have the highest drop rate for this item. [Skotlex]
 	struct script_code *script;	//Default script for everything.
@@ -398,6 +433,9 @@ struct item_data {
 		unsigned buyingstore : 1;
 		unsigned dead_branch : 1; // As dead branch item. Logged at `branchlog` table and cannot be used at 'nobranch' mapflag [Cydh]
 		unsigned group : 1; // As item group container [Cydh]
+		unsigned guid : 1; // This item always be attached with GUID and make it as bound item! [Cydh]
+		unsigned broadcast : 1; ///< Will be broadcasted if someone obtain the item [Cydh]
+		bool bindOnEquip; ///< Set item as bound when equipped
 	} flag;
 	struct {// item stacking limitation
 		unsigned short amount;
@@ -414,6 +452,7 @@ struct item_data {
 	/* bugreport:309 */
 	struct item_combo **combos;
 	unsigned char combos_count;
+	short delay_sc; ///< Use delay group if any instead using player's item_delay data [Cydh]
 };
 
 struct item_data* itemdb_searchname(const char *name);
@@ -449,6 +488,7 @@ const char* itemdb_typename(enum item_types type);
 const char *itemdb_typename_ammo (enum e_item_ammo ammo);
 bool itemdb_is_spellbook2(unsigned short nameid);
 
+struct s_item_group_entry *itemdb_get_randgroupitem(uint16 group_id, uint8 sub_group);
 unsigned short itemdb_searchrandomid(uint16 group_id, uint8 sub_group);
 
 #define itemdb_value_buy(n) itemdb_search(n)->value_buy
@@ -480,7 +520,6 @@ bool itemdb_isequip2(struct item_data *id);
 char itemdb_isidentified(unsigned short nameid);
 bool itemdb_isstackable2(struct item_data *id);
 #define itemdb_isstackable(nameid) itemdb_isstackable2(itemdb_search(nameid))
-uint64 itemdb_unique_id(struct map_session_data *sd); // Unique Item ID
 bool itemdb_isNoEquip(struct item_data *id, uint16 m);
 
 struct item_combo *itemdb_combo_exists(unsigned short combo_id);
@@ -488,6 +527,8 @@ struct item_combo *itemdb_combo_exists(unsigned short combo_id);
 struct s_item_group_db *itemdb_group_exists(unsigned short group_id);
 char itemdb_pc_get_itemgroup(uint16 group_id, struct map_session_data *sd);
 uint16 itemdb_get_randgroupitem_count(uint16 group_id, uint8 sub_group, unsigned short nameid);
+
+bool itemdb_parse_roulette_db(void);
 
 void itemdb_reload(void);
 

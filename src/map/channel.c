@@ -7,14 +7,11 @@
 #include "../common/showmsg.h"
 #include "../common/strlib.h" //safestrncpy
 #include "../common/socket.h" //set_eof
-#include "../common/nullpo.h" //nullpo chk
 
 #include "map.h" //msg_conf
 #include "clif.h" //clif_chsys_msg
 #include "channel.h"
-#include "pc.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 
 static DBMap* channel_db; // channels
@@ -24,7 +21,7 @@ struct Channel_Config channel_config;
 DBMap* channel_get_db(void){ return channel_db; }
 
 struct chan_banentry {
-	int char_id;
+	uint32 char_id;
 	char char_name[NAME_LENGTH];
 } chan_banentry;
 
@@ -82,7 +79,7 @@ int channel_delete(struct Channel *channel) {
 	if( db_size(channel->users)) {
 		struct map_session_data *sd;
 		DBIterator *iter = db_iterator(channel->users);
-		for( sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter) ) { //for all users
+		for( sd = (struct map_session_data *)dbi_first(iter); dbi_exists(iter); sd = (struct map_session_data *)dbi_next(iter) ) { //for all users
 			channel_clean(channel,sd,1); //make all quit
 		}
 		dbi_destroy(iter);
@@ -342,7 +339,7 @@ int channel_send(struct Channel *channel, struct map_session_data *sd, const cha
 		return -1;
 
 	if(!pc_has_permission(sd, PC_PERM_CHANNEL_ADMIN) && channel->msg_delay != 0 && DIFF_TICK(sd->channel_tick + ( channel->msg_delay * 1000 ), gettick()) > 0) {
-		clif_colormes(sd,color_table[COLOR_RED],msg_txt(sd,1455)); //You're talking too fast!
+		clif_colormes(sd->fd,color_table[COLOR_RED],msg_txt(sd,1455)); //You're talking too fast!
 		return -2;
 	}
 	else {
@@ -385,7 +382,7 @@ int channel_chk(char *chname, char *chpass, int type){
 			return -4;
 		}
 	}
-	if (type&4 && (chpass != '\0' && strlen(chpass) > CHAN_NAME_LENGTH ) ) {
+	if (type&4 && (chpass[0] != '\0' && strlen(chpass) > CHAN_NAME_LENGTH ) ) {
 		return -3;
 	}
 
@@ -486,7 +483,7 @@ int channel_display_list(struct map_session_data *sd, char *options){
 		for( k = 0; k < channel_config.colors_count; k++ ) {
 			if (channel_config.colors[k]) {
 				sprintf(msg, msg_txt(sd,1445),channel_config.colors_name[k]);// - '%s'
-				clif_colormes(sd,channel_config.colors[k],msg);
+				clif_colormes(sd->fd,channel_config.colors[k],msg);
 			}
 		}
 	}
@@ -496,11 +493,14 @@ int channel_display_list(struct map_session_data *sd, char *options){
 			clif_displaymessage(sd->fd, msg_txt(sd,1476)); // You have not joined any channels.
 		else {
 			unsigned char k;
-			struct Channel *channel;
-			for(k=0; k<sd->channel_count; k++){
+
+			for(k = 0; k < sd->channel_count; k++) {
 				char output[128];
+				struct Channel *channel;
+
 				if (!(channel = sd->channels[k]))
 					continue;
+
 				sprintf(output, msg_txt(sd,1409), channel->name, db_size(channel->users));// - #%s (%d users)
 				clif_displaymessage(sd->fd, output);
 			}
@@ -525,7 +525,7 @@ int channel_display_list(struct map_session_data *sd, char *options){
 			}
 		}
 		iter = db_iterator(channel_db);
-		for(channel = dbi_first(iter); dbi_exists(iter); channel = dbi_next(iter)) {
+		for(channel = (struct Channel *)dbi_first(iter); dbi_exists(iter); channel = (struct Channel *)dbi_next(iter)) {
 			if( has_perm || channel->type == CHAN_TYPE_PUBLIC ) {
 				sprintf(output, msg_txt(sd,1409), channel->name, db_size(channel->users));// - #%s (%d users)
 				clif_displaymessage(sd->fd, output);
@@ -810,9 +810,10 @@ int channel_pcunbind(struct map_session_data *sd){
  *  0 : success
  *  -1 : fail
  */
-int channel_pcban(struct map_session_data *sd, char *chname, struct map_session_data *tsd, int flag){
+int channel_pcban(struct map_session_data *sd, char *chname, char *pname, int flag){
 	struct Channel *channel;
 	char output[128];
+	struct map_session_data *tsd = map_nick2sd(pname);
 
 	if( channel_chk(chname,NULL,1) ) {
 		clif_displaymessage(sd->fd, msg_txt(sd,1405));// Channel name must start with '#'.
@@ -835,7 +836,7 @@ int channel_pcban(struct map_session_data *sd, char *chname, struct map_session_
 	if(flag != 2 && flag != 3){
 		char banned;
 		if(!tsd || pc_has_permission(tsd, PC_PERM_CHANNEL_ADMIN) ) {
-			sprintf(output, msg_txt(sd,1464), tsd->status.name);// Ban failed for player '%s'.
+			sprintf(output, msg_txt(sd,1464), pname);// Ban failed for player '%s'.
 			clif_displaymessage(sd->fd, output);
 			return -1;
 		}
@@ -864,6 +865,8 @@ int channel_pcban(struct map_session_data *sd, char *chname, struct map_session_
 	switch(flag){
 	case 0: {
 		struct chan_banentry *cbe;
+		if (!tsd)
+			return -1;
 		CREATE(cbe, struct chan_banentry, 1);
 		cbe->char_id = tsd->status.char_id;
 		strcpy(cbe->char_name,tsd->status.name);
@@ -873,6 +876,8 @@ int channel_pcban(struct map_session_data *sd, char *chname, struct map_session_
 		break;
 		}
 	case 1:
+		if (!tsd)
+			return -1;
 		idb_remove(channel->banned, tsd->status.char_id);
 		sprintf(output, msg_txt(sd,1441),tsd->status.name,chname); // Player '%s' is unbanned from the '%s' channel.
 		break;
@@ -885,7 +890,7 @@ int channel_pcban(struct map_session_data *sd, char *chname, struct map_session_
 		struct chan_banentry *cbe;
 		sprintf(output, msg_txt(sd,1443), channel->name);// ---- '#%s' Ban List:
 		clif_displaymessage(sd->fd, output);
-		for( cbe = dbi_first(iter); dbi_exists(iter); cbe = dbi_next(iter) ) { //for all users
+		for( cbe = (struct chan_banentry *)dbi_first(iter); dbi_exists(iter); cbe = (struct chan_banentry *)dbi_next(iter) ) { //for all users
 			sprintf(output, "%d: %s",cbe->char_id,cbe->char_name);
 			clif_displaymessage(sd->fd, output);
 		}
@@ -935,15 +940,10 @@ int channel_pcsetopt(struct map_session_data *sd, char *chname, const char *opti
 		clif_displaymessage(sd->fd, output);
 		return -1;
 	}
-
-	if(!option || option[0] == '\0' ) {
-		clif_displaymessage(sd->fd, msg_txt(sd,1446));// You need to input an option.
-		return -1;
-	}
-
+	
 	s = ARRAYLENGTH(opt_str);
 	ARR_FIND(1,s,k,( strncmpi(option,opt_str[k],3) == 0 )); //we only cmp 3 letter atm
-	if( k >= s ) {
+	if(!option || option[0] == '\0' || k >= s ) {
 		sprintf(output, msg_txt(sd,1447), option);// Unknown channel option '%s'.
 		clif_displaymessage(sd->fd, output);
 		clif_displaymessage(sd->fd, msg_txt(sd,1414));// ---- Available options:
@@ -1159,7 +1159,7 @@ void do_final_channel(void) {
 	
 	//delete all in remaining chan db
 	iter = db_iterator(channel_db);
-	for( channel = dbi_first(iter); dbi_exists(iter); channel = dbi_next(iter) ) {
+	for( channel = (struct Channel *)dbi_first(iter); dbi_exists(iter); channel = (struct Channel *)dbi_next(iter) ) {
 		channel_delete(channel);
 	}
 	dbi_destroy(iter);

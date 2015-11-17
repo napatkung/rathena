@@ -3,43 +3,34 @@
 
 #include "../common/showmsg.h"
 #include "../common/socket.h"
-#include "../common/timer.h"
 #include "../common/nullpo.h"
 #include "../common/malloc.h"
 #include "../common/strlib.h"
+#include "../common/mmo.h"
 #include "map.h"
 #include "battle.h"
 #include "chrif.h"
 #include "clif.h"
 #include "pc.h"
 #include "intif.h"
-#include "log.h"
 #include "storage.h"
 #include "party.h"
-#include "guild.h"
 #include "pet.h"
-#include "atcommand.h"
 #include "mercenary.h"
 #include "homunculus.h"
 #include "elemental.h"
 #include "mail.h"
 #include "quest.h"
 
-#include <sys/types.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <signal.h>
-#include <fcntl.h>
-#include <string.h>
-
 
 static const int packet_len_table[]={
-	-1,-1,27,-1, -1, 0,37,-1,  0, 0, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
+	-1,-1,27,-1, -1, 0,37,-1, 10+NAME_LENGTH,-1, 0, 0,  0, 0,  0, 0, //0x3800-0x380f
 	 0, 0, 0, 0,  0, 0, 0, 0, -1,11, 0, 0,  0, 0,  0, 0, //0x3810
 	39,-1,15,15, 14,19, 7,-1,  0, 0, 0, 0,  0, 0,  0, 0, //0x3820
 	10,-1,15, 0, 79,19, 7,-1,  0,-1,-1,-1, 14,67,186,-1, //0x3830
 	-1, 0, 0,14,  0, 0, 0, 0, -1,74,-1,11, 11,-1,  0, 0, //0x3840
-	-1,-1, 7, 7,  7,11, 8, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3850  Auctions [Zephyrus] itembound[Akinari]
+	-1,-1, 7, 7,  7,11, 8,-1,  0, 0, 0, 0,  0, 0,  0, 0, //0x3850  Auctions [Zephyrus] itembound[Akinari]
 	-1, 7, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3860  Quests [Kevin] [Inkfish]
 	-1, 3, 3, 0,  0, 0, 0, 0,  0, 0, 0, 0, -1, 3,  3, 0, //0x3870  Mercenaries [Zephyrus] / Elemental [pakpil]
 	12,-1, 7, 3,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3880
@@ -76,7 +67,7 @@ int CheckForCharServer(void)
  * @param pet_name
  * @return 
  */
-int intif_create_pet(int account_id,int char_id,short pet_class,short pet_lv,short pet_egg_id,
+int intif_create_pet(uint32 account_id,uint32 char_id,short pet_class,short pet_lv,short pet_egg_id,
 	short pet_equip,short intimate,short hungry,char rename_flag,char incubate,char *pet_name)
 {
 	if (CheckForCharServer())
@@ -106,7 +97,7 @@ int intif_create_pet(int account_id,int char_id,short pet_class,short pet_lv,sho
  * @param pet_id
  * @return 
  */
-int intif_request_petdata(int account_id,int char_id,int pet_id)
+int intif_request_petdata(uint32 account_id,uint32 char_id,int pet_id)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -126,7 +117,7 @@ int intif_request_petdata(int account_id,int char_id,int pet_id)
  * @param p
  * @return 
  */
-int intif_save_petdata(int account_id,struct s_pet *p)
+int intif_save_petdata(uint32 account_id,struct s_pet *p)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -345,7 +336,7 @@ int intif_wis_message_to_gm(char *wisp_name, int permission, char *mes)
 	if (CheckForCharServer())
 		return 0;
 	mes_len = strlen(mes) + 1; // + null
-	WFIFOHEAD(inter_fd, mes_len + 32);
+	WFIFOHEAD(inter_fd, mes_len + 8 + NAME_LENGTH);
 	WFIFOW(inter_fd,0) = 0x3003;
 	WFIFOW(inter_fd,2) = mes_len + 32;
 	memcpy(WFIFOP(inter_fd,4), wisp_name, NAME_LENGTH);
@@ -360,72 +351,119 @@ int intif_wis_message_to_gm(char *wisp_name, int permission, char *mes)
 }
 
 /**
- * 
- * @param str
- * @param reg
- * @param qty
- * @return 
- */
-int intif_regtostr(char* str, struct global_reg *reg, int qty)
-{
-	int len =0, i;
-
-	for (i = 0; i < qty; i++) {
-		len+= sprintf(str+len, "%s", reg[i].str)+1; //We add 1 to consider the '\0' in place.
-		len+= sprintf(str+len, "%s", reg[i].value)+1;
-	}
-	return len;
-}
-
-/**
  * Request for saving registry values.
  * @param sd : Player to save registry
- * @param type : Type of registry to save, 1=login save, 2=acc on char, 3=char
  * @return 1=msg sent, -1=error
  */
-int intif_saveregistry(struct map_session_data *sd, int type)
+int intif_saveregistry(struct map_session_data *sd)
 {
-	struct global_reg *reg;
-	int count;
-	int i, p;
+	DBIterator *iter;
+	DBKey key;
+	DBData *data;
+	int plen = 0;
+	size_t len;
 
-	if (CheckForCharServer())
+	if (CheckForCharServer() || !sd->regs.vars)
 		return -1;
 
-	switch (type) {
-	case 3: //Character reg
-		reg = sd->save_reg.global;
-		count = sd->save_reg.global_num;
-		sd->state.reg_dirty &= ~0x4;
-	break;
-	case 2: //Account reg
-		reg = sd->save_reg.account;
-		count = sd->save_reg.account_num;
-		sd->state.reg_dirty &= ~0x2;
-	break;
-	case 1: //Account2 reg
-		reg = sd->save_reg.account2;
-		count = sd->save_reg.account2_num;
-		sd->state.reg_dirty &= ~0x1;
-	break;
-	default: //Broken code?
-		ShowError("intif_saveregistry: Invalid type %d\n", type);
-		return -1;
-	}
-	WFIFOHEAD(inter_fd, 288 * MAX_REG_NUM+13);
-	WFIFOW(inter_fd,0)=0x3004;
-	WFIFOL(inter_fd,4)=sd->status.account_id;
-	WFIFOL(inter_fd,8)=sd->status.char_id;
-	WFIFOB(inter_fd,12)=type;
-	for( p = 13, i = 0; i < count; i++ ) {
-		if (reg[i].str[0] != '\0' && reg[i].value[0] != '\0') {
-			p+= sprintf((char*)WFIFOP(inter_fd,p), "%s", reg[i].str)+1; //We add 1 to consider the '\0' in place.
-			p+= sprintf((char*)WFIFOP(inter_fd,p), "%s", reg[i].value)+1;
+	WFIFOHEAD(inter_fd, 60000 + 300);
+	WFIFOW(inter_fd,0)  = 0x3004;
+	// 0x2 = length (set later)
+	WFIFOL(inter_fd,4)  = sd->status.account_id;
+	WFIFOL(inter_fd,8)  = sd->status.char_id;
+	WFIFOW(inter_fd,12) = 0; // count
+
+	plen = 14;
+
+	iter = db_iterator(sd->regs.vars);
+	for( data = iter->first(iter,&key); iter->exists(iter); data = iter->next(iter,&key) ) {
+		const char *varname = NULL;
+		struct script_reg_state *src = NULL;
+
+		if( data->type != DB_DATA_PTR ) // it's a @number
+			continue;
+
+		varname = get_str(script_getvarid(key.i64));
+
+		if( varname[0] == '@' ) // @string$ can get here, so we skip
+			continue;
+
+		src = (struct script_reg_state *)db_data2ptr(data);
+
+		if( !src->update )
+			continue;
+
+		src->update = false;
+
+		len = strlen(varname)+1;
+
+		WFIFOB(inter_fd, plen) = (unsigned char)len; // won't be higher; the column size is 32
+		plen += 1;
+
+		safestrncpy((char*)WFIFOP(inter_fd,plen), varname, len);
+		plen += len;
+
+		WFIFOL(inter_fd, plen) = script_getvaridx(key.i64);
+		plen += 4;
+
+		if( src->type ) {
+			struct script_reg_str *p = (struct script_reg_str *)src;
+
+			WFIFOB(inter_fd, plen) = p->value ? 2 : 3;
+			plen += 1;
+
+			if( p->value ) {
+				len = strlen(p->value)+1;
+
+				WFIFOB(inter_fd, plen) = (unsigned char)len; // won't be higher; the column size is 254
+				plen += 1;
+
+				safestrncpy((char*)WFIFOP(inter_fd,plen), p->value, len);
+				plen += len;
+			} else {
+				script_reg_destroy_single(sd,key.i64,&p->flag);
+			}
+
+		} else {
+			struct script_reg_num *p = (struct script_reg_num *)src;
+
+			WFIFOB(inter_fd, plen) =  p->value ? 0 : 1;
+			plen += 1;
+
+			if( p->value ) {
+				WFIFOL(inter_fd, plen) = p->value;
+				plen += 4;
+			} else {
+				script_reg_destroy_single(sd,key.i64,&p->flag);
+			}
+
+		}
+
+		WFIFOW(inter_fd,12) += 1;
+
+		if( plen > 60000 ) {
+			WFIFOW(inter_fd, 2) = plen;
+			WFIFOSET(inter_fd, plen);
+
+			// prepare follow up
+			WFIFOHEAD(inter_fd, 60000 + 300);
+			WFIFOW(inter_fd,0)  = 0x3004;
+			// 0x2 = length (set later)
+			WFIFOL(inter_fd,4)  = sd->status.account_id;
+			WFIFOL(inter_fd,8)  = sd->status.char_id;
+			WFIFOW(inter_fd,12) = 0; // count
+
+			plen = 14;
 		}
 	}
-	WFIFOW(inter_fd,2)=p;
-	WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
-	return 1;
+	dbi_destroy(iter);
+
+	WFIFOW(inter_fd, 2) = plen;
+	WFIFOSET(inter_fd, plen);
+
+	sd->vars_dirty = false;
+
+	return 0;
 }
 
 /**
@@ -437,10 +475,6 @@ int intif_saveregistry(struct map_session_data *sd, int type)
 int intif_request_registry(struct map_session_data *sd, int flag)
 {
 	nullpo_ret(sd);
-
-	sd->save_reg.account2_num = -1;
-	sd->save_reg.account_num = -1;
-	sd->save_reg.global_num = -1;
 
 	if (CheckForCharServer())
 		return 0;
@@ -463,7 +497,7 @@ int intif_request_registry(struct map_session_data *sd, int flag)
  * @param guild_id : Guild of player
  * @return 0:error, 1=msg sent
  */
-int intif_request_guild_storage(int account_id,int guild_id)
+int intif_request_guild_storage(uint32 account_id,int guild_id)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -481,7 +515,7 @@ int intif_request_guild_storage(int account_id,int guild_id)
  * @param gstor : Guild storage struct to save
  * @return 
  */
-int intif_send_guild_storage(int account_id,struct guild_storage *gstor)
+int intif_send_guild_storage(uint32 account_id,struct guild_storage *gstor)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -526,7 +560,7 @@ int intif_create_party(struct party_member *member,char *name,int item,int item2
  * @param char_id : Player id requesting
  * @return 0=error, 1=msg sent
  */
-int intif_request_partyinfo(int party_id, int char_id)
+int intif_request_partyinfo(int party_id, uint32 char_id)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -565,7 +599,7 @@ int intif_party_addmember(int party_id,struct party_member *member)
  * @param item :  sharing item option
  * @return 0=error, 1=msg sent
  */
-int intif_party_changeoption(int party_id,int account_id,int exp,int item)
+int intif_party_changeoption(int party_id,uint32 account_id,int exp,int item)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -586,7 +620,7 @@ int intif_party_changeoption(int party_id,int account_id,int exp,int item)
  * @param char_id : cid of player to leave
  * @return 0:char-serv disconected, 1=msg sent
  */
-int intif_party_leave(int party_id,int account_id, int char_id)
+int intif_party_leave(int party_id,uint32 account_id, uint32 char_id)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -658,7 +692,7 @@ int intif_break_party(int party_id)
  * @param len : Size of the message
  * @return 0=error, 1=msg sent
  */
-int intif_party_message(int party_id,int account_id,const char *mes,int len)
+int intif_party_message(int party_id,uint32 account_id,const char *mes,int len)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -683,7 +717,7 @@ int intif_party_message(int party_id,int account_id,const char *mes,int len)
  * @param char_id : player to set as new leader
  * @return  0=error, 1=msg sent
  */
-int intif_party_leaderchange(int party_id,int account_id,int char_id)
+int intif_party_leaderchange(int party_id,uint32 account_id,uint32 char_id)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -798,7 +832,7 @@ int intif_guild_change_gm(int guild_id, const char* name, int len)
  * @param mes : quitting message (max 40)
  * @return 0=error, 1=msg_sent
  */
-int intif_guild_leave(int guild_id,int account_id,int char_id,int flag,const char *mes)
+int intif_guild_leave(int guild_id,uint32 account_id,uint32 char_id,int flag,const char *mes)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -823,7 +857,7 @@ int intif_guild_leave(int guild_id,int account_id,int char_id,int flag,const cha
  * @param class_ : player class
  * @return 0=error, 1=msg_sent
  */
-int intif_guild_memberinfoshort(int guild_id,int account_id,int char_id,int online,int lv,int class_)
+int intif_guild_memberinfoshort(int guild_id,uint32 account_id,uint32 char_id,int online,int lv,int class_)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -864,7 +898,7 @@ int intif_guild_break(int guild_id)
  * @param len : Size of the message
  * @return 0=error, 1=msg_sent
  */
-int intif_guild_message(int guild_id,int account_id,const char *mes,int len)
+int intif_guild_message(int guild_id,uint32 account_id,const char *mes,int len)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -915,7 +949,7 @@ int intif_guild_change_basicinfo(int guild_id,int type,const void *data,int len)
  * @param len : Size of value
  * @return 0=error, 1=msg_sent
  */
-int intif_guild_change_memberinfo(int guild_id,int account_id,int char_id,
+int intif_guild_change_memberinfo(int guild_id,uint32 account_id,uint32 char_id,
 	int type,const void *data,int len)
 {
 	if (CheckForCharServer())
@@ -961,7 +995,7 @@ int intif_guild_position(int guild_id,int idx,struct guild_position *p)
  * @param max : skill max level
  * @return 0=error, 1=msg_sent
  */
-int intif_guild_skillup(int guild_id, uint16 skill_id, int account_id, int max)
+int intif_guild_skillup(int guild_id, uint16 skill_id, uint32 account_id, int max)
 {
 	if( CheckForCharServer() )
 		return 0;
@@ -984,7 +1018,7 @@ int intif_guild_skillup(int guild_id, uint16 skill_id, int account_id, int max)
  * @param flag : (GUILD_ALLIANCE_REMOVE|0|1)
  * @return  0=error, 1=msg_sent
  */
-int intif_guild_alliance(int guild_id1,int guild_id2,int account_id1,int account_id2,int flag)
+int intif_guild_alliance(int guild_id1,int guild_id2,uint32 account_id1,uint32 account_id2,int flag)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -1089,7 +1123,7 @@ int intif_guild_castle_datasave(int castle_id,int index, int value)
  * @param sh : TMp homunlus data
  * @return 0=error, 1=msg_sent
  */
-int intif_homunculus_create(int account_id, struct s_homunculus *sh)
+int intif_homunculus_create(uint32 account_id, struct s_homunculus *sh)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -1108,7 +1142,7 @@ int intif_homunculus_create(int account_id, struct s_homunculus *sh)
  * @param homun_id
  * @return 0=error, 1=msg sent
  */
-int intif_homunculus_requestload(int account_id, int homun_id)
+int intif_homunculus_requestload(uint32 account_id, int homun_id)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -1126,7 +1160,7 @@ int intif_homunculus_requestload(int account_id, int homun_id)
  * @param sh : homunculus struct
  * @return : 0=error, 1=msg sent
  */
-int intif_homunculus_requestsave(int account_id, struct s_homunculus* sh)
+int intif_homunculus_requestsave(uint32 account_id, struct s_homunculus* sh)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -1200,7 +1234,7 @@ int intif_parse_WisMessage(int fd)
 	}
 	//Success to send whisper.
 	clif_wis_message(sd->fd, wisp_source, (char*)RFIFOP(fd,56),RFIFOW(fd,2)-56);
-	intif_wis_replay(id,0);   // succes
+	intif_wis_replay(id,0);   // success
 	return 1;
 }
 
@@ -1258,12 +1292,12 @@ int mapif_parse_WisToGM(int fd)
 	char Wisp_name[NAME_LENGTH];
 	char *message;
 
-	mes_len =  RFIFOW(fd,2) - 32;
+	mes_len =  RFIFOW(fd,2) - 8+NAME_LENGTH;
 	message = (char *) aMalloc(mes_len);
 
-	permission = RFIFOL(fd,28);
+	permission = RFIFOL(fd,4+NAME_LENGTH);
 	safestrncpy(Wisp_name, (char*)RFIFOP(fd,4), NAME_LENGTH);
-	safestrncpy(message, (char*)RFIFOP(fd,32), mes_len);
+	safestrncpy(message, (char*)RFIFOP(fd,8+NAME_LENGTH), mes_len);
 	// information is sent to all online GM
 	map_foreachpc(mapif_parse_WisToGM_sub, permission, Wisp_name, message, mes_len);
 	aFree(message);
@@ -1275,58 +1309,98 @@ int mapif_parse_WisToGM(int fd)
  * @param fd : char-serv link
  * @return 0=error, 1=sucess
  */
-int intif_parse_Registers(int fd)
+void intif_parse_Registers(int fd)
 {
-	int j,p,len,max, flag;
+	int flag;
 	struct map_session_data *sd;
-	struct global_reg *reg;
-	int *qty;
-	int account_id = RFIFOL(fd,4), char_id = RFIFOL(fd,8);
+	uint32 account_id = RFIFOL(fd,4), char_id = RFIFOL(fd,8);
 	struct auth_node *node = chrif_auth_check(account_id, char_id, ST_LOGIN);
+	char type = RFIFOB(fd, 13);
+
 	if (node)
 		sd = node->sd;
 	else { //Normally registries should arrive for in log-in chars.
 		sd = map_id2sd(account_id);
-		if (sd && RFIFOB(fd,12) == 3 && sd->status.char_id != char_id)
-			sd = NULL; //Character registry from another character.
 	}
-	if (!sd) return 0;
 
-	flag = (sd->save_reg.global_num == -1 || sd->save_reg.account_num == -1 || sd->save_reg.account2_num == -1);
+	if (!sd || sd->status.char_id != char_id) {
+		return; //Character registry from another character.
+	}
+
+	flag = ( sd->vars_received&PRL_ACCG && sd->vars_received&PRL_ACCL && sd->vars_received&PRL_CHAR ) ? 0 : 1;
 
 	switch (RFIFOB(fd,12)) {
 		case 3: //Character Registry
-			reg = sd->save_reg.global;
-			qty = &sd->save_reg.global_num;
-			max = GLOBAL_REG_NUM;
-		break;
+			sd->vars_received |= PRL_CHAR;
+			break;
 		case 2: //Account Registry
-			reg = sd->save_reg.account;
-			qty = &sd->save_reg.account_num;
-			max = ACCOUNT_REG_NUM;
-		break;
+			sd->vars_received |= PRL_ACCL;
+			break;
 		case 1: //Account2 Registry
-			reg = sd->save_reg.account2;
-			qty = &sd->save_reg.account2_num;
-			max = ACCOUNT_REG2_NUM;
-		break;
+			sd->vars_received |= PRL_ACCG;
+			break;
+		case 0:
+			break;
 		default:
 			ShowError("intif_parse_Registers: Unrecognized type %d\n",RFIFOB(fd,12));
-			return 0;
+			return;
 	}
-	for(j=0,p=13;j<max && p<RFIFOW(fd,2);j++){
-		sscanf((char*)RFIFOP(fd,p), "%31c%n", reg[j].str,&len);
-		reg[j].str[len]='\0';
-		p += len+1; //+1 to skip the '\0' between strings.
-		sscanf((char*)RFIFOP(fd,p), "%255c%n", reg[j].value,&len);
-		reg[j].value[len]='\0';
-		p += len+1;
-	}
-	*qty = j;
 
-	if (flag && sd->save_reg.global_num > -1 && sd->save_reg.account_num > -1 && sd->save_reg.account2_num > -1)
+	// have it not complain about insertion of vars before loading, and not set those vars as new or modified
+	reg_load = true;
+	
+	if( RFIFOW(fd, 14) ) {
+		char key[32];
+		unsigned int index;
+		int max = RFIFOW(fd, 14), cursor = 16, i;
+
+		/**
+		 * Vessel!char_reg_num_db
+		 *
+		 * str type
+		 * { keyLength(B), key(<keyLength>), index(L), valLength(B), val(<valLength>) }
+		 **/
+		if (type) {
+			for(i = 0; i < max; i++) {
+				char sval[254];
+				safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
+				cursor += RFIFOB(fd, cursor) + 1;
+
+				index = RFIFOL(fd, cursor);
+				cursor += 4;
+
+				safestrncpy(sval, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
+				cursor += RFIFOB(fd, cursor) + 1;
+
+				set_reg(NULL,sd,reference_uid(add_str(key), index), key, (void*)sval, NULL);
+			}
+		/**
+		 * Vessel!
+		 *
+		 * int type
+		 * { keyLength(B), key(<keyLength>), index(L), value(L) }
+		 **/
+		} else {
+			for(i = 0; i < max; i++) {
+				int ival;
+				safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
+				cursor += RFIFOB(fd, cursor) + 1;
+
+				index = RFIFOL(fd, cursor);
+				cursor += 4;
+
+				ival = RFIFOL(fd, cursor);
+				cursor += 4;
+
+				set_reg(NULL,sd,reference_uid(add_str(key), index), key, (void*)__64BPRTSIZE(ival), NULL);
+			}
+		}
+	}
+
+	reg_load = false;
+
+	if (flag && sd->vars_received&PRL_ACCG && sd->vars_received&PRL_ACCL && sd->vars_received&PRL_CHAR)
 		pc_reg_received(sd); //Received all registry values, execute init scripts and what-not. [Skotlex]
-	return 1;
 }
 
 /**
@@ -1342,22 +1416,22 @@ int intif_parse_LoadGuildStorage(int fd)
 
 	guild_id = RFIFOL(fd,8);
 	flag = RFIFOL(fd,12);
-	if(guild_id <= 0)
+	if (guild_id <= 0)
 		return 0;
 
-	sd=map_id2sd( RFIFOL(fd,4) );
-	if( flag ){ //If flag != 0, we attach a player and open the storage
-		if(sd==NULL){
-			ShowError("intif_parse_LoadGuildStorage: user not found %d\n",RFIFOL(fd,4));
+	sd = map_id2sd( RFIFOL(fd,4) );
+	if (flag){ //If flag != 0, we attach a player and open the storage
+		if(sd == NULL){
+			ShowError("intif_parse_LoadGuildStorage: user not found (AID: %d)\n",RFIFOL(fd,4));
 			return 0;
 		}
 	}
-	gstor=guild2storage(guild_id);
-	if(!gstor) {
+	gstor = gstorage_guild2storage(guild_id);
+	if (!gstor) {
 		ShowWarning("intif_parse_LoadGuildStorage: error guild_id %d not exist\n",guild_id);
 		return 0;
 	}
-	if (gstor->storage_status == 1) { // Already open.. lets ignore this update
+	if (gstor->opened) { // Already open.. lets ignore this update
 		ShowWarning("intif_parse_LoadGuildStorage: storage received for a client already open (User %d:%d)\n", flag?sd->status.account_id:1, flag?sd->status.char_id:1);
 		return 0;
 	}
@@ -1367,13 +1441,13 @@ int intif_parse_LoadGuildStorage(int fd)
 	}
 	if( RFIFOW(fd,2)-13 != sizeof(struct guild_storage) ){
 		ShowError("intif_parse_LoadGuildStorage: data size error %d %d\n",RFIFOW(fd,2)-13 , sizeof(struct guild_storage));
-		gstor->storage_status = 0;
+		gstor->opened = 0;
 		return 0;
 	}
 
 	memcpy(gstor,RFIFOP(fd,13),sizeof(struct guild_storage));
 	if( flag )
-		storage_guild_storageopen(sd);
+		gstorage_storageopen(sd);
 
 	return 1;
 }
@@ -1385,7 +1459,7 @@ int intif_parse_LoadGuildStorage(int fd)
  */
 int intif_parse_SaveGuildStorage(int fd)
 {
-	storage_guild_storagesaved(/*RFIFOL(fd,2), */RFIFOL(fd,6));
+	gstorage_storagesaved(/*RFIFOL(fd,2), */RFIFOL(fd,6));
 	return 1;
 }
 
@@ -1602,8 +1676,8 @@ int intif_parse_GuildMemberInfoChanged(int fd)
 {
 	//int len = RFIFOW(fd,2) - 18;
 	int guild_id = RFIFOL(fd,4);
-	int account_id = RFIFOL(fd,8);
-	int char_id = RFIFOL(fd,12);
+	uint32 account_id = RFIFOL(fd,8);
+	uint32 char_id = RFIFOL(fd,12);
 	int type = RFIFOW(fd,16);
 	//void* data = RFIFOP(fd,18);
 
@@ -1896,7 +1970,7 @@ void intif_request_questlog(TBL_PC *sd)
  */
 void intif_parse_questlog(int fd)
 {
-	int char_id = RFIFOL(fd,4), num_received = (RFIFOW(fd,2) - 8) / sizeof(struct quest);
+	uint32 char_id = RFIFOL(fd,4), num_received = (RFIFOW(fd,2) - 8) / sizeof(struct quest);
 	TBL_PC *sd = map_charid2sd(char_id);
 
 	if(!sd) // User not online anymore
@@ -1919,7 +1993,7 @@ void intif_parse_questlog(int fd)
 			CREATE(sd->quest_log, struct quest, num_received);
 
 		for(i = 0; i < num_received; i++) {
-			if(quest_db(received[i].quest_id) == &quest_dummy) {
+			if(quest_search(received[i].quest_id) == &quest_dummy) {
 				ShowError("intif_parse_QuestLog: quest %d not found in DB.\n", received[i].quest_id);
 				continue;
 			}
@@ -1933,7 +2007,7 @@ void intif_parse_questlog(int fd)
 			// sd->avail_quests and k didn't meet in the middle: some entries were skipped
 			if(k < num_received) // Move the entries at the end to fill the gap
 				memmove(&sd->quest_log[k], &sd->quest_log[sd->avail_quests], sizeof(struct quest) * (num_received - k));
-			sd->quest_log = aRealloc(sd->quest_log, sizeof(struct quest) * sd->num_quests);
+			sd->quest_log = (struct quest *)aRealloc(sd->quest_log, sizeof(struct quest) * sd->num_quests);
 		}
 	}
 
@@ -1991,7 +2065,7 @@ int intif_quest_save(TBL_PC *sd)
  * @param flag 0 Update Inbox | 1 OpenMail
  * @return 0=errur, 1=msg_sent
  */
-int intif_Mail_requestinbox(int char_id, unsigned char flag)
+int intif_Mail_requestinbox(uint32 char_id, unsigned char flag)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -2069,7 +2143,7 @@ int intif_Mail_read(int mail_id)
  * @param mail_id : Mail identification
  * @return 0=error, 1=msg sent
  */
-int intif_Mail_getattach(int char_id, int mail_id)
+int intif_Mail_getattach(uint32 char_id, int mail_id)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -2120,7 +2194,7 @@ int intif_parse_Mail_getattach(int fd)
  * @param mail_id : mail to delete
  * @return 0=error, 1=msg sent
  */
-int intif_Mail_delete(int char_id, int mail_id)
+int intif_Mail_delete(uint32 char_id, int mail_id)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -2141,7 +2215,7 @@ int intif_Mail_delete(int char_id, int mail_id)
  */
 int intif_parse_Mail_delete(int fd)
 {
-	int char_id = RFIFOL(fd,2);
+	uint32 char_id = RFIFOL(fd,2);
 	int mail_id = RFIFOL(fd,6);
 	bool failed = RFIFOB(fd,10);
 
@@ -2180,7 +2254,7 @@ int intif_parse_Mail_delete(int fd)
  * @param mail_id : mail to return
  * @return 0=error, 1=msg sent
  */
-int intif_Mail_return(int char_id, int mail_id)
+int intif_Mail_return(uint32 char_id, int mail_id)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -2239,7 +2313,7 @@ int intif_parse_Mail_return(int fd)
  * @param msg : mail struct
  * @return 0=error, 1=msg sent
  */
-int intif_Mail_send(int account_id, struct mail_message *msg)
+int intif_Mail_send(uint32 account_id, struct mail_message *msg)
 {
 	int len = sizeof(struct mail_message) + 8;
 
@@ -2284,7 +2358,7 @@ static void intif_parse_Mail_send(int fd)
 		else
 		{
 			clif_Mail_send(sd->fd, false);
-			if( save_settings&16 )
+			if( save_settings&CHARSAVE_MAIL )
 				chrif_save(sd, 0);
 		}
 	}
@@ -2322,7 +2396,7 @@ static void intif_parse_Mail_new(int fd)
  * @param page : in case of huge result list display 5 entry per page, (kinda suck that we redo the request atm)
  * @return 0=error, 1=msg sent
  */
-int intif_Auction_requestlist(int char_id, short type, int price, const char* searchtext, short page)
+int intif_Auction_requestlist(uint32 char_id, short type, int price, const char* searchtext, short page)
 {
 	int len = NAME_LENGTH + 16;
 
@@ -2402,7 +2476,7 @@ static void intif_parse_Auction_register(int fd)
 	if( auction.auction_id > 0 )
 	{
 		clif_Auction_message(sd->fd, 1); // Confirmation Packet ??
-		if( save_settings&32 )
+		if( save_settings&CHARSAVE_AUCTION )
 			chrif_save(sd,0);
 	}
 	else
@@ -2422,7 +2496,7 @@ static void intif_parse_Auction_register(int fd)
  * @param auction_id : auction to cancel
  * @return 0=error, 1=msg sent
  */
-int intif_Auction_cancel(int char_id, unsigned int auction_id)
+int intif_Auction_cancel(uint32 char_id, unsigned int auction_id)
 {
 	if( CheckForCharServer() )
 		return 0;
@@ -2463,7 +2537,7 @@ static void intif_parse_Auction_cancel(int fd)
  * @param auction_id : auction to stop
  * @return 0=error, 1=msg sent
  */
-int intif_Auction_close(int char_id, unsigned int auction_id)
+int intif_Auction_close(uint32 char_id, unsigned int auction_id)
 {
 	if( CheckForCharServer() )
 		return 0;
@@ -2506,7 +2580,7 @@ static void intif_parse_Auction_close(int fd)
  * @param bid
  * @return 0=error, 1=msg sent
  */
-int intif_Auction_bid(int char_id, const char* name, unsigned int auction_id, int bid)
+int intif_Auction_bid(uint32 char_id, const char* name, unsigned int auction_id, int bid)
 {
 	int len = 16 + NAME_LENGTH;
 
@@ -2615,7 +2689,7 @@ int intif_parse_mercenary_received(int fd)
  * @param char_id : player cid requesting data
  * @return 0=error, 1=msg sent
  */
-int intif_mercenary_request(int merc_id, int char_id)
+int intif_mercenary_request(int merc_id, uint32 char_id)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -2740,7 +2814,7 @@ int intif_parse_elemental_received(int fd)
  * @param char_id : player identification
  * @return 0=error, 1=msg sent
  */
-int intif_elemental_request(int ele_id, int char_id)
+int intif_elemental_request(int ele_id, uint32 char_id)
 {
 	if (CheckForCharServer())
 		return 0;
@@ -2822,23 +2896,37 @@ int intif_parse_elemental_saved(int fd)
  * @param aid : requesting player aid
  * @param group_lv : requesting player lv
  * @param query : name or aid of player we want info
+ * @param type : 1 - Only return account id & userid, 0 - Full info
  * @return : 0=errur, 1=msg sent
  */
-int intif_request_accinfo( int u_fd, int aid, int group_lv, char* query ) {
+int intif_request_accinfo(int u_fd, int aid, int group_lv, char* query, char type) {
 
 	if( CheckForCharServer() )
 		return 0;
 	
-	WFIFOHEAD(inter_fd,2 + 4 + 4 + 4 + NAME_LENGTH);
+	WFIFOHEAD(inter_fd,2 + 4 + 4 + 4 + 1 + NAME_LENGTH);
 
 	WFIFOW(inter_fd,0) = 0x3007;
 	WFIFOL(inter_fd,2) = u_fd;
 	WFIFOL(inter_fd,6) = aid;
 	WFIFOL(inter_fd,10) = group_lv;
-	safestrncpy((char *)WFIFOP(inter_fd,14), query, NAME_LENGTH);
+	WFIFOB(inter_fd,14) = type;
+	safestrncpy((char *)WFIFOP(inter_fd,15), query, NAME_LENGTH);
 
-	WFIFOSET(inter_fd,2 + 4 + 4 + 4 + NAME_LENGTH);
+	WFIFOSET(inter_fd,2 + 4 + 4 + 4 + 1 + NAME_LENGTH);
 	return 1;
+}
+
+/**
+ * Receive the reply of a request_accinfo with type 1
+ * @param fd : char-serv link
+ */
+void intif_parse_accinfo_ack( int fd ) {
+	char acc_name[NAME_LENGTH];
+	int u_fd = RFIFOL(fd,2);
+	int acc_id = RFIFOL(fd,6);
+	safestrncpy(acc_name, (char*)RFIFOP(fd,10), NAME_LENGTH);
+	clif_account_name(u_fd, acc_id, acc_name);
 }
 
 /**
@@ -2850,7 +2938,7 @@ void intif_parse_MessageToFD(int fd) {
 
 	if( session[u_fd] && session[u_fd]->session_data ) { //check if the player still online
 		int aid = RFIFOL(fd,8);
-		struct map_session_data * sd = session[u_fd]->session_data;
+		struct map_session_data * sd = (struct map_session_data *)session[u_fd]->session_data;
 		/* matching e.g. previous fd owner didn't dc during request or is still the same */
 		if( sd->bl.id == aid ) {
 			char msg[512];
@@ -2863,6 +2951,97 @@ void intif_parse_MessageToFD(int fd) {
 	return;
 }
 
+/// BROADCAST OBTAIN SPECIAL ITEM
+
+/**
+ * Request to send broadcast item to all servers
+ * ZI 3009 <cmd>.W <len>.W <nameid>.W <source>.W <type>.B <name>.?B
+ * @param sd Player who obtain the item
+ * @param nameid Obtained item
+ * @param sourceid Source of item, another item ID or monster ID
+ * @param type Obtain type @see enum BROADCASTING_SPECIAL_ITEM_OBTAIN
+ * @return
+ **/
+int intif_broadcast_obtain_special_item(struct map_session_data *sd, unsigned short nameid, unsigned int sourceid, unsigned char type) {
+	nullpo_retr(0, sd);
+
+	// Should not be here!
+	if (type == ITEMOBTAIN_TYPE_NPC) {
+		intif_broadcast_obtain_special_item_npc(sd, nameid, NULL /*wisp_server_name*/);
+		return 0;
+	}
+
+	// Send local
+	clif_broadcast_obtain_special_item(sd->status.name, nameid, sourceid, (enum BROADCASTING_SPECIAL_ITEM_OBTAIN)type, NULL);
+
+	if (CheckForCharServer())
+		return 0;
+
+	if (other_mapserver_count < 1)
+		return 0;
+
+	WFIFOHEAD(inter_fd, 9 + NAME_LENGTH);
+	WFIFOW(inter_fd, 0) = 0x3009;
+	WFIFOW(inter_fd, 2) = 9 + NAME_LENGTH;
+	WFIFOW(inter_fd, 4) = nameid;
+	WFIFOW(inter_fd, 6) = sourceid;
+	WFIFOB(inter_fd, 8) = type;
+	safestrncpy((char *)WFIFOP(inter_fd, 9), sd->status.name, NAME_LENGTH);
+	WFIFOSET(inter_fd, WFIFOW(inter_fd, 2));
+
+	return 1;
+}
+
+/**
+ * Request to send broadcast item to all servers.
+ * TODO: Confirm the usage. Maybe on getitem-like command?
+ * ZI 3009 <cmd>.W <len>.W <nameid>.W <source>.W <type>.B <name>.24B <npcname>.24B
+ * @param sd Player who obtain the item
+ * @param nameid Obtained item
+ * @param srcname Source name
+ * @return
+ **/
+int intif_broadcast_obtain_special_item_npc(struct map_session_data *sd, unsigned short nameid, const char *srcname) {
+	nullpo_retr(0, sd);
+
+	// Send local
+	clif_broadcast_obtain_special_item(sd->status.name, nameid, 0, ITEMOBTAIN_TYPE_NPC, srcname);
+
+	if (CheckForCharServer())
+		return 0;
+
+	if (other_mapserver_count < 1)
+		return 0;
+
+	WFIFOHEAD(inter_fd, 9 + NAME_LENGTH*2);
+	WFIFOW(inter_fd, 0) = 0x3009;
+	WFIFOW(inter_fd, 2) = 9 + NAME_LENGTH*2;
+	WFIFOW(inter_fd, 4) = nameid;
+	WFIFOW(inter_fd, 6) = 0;
+	WFIFOB(inter_fd, 8) = ITEMOBTAIN_TYPE_NPC;
+	safestrncpy((char *)WFIFOP(inter_fd, 9), sd->status.name, NAME_LENGTH);
+	safestrncpy((char *)WFIFOP(inter_fd, 9 + NAME_LENGTH), srcname, NAME_LENGTH);
+	WFIFOSET(inter_fd, WFIFOW(inter_fd, 2));
+
+	return 1;
+}
+
+/**
+ * Received broadcast item and broadcast on local map.
+ * IZ 3809 <cmd>.W <len>.W <nameid>.W <source>.W <type>.B <name>.24B <srcname>.24B
+ * @param fd
+ **/
+void intif_parse_broadcast_obtain_special_item(int fd) {
+	int type = RFIFOB(fd, 8);
+	char name[NAME_LENGTH], srcname[NAME_LENGTH];
+
+	safestrncpy(name, (char *)RFIFOP(fd, 9), NAME_LENGTH);
+	if (type == ITEMOBTAIN_TYPE_NPC)
+		safestrncpy(name, (char *)RFIFOP(fd, 9 + NAME_LENGTH), NAME_LENGTH);
+
+	clif_broadcast_obtain_special_item(name, RFIFOW(fd, 4), RFIFOW(fd, 6), (enum BROADCASTING_SPECIAL_ITEM_OBTAIN)type, srcname);
+}
+
 /*==========================================
  * Item Bound System
  *------------------------------------------*/
@@ -2870,13 +3049,14 @@ void intif_parse_MessageToFD(int fd) {
 #ifdef BOUND_ITEMS
 
 /**
- * Request char-serv to delete some bound item, for non connected cid
+ * ZI 0x3056 <char_id>.L <account_id>.L <guild_id>.W
+ * Request inter-serv to delete some bound item, for non connected cid
  * @param char_id : Char to delete item ID
  * @param aid : Account to delete item ID
  * @param guild_id : Guild of char
  */
-void intif_itembound_req(int char_id,int aid,int guild_id) {
-	struct guild_storage *gstor = guild2storage2(guild_id);
+void intif_itembound_guild_retrieve(uint32 char_id,uint32 account_id,int guild_id) {
+	struct guild_storage *gstor = gstorage_get_storage(guild_id);
 	
 	if( CheckForCharServer() )
 		return;
@@ -2884,22 +3064,54 @@ void intif_itembound_req(int char_id,int aid,int guild_id) {
 	WFIFOHEAD(inter_fd,12);
 	WFIFOW(inter_fd,0) = 0x3056;
 	WFIFOL(inter_fd,2) = char_id;
-	WFIFOL(inter_fd,6) = aid;
+	WFIFOL(inter_fd,6) = account_id;
 	WFIFOW(inter_fd,10) = guild_id;
 	WFIFOSET(inter_fd,12);
-	if(gstor) gstor->lock = 1; //Lock for retrieval process
+	if (gstor)
+		gstor->locked = true; //Lock for retrieval process
+	ShowInfo("Request guild bound item(s) retrieval for CID = "CL_WHITE"%d"CL_RESET", AID = %d, Guild ID = "CL_WHITE"%d"CL_RESET".\n", char_id, account_id, guild_id);
 }
 
 /**
- * Acknoledge the good deletion of the bound item
+ * Acknowledge the good deletion of the bound item
  * (unlock the guild storage)
  * @struct : 0x3856 <aid>.L <gid>.W
  * @param fd : Char-serv link
  */
 void intif_parse_itembound_ack(int fd) {
 	int guild_id = RFIFOW(fd,6);
-	struct guild_storage *gstor = guild2storage2(guild_id);
-	if(gstor) gstor->lock = 0; //Unlock now that operation is completed
+	struct guild_storage *gstor = gstorage_get_storage(guild_id);
+	if (gstor)
+		gstor->locked = false; //Unlock now that operation is completed
+}
+
+/**
+* IZ 0x3857 <size>.W <count>.W <guild_id>.W { <item>.?B }.*MAX_INVENTORY
+* Received the retrieved guild bound items from inter-server, store them to guild storage.
+* @param fd
+* @author [Cydh]
+*/
+void intif_parse_itembound_store2gstorage(int fd) {
+	unsigned short i, failed = 0;
+	short count = RFIFOW(fd, 4), guild_id = RFIFOW(fd, 6);
+	struct guild_storage *gstor = gstorage_guild2storage(guild_id);
+
+	if (!gstor) {
+		ShowError("intif_parse_itembound_store2gstorage: Guild '%d' not found.\n", guild_id);
+		return;
+	}
+
+	//@TODO: Gives some actions for item(s) that cannot be stored because storage is full or reach the limit of stack amount
+	for (i = 0; i < count; i++) {
+		struct item *item = (struct item*)RFIFOP(fd, 8 + i*sizeof(struct item));
+		if (!item)
+			continue;
+		if (!gstorage_additem2(gstor, item, item->amount))
+			failed++;
+	}
+	ShowInfo("Retrieved '"CL_WHITE"%d"CL_RESET"' (failed: %d) guild bound item(s) for Guild ID = "CL_WHITE"%d"CL_RESET".\n", count, failed, guild_id);
+	gstor->locked = false;
+	gstor->opened = 0;
 }
 #endif
 
@@ -2946,6 +3158,8 @@ int intif_parse(int fd)
 	case 0x3804:	intif_parse_Registers(fd); break;
 	case 0x3806:	intif_parse_ChangeNameOk(fd); break;
 	case 0x3807:	intif_parse_MessageToFD(fd); break;
+	case 0x3808:	intif_parse_accinfo_ack(fd); break;
+	case 0x3809:	intif_parse_broadcast_obtain_special_item(fd); break;
 	case 0x3818:	intif_parse_LoadGuildStorage(fd); break;
 	case 0x3819:	intif_parse_SaveGuildStorage(fd); break;
 	case 0x3820:	intif_parse_PartyCreated(fd); break;
@@ -2973,18 +3187,15 @@ int intif_parse(int fd)
 	case 0x3840:	intif_parse_GuildCastleDataLoad(fd); break;
 	case 0x3843:	intif_parse_GuildMasterChanged(fd); break;
 
-	//Quest system
-	case 0x3860:	intif_parse_questlog(fd); break;
-	case 0x3861:	intif_parse_questsave(fd); break;
-
-// Mail System
+	// Mail System
 	case 0x3848:	intif_parse_Mail_inboxreceived(fd); break;
 	case 0x3849:	intif_parse_Mail_new(fd); break;
 	case 0x384a:	intif_parse_Mail_getattach(fd); break;
 	case 0x384b:	intif_parse_Mail_delete(fd); break;
 	case 0x384c:	intif_parse_Mail_return(fd); break;
 	case 0x384d:	intif_parse_Mail_send(fd); break;
-// Auction System
+
+	// Auction System
 	case 0x3850:	intif_parse_Auction_results(fd); break;
 	case 0x3851:	intif_parse_Auction_register(fd); break;
 	case 0x3852:	intif_parse_Auction_cancel(fd); break;
@@ -2992,28 +3203,38 @@ int intif_parse(int fd)
 	case 0x3854:	intif_parse_Auction_message(fd); break;
 	case 0x3855:	intif_parse_Auction_bid(fd); break;
 
-//Bound items
+	//Bound items
 #ifdef BOUND_ITEMS
 	case 0x3856:	intif_parse_itembound_ack(fd); break;
+	case 0x3857:	intif_parse_itembound_store2gstorage(fd); break;
 #endif
+
+	//Quest system
+	case 0x3860:	intif_parse_questlog(fd); break;
+	case 0x3861:	intif_parse_questsave(fd); break;
 
 	// Mercenary System
 	case 0x3870:	intif_parse_mercenary_received(fd); break;
 	case 0x3871:	intif_parse_mercenary_deleted(fd); break;
 	case 0x3872:	intif_parse_mercenary_saved(fd); break;
+
 	// Elemental System
 	case 0x387c:	intif_parse_elemental_received(fd); break;
 	case 0x387d:	intif_parse_elemental_deleted(fd); break;
 	case 0x387e:	intif_parse_elemental_saved(fd); break;
 
+	// Pet System
 	case 0x3880:	intif_parse_CreatePet(fd); break;
 	case 0x3881:	intif_parse_RecvPetData(fd); break;
 	case 0x3882:	intif_parse_SavePetOk(fd); break;
 	case 0x3883:	intif_parse_DeletePetOk(fd); break;
+
+	// Homunculus
 	case 0x3890:	intif_parse_CreateHomunculus(fd); break;
 	case 0x3891:	intif_parse_RecvHomunculusData(fd); break;
 	case 0x3892:	intif_parse_SaveHomunculusOk(fd); break;
 	case 0x3893:	intif_parse_DeleteHomunculusOk(fd); break;
+
 	default:
 		ShowError("intif_parse : unknown packet %d %x\n",fd,RFIFOW(fd,0));
 		return 0;
