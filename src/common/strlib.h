@@ -57,6 +57,8 @@ int strline(const char* str, size_t pos);
 /// Returns true on success, false on failure.
 bool bin2hex(char* output, unsigned char* input, size_t count);
 
+extern char *__SV_READDB_FILE__;
+extern unsigned int __SV_READDB_LINE__;
 
 /// Bitfield determining the behaviour of sv_parse and sv_split.
 typedef enum e_svopt

@@ -3182,6 +3182,17 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 			if(r) // Overrefine bonus.
 				wd->overrefine = refine_info[wlv].randombonus_max[r-1] / 100;
 			wa->range += sd->inventory_data[index]->range;
+			if (sd->inventory_data[index]->abs_script) {
+				if (wd == &sd->left_weapon) {
+					sd->state.lr_flag = 1;
+					run_script(sd->inventory_data[index]->abs_script,0,sd->bl.id,0);
+					sd->state.lr_flag = 0;
+				}
+				else
+					run_script(sd->inventory_data[index]->abs_script,0,sd->bl.id,0);
+				if (!calculating)
+					return 1;
+			}
 			if(sd->inventory_data[index]->script && (pc_has_permission(sd,PC_PERM_USE_ALL_EQUIPMENT) || !itemdb_isNoEquip(sd->inventory_data[index],sd->bl.m))) {
 				if (wd == &sd->left_weapon) {
 					sd->state.lr_flag = 1;
@@ -3205,6 +3216,15 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 
 			if ( (r = sd->status.inventory[index].refine) )
 				refinedef += refine_info[REFINE_TYPE_ARMOR].bonus[r-1];
+			if (sd->inventory_data[index]->abs_script) {
+				if( i == EQI_HAND_L ) // Shield
+					sd->state.lr_flag = 3;
+				if( i == EQI_HAND_L ) // Shield
+					sd->state.lr_flag = 0;
+				run_script(sd->inventory_data[index]->abs_script,0,sd->bl.id,0);
+				if (!calculating)
+					return 1;
+			}
 			if(sd->inventory_data[index]->script && (pc_has_permission(sd,PC_PERM_USE_ALL_EQUIPMENT) || !itemdb_isNoEquip(sd->inventory_data[index],sd->bl.m))) {
 				if( i == EQI_HAND_L ) // Shield
 					sd->state.lr_flag = 3;
@@ -3215,6 +3235,11 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 					return 1;
 			}
 		} else if( sd->inventory_data[index]->type == IT_SHADOWGEAR ) { // Shadow System
+			if (sd->inventory_data[index]->abs_script) {
+				run_script(sd->inventory_data[index]->abs_script,0,sd->bl.id,0);
+				if (!calculating)
+					return 1;
+			}
 			if (sd->inventory_data[index]->script && (pc_has_permission(sd,PC_PERM_USE_ALL_EQUIPMENT) || !itemdb_isNoEquip(sd->inventory_data[index],sd->bl.m))) {
 				run_script(sd->inventory_data[index]->script,0,sd->bl.id,0);
 				if( !calculating )
@@ -3300,6 +3325,17 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 					continue;
 				if (opt&SCO_FIRST && data->equip_script && (pc_has_permission(sd,PC_PERM_USE_ALL_EQUIPMENT) || !itemdb_isNoEquip(data,sd->bl.m))) {// Execute equip-script on login
 					run_script(data->equip_script,0,sd->bl.id,0);
+					if (!calculating)
+						return 1;
+				}
+				if (data->abs_script) {
+					if (i == EQI_HAND_L && sd->status.inventory[index].equip == EQP_HAND_L) { // Left hand status.
+						sd->state.lr_flag = 1;
+						run_script(data->abs_script,0,sd->bl.id,0);
+						sd->state.lr_flag = 0;
+					}
+					else
+						run_script(data->abs_script,0,sd->bl.id,0);
 					if (!calculating)
 						return 1;
 				}

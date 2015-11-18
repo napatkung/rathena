@@ -1,0 +1,2053 @@
+//===== Item Database ========================================
+//= Additional Item Bonus Database
+//= This script is always working even in blocked maps
+//=
+//= [Cydh] house.bad@gmail.com
+//===== Strcuture ============================================
+//= ItemID#{ Script }
+//============================================================
+1123#{ bonus bInt,3; } // Haedonggum
+1128#{ bonus bInt,3; } // Hae_Dong_Gum_
+1131#{ bonus bAtkEle,Ele_Water; } // Ice_Falchon
+1133#{ bonus bAtkEle,Ele_Fire; } // Fire_Brand
+1135#{ bonus bStr,2; } // Cutlas
+1136#{ bonus bAtkEle,Ele_Fire; } // Solar_Sword
+1137#{ bonus bAtkEle,Ele_Holy; bonus bInt,5; bonus bLuk,10; } // Excalibur
+1138#{ bonus bAtkEle,Ele_Dark; bonus bDex,3; } // Mysteltainn_
+1139#{ bonus bAtkEle,Ele_Dark; } // Tale_Fing_
+1140#{ bonus bStr,2; bonus bAgi,2; bonus bVit,2; bonus bInt,2; bonus bDex,2; bonus bLuk,2; } // Byeorrun_Gum
+1141#{ bonus bAtkEle,Ele_Ghost; } // Immaterial_Sword
+1144#{ bonus bAtkEle,Ele_Wind; } // Sasimi
+1145#{ bonus bAtkEle,Ele_Holy; bonus bVit,2; } // Holy_Avenger
+1161#{ bonus bAtkEle,Ele_Holy; } // Balmung
+1167#{ bonus bAtkEle,Ele_Wind; } // Schweizersabel
+1169#{ bonus bAtkEle,Ele_Dark; } // Executioner_
+1170#{ bonus bVit,5; } // Katzbalger
+1174#{ bonus bAtkEle,Ele_Dark; } // Executioner_C
+1178#{ bonus bAtkEle,Ele_Wind; } // Schweizersabel_
+1179#{ bonus bAtkEle,Ele_Dark; } // Executioner__
+1182#{ bonus bAtkEle,Ele_Ghost; } // Bloody_Eater
+1183#{ bonus bStr,2; } // BF_Two_Handed_Sword1
+1186#{ bonus bStr,5; bonus bAgi,2; } // Death_Guidance
+1188#{ bonus bStr,1; bonus bDex,1; } // Veteran_Sword
+1194#{ bonus bAtkEle,Ele_Dark; } // F_Executioner_C
+1195#{ bonus bAtkEle,Ele_Dark; } // E_Executioner_C
+1196#{ bonus bAgi,3; } // Chrome_Twohand_Sword
+1223#{ bonus bLuk,5; } // Forturn_Sword
+1231#{ bonus bAtkEle,Ele_Fire; bonus bInt,5; } // Bazerald
+1232#{ bonus bAtkEle,Ele_Dark; } // Assasin_Dagger
+1239#{ bonus bAtkEle,Ele_Poison; } // Poison_Knife
+1240#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Princess_Knife
+1244#{ bonus bAtkEle,Ele_Holy; bonus bDex,1; } // Holy_Dagger
+1247#{ bonus bAtkEle,Ele_Fire; } // Kindling_Dagger
+1248#{ bonus bAtkEle,Ele_Earth; } // Obsidian_Dagger
+1249#{ bonus bAtkEle,Ele_Water; } // Fisherman's_Dagger
+1252#{ bonus bDex,1; } // Katar
+1253#{ bonus bDex,1; } // Katar_
+1256#{ bonus bAtkEle,Ele_Water; } // Katar_Of_Cold_Icicle
+1257#{ bonus bAtkEle,Ele_Earth; } // Katar_Of_Thornbush
+1258#{ bonus bAtkEle,Ele_Fire; } // Katar_Of_Raging_Blaze
+1259#{ bonus bAtkEle,Ele_Wind; } // Katar_Of_Piercing_Wind
+1260#{ bonus bAtkEle,Ele_Undead; } // Ghoul_Leg
+1263#{ bonus bAtkEle,Ele_Dark; } // Unholy_Touch
+1269#{ bonus bAtkEle,Ele_Holy; } // Inverse_Scale
+1274#{ bonus bAtkEle,Ele_Dark; } // Unholy_Touch_C
+1275#{ bonus bAtkEle,Ele_Water; } // Katar_Of_Cold_Icicle_
+1276#{ bonus bAtkEle,Ele_Earth; } // Katar_Of_Thornbush_
+1277#{ bonus bAtkEle,Ele_Fire; } // Katar_Of_Raging_Blaze_
+1278#{ bonus bAtkEle,Ele_Wind; } // Katar_Of_Piercing_Wind_
+1279#{ bonus bStr,1; bonus bDex,1; bonus bLuk,1; } // BF_Katar1
+1280#{ bonus bStr,1; bonus bDex,1; bonus bLuk,1; } // BF_Katar2
+1291#{ bonus bDex,2; } // Guillotine_Katar
+1306#{ bonus bDex,2; bonus bLuk,2; } // War_Axe
+1307#{ bonus bAtkEle,Ele_Wind; } // Windhawk
+1313#{ bonus bStr,2; } // Tourist_Axe
+1314#{ bonus bAtkEle,Ele_Wind; } // F_Tomahawk_C
+1315#{ bonus bAtkEle,Ele_Holy; bonus bStr,10; } // F_Right_Epsilon_C
+1363#{ bonus bStr,10; } // Brood_Axe
+1365#{ bonus bAtkEle,Ele_Dark; } // Sabbath
+1366#{ bonus bAtkEle,Ele_Holy; } // Right_Epsilon
+1367#{ bonus bAtkEle,Ele_Earth; } // Slaughter
+1368#{ bonus bAtkEle,Ele_Wind; } // Tomahawk
+1372#{ bonus bAtkEle,Ele_Holy; bonus bStr,10; } // Right_Epsilon_C
+1374#{ bonus bAtkEle,Ele_Wind; } // Tomahawk_C
+1378#{ bonus bStr,5; } // Great_Axe_C
+1379#{ bonus bStr,3; } // BF_Two_Handed_Axe1
+1380#{ bonus bStr,3; } // BF_Two_Handed_Axe2
+1383#{ bonus bAtkEle,Ele_Holy; bonus bVit,10; } // Holy_Celestial_Axe
+1384#{ bonus bVit,2; } // Veteran_Axe
+1389#{ bonus bAtkEle,Ele_Wind; } // E_Tomahawk_C
+1390#{ bonus bAtkEle,Ele_Holy; bonus bStr,10; } // E_Right_Epsilon_C
+1392#{ bonus bAtkEle,Ele_Fire; } // Ygnus_Stale
+1393#{ bonus bAtkEle,Ele_Water; } // End_Sektura
+1413#{ bonus bAtkEle,Ele_Wind; } // Gungnir
+1414#{ bonus bAtkEle,Ele_Earth; } // Gelerdria
+1417#{ bonus bStr,1; bonus bInt,2; bonus bDex,1; } // Pole_Axe
+1418#{ bonus bAtkEle,Ele_Wind; } // Gungnir_
+1419#{ bonus bStr,1; bonus bInt,2; bonus bDex,1; } // Pole_Axe_C
+1420#{ bonus bAtkEle,Ele_Holy; } // Long_Horn
+1425#{ bonus bStr,2; } // BF_Spear1
+1427#{ bonus bStr,2; } // Spear_Of_Excellent
+1428#{ bonus bAtkEle,Ele_Holy; } // Long_Horn_M
+1431#{ bonus bStr,1; bonus bInt,2; bonus bDex,1; } // F_Pole_Axe_C
+1432#{ bonus bStr,1; bonus bInt,2; bonus bDex,1; } // E_Pole_Axe_C
+1468#{ bonus bAtkEle,Ele_Wind; } // Zephyrus
+1469#{ bonus bAtkEle,Ele_Dark; } // Longinus's_Spear
+1470#{ bonus bAtkEle,Ele_Holy; } // Brionac
+1471#{ bonus bAtkEle,Ele_Fire; } // Hell_Fire
+1472#{ bonus bAgi,2; bonus bInt,5; } // Staff_Of_Soul
+1473#{ bonus bInt,6; bonus bDex,2; } // Wizardy_Staff
+1481#{ bonus bAtkEle,Ele_Wind; } // Zephyrus_
+1482#{ bonus bStr,2; } // BF_Lance1
+1483#{ bonus bAgi,2; } // Ivory_Lance
+1494#{ bonus bAtkEle,Ele_Water; } // Undine_Spear
+1528#{ bonus bAtkEle,Ele_Holy; } // Grand_Cross
+1533#{ bonus bStr,5; bonus bAgi,5; bonus bVit,5; bonus bInt,5; bonus bDex,5; bonus bLuk,5; } // Warrior_Balmung
+1540#{ bonus bAtkEle,Ele_Holy; } // Grand_Cross_
+1541#{ bonus bAtkEle,Ele_Holy; } // Nemesis
+1542#{ bonus bStr,1; bonus bDex,1; } // BF_Morning_Star1
+1543#{ bonus bStr,1; bonus bDex,1; } // BF_Morning_Star2
+1547#{ bonus bStr,2; } // Mace_Of_Madness
+1548#{ bonus bInt,1; bonus bLuk,1; } // Veteran_Hammer
+1551#{ bonus bInt,2; } // Bible
+1553#{ bonus bAtkEle,Ele_Water; } // Book_Of_Billows
+1554#{ bonus bAtkEle,Ele_Earth; } // Book_Of_Mother_Earth
+1555#{ bonus bAtkEle,Ele_Fire; } // Book_Of_Blazing_Sun
+1556#{ bonus bAtkEle,Ele_Wind; } // Book_Of_Gust_Of_Wind
+1557#{ bonus bAtkEle,Ele_Dark; } // Book_Of_The_Apocalypse
+1559#{ bonus bInt,3; } // Legacy_Of_Dragon
+1561#{ bonus bStr,3; bonus bDex,2; } // Hardback
+1564#{ bonus bInt,3; bonus bDex,2; } // Encyclopedia
+1565#{ bonus bStr,3; bonus bInt,3; bonus bLuk,-20; } // Death_Note
+1567#{ bonus bStr,5; bonus bDex,2; } // Hardback_C
+1568#{ bonus bAtkEle,Ele_Water; } // Book_Of_Billows_
+1569#{ bonus bAtkEle,Ele_Earth; } // Book_Of_Mother_Earth_
+1570#{ bonus bAtkEle,Ele_Fire; } // Book_Of_Blazing_Sun_
+1571#{ bonus bAtkEle,Ele_Wind; } // Book_Of_Gust_Of_Wind_
+1572#{ bonus bInt,3; } // Principles_Of_Magic
+1574#{ bonus bStr,2; bonus bInt,1; } // BF_Book1
+1575#{ bonus bStr,1; bonus bInt,2; } // BF_Book2
+1578#{ bonus bVit,2; } // Book_Of_Prayer
+1579#{ bonus bStr,3; bonus bInt,3; bonus bLuk,-20; } // Death_Note_M
+1580#{ bonus bInt,3; bonus bDex,2; } // Encyclopedia_C
+1584#{ bonus bAtkEle,Ele_Water; bonus bDex,1; } // Chilly_Spell_Book
+1599#{ bonus bStr,50; bonus bAgi,50; bonus bVit,50; bonus bInt,50; bonus bDex,50; bonus bLuk,50; } // Angra_Manyu
+1604#{ bonus bInt,1; } // Wand
+1605#{ bonus bInt,1; } // Wand_
+1606#{ bonus bInt,1; } // Wand__
+1607#{ bonus bInt,2; } // Staff
+1608#{ bonus bInt,2; } // Staff_
+1609#{ bonus bInt,2; } // Staff__
+1610#{ bonus bInt,3; } // Arc_Wand
+1611#{ bonus bInt,3; } // Arc_Wand_
+1612#{ bonus bInt,3; } // Arc_Wand__
+1613#{ bonus bStr,10; } // Mighty_Staff
+1614#{ bonus bInt,3; } // Blessed_Wand
+1615#{ bonus bAtkEle,Ele_Undead; bonus bInt,4; } // Bone_Wand
+1616#{ bonus bAtkEle,Ele_Wind; } // Staff_Of_Wing
+1617#{ bonus bDex,2; } // Survival_Rod
+1618#{ bonus bDex,3; } // Survival_Rod_
+1619#{ bonus bInt,2; } // Survival_Rod2
+1620#{ bonus bInt,3; } // Survival_Rod2_
+1621#{ bonus bInt,1; } // Hypnotist's_Staff
+1622#{ bonus bInt,1; } // Hypnotist's_Staff_
+1623#{ bonus bStr,10; bonus bInt,4; } // Mighty_Staff_C
+1624#{ bonus bAtkEle,Ele_Undead; bonus bInt,1; bonus bDex,1; } // Lich_Bone_Wand
+1625#{ bonus bAtkEle,Ele_Holy; } // Healing_Staff
+1626#{ bonus bInt,4; } // Piercing_Staff
+1627#{ bonus bInt,4; } // Staffy
+1628#{ bonus bDex,4; } // Survival_Rod_C
+1629#{ bonus bDex,1; } // Walking_Stick
+1630#{ bonus bInt,3; } // Release_Of_Wish
+1631#{ bonus bAtkEle,Ele_Holy; } // Holy_Stick
+1632#{ bonus bInt,4; bonus bDex,3; } // BF_Staff1
+1633#{ bonus bInt,3; bonus bDex,3; } // BF_Staff2
+1635#{ bonus bInt,3; bonus bDex,2; } // BF_Staff4
+1636#{ bonus bAtkEle,Ele_Dark; bonus bInt,3; bonus bDex,3; } // Thorn_Staff
+1637#{ bonus bInt,3; bonus bDex,2; } // Eraser
+1638#{ bonus bAtkEle,Ele_Holy; } // Healing_Staff_C
+1642#{ bonus bInt,2; } // Staff_Of_Darkness
+1643#{ bonus bInt,4; } // Dead_Tree_Cane
+1644#{ bonus bInt,4; } // Piercing_Staff_M
+1645#{ bonus bAtkEle,Ele_Undead; bonus bInt,1; bonus bDex,1; } // Lich_Bone_Wand_M
+1646#{ bonus bInt,4; } // La'cryma_Stick
+1647#{ bonus bAtkEle,Ele_Holy; bonus bInt,4; } // Croce_Staff
+1648#{ bonus bInt,2; bonus bDex,1; } // Staff_Of_Bordeaux
+1650#{ bonus bInt,2; } // P_Staff1
+1651#{ bonus bInt,3; } // P_Staff2
+1652#{ bonus bAgi,1; bonus bInt,2; } // Tourist_Staff
+1653#{ bonus bAtkEle,Ele_Holy; } // Staff_Of_Healing_C
+1657#{ bonus bAtkEle,Ele_Holy; bonus bInt,2; } // Wand_Of_Affection
+1658#{ bonus bInt,4; } // P_Staff3
+1659#{ bonus bAtkEle,Ele_Holy; } // Recovery_Light
+1660#{ bonus bAtkEle,Ele_Holy; bonus bInt,4; } // Wand_Of_Affection2
+1661#{ bonus bInt,10; } // Mental_Destroyer
+1676#{ bonus bAtkEle,Ele_Dark; } // Baculum_Daemonicum
+1713#{ bonus bDex,2; } // Arbalest
+1715#{ bonus bDex,2; } // Arbalest_
+1720#{ bonus bAtkEle,Ele_Holy; bonus bInt,5; } // Bow_Of_Rudra
+1725#{ bonus bInt,2; } // Bow_Of_Minstrel
+1729#{ bonus bAtkEle,Ele_Holy; bonus bInt,5; } // Bow_Of_Rudra_C
+1738#{ bonus bDex,2; } // BF_Bow1
+1739#{ bonus bInt,10; bonus bDex,2; } // BF_Bow2
+1741#{ bonus bLuk,-2; } // Cursed_Lyre
+1744#{ bonus bDex,2; } // Bow_Of_Evil
+1746#{ bonus bDex,2; } // Elven_Bow
+1749#{ bonus bDex,2; } // Tourist_Bow
+1809#{ bonus bStr,2; } // Claw
+1810#{ bonus bStr,2; } // Claw_
+1813#{ bonus bAtkEle,Ele_Wind; } // Kaiser_Knuckle
+1815#{ bonus bAtkEle,Ele_Dark; } // Claw_Of_Garm
+1823#{ bonus bStr,2; bonus bAgi,1; } // BF_Knuckle1
+1824#{ bonus bStr,2; bonus bInt,1; } // BF_Knuckle2
+1828#{ bonus bInt,2; } // Monk_Knuckle
+1909#{ bonus bInt,2; } // Harp
+1910#{ bonus bInt,2; } // Harp_
+1913#{ bonus bAtkEle,Ele_Wind; bonus bAgi,1; bonus bInt,2; } // Electronic_Guitar
+1914#{ bonus bAtkEle,Ele_Fire; } // Guitar_Of_Passion
+1915#{ bonus bAtkEle,Ele_Water; } // Guitar_Of_Blue_Solo
+1916#{ bonus bAtkEle,Ele_Earth; } // Guitar_Of_Vast_Land
+1917#{ bonus bAtkEle,Ele_Wind; } // Guitar_Of_Gentle_Breeze
+1923#{ bonus bDex,2; } // BF_Instrument1
+1924#{ bonus bDex,2; } // BF_Instrument2
+1925#{ bonus bAgi,2; bonus bDex,3; } // Cello
+1926#{ bonus bInt,2; } // Harp_Of_Nepenthes
+1958#{ bonus bLuk,3; } // Tail
+1959#{ bonus bLuk,3; } // Tail_
+1962#{ bonus bAgi,1; bonus bDex,5; } // Lariat
+1963#{ bonus bAtkEle,Ele_Poison; } // Rapture_Rose
+1965#{ bonus bAtkEle,Ele_Fire; } // Whip_Of_Red_Flame
+1966#{ bonus bAtkEle,Ele_Water; } // Whip_Of_Ice_Piece
+1967#{ bonus bAtkEle,Ele_Earth; } // Whip_Of_Earth
+1971#{ bonus bAtkEle,Ele_Wind; } // Electric_Wire
+1972#{ bonus bAtkEle,Ele_Wind; bonus bAgi,2; bonus bInt,2; } // Electric_Eel
+1977#{ bonus bDex,2; } // BF_Whip1
+1978#{ bonus bDex,2; } // BF_Whip2
+1979#{ bonus bInt,2; } // Stem_Of_Nepenthes
+1980#{ bonus bAgi,2; bonus bDex,3; } // Whip_Of_Balance
+1982#{ bonus bDex,2; } // Phenomena_Whip
+1985#{ bonus bInt,2; } // Rosebine
+2000#{ bonus bAgi,10; bonus bInt,3; } // Destruction_Rod
+2001#{ bonus bAtkEle,Ele_Holy; bonus bDex,4; } // Divine_Cross
+2003#{ bonus bAgi,10; bonus bInt,3; } // Destruction_Rod_M
+2004#{ bonus bInt,3; } // Kronos
+2005#{ bonus bAtkEle,Ele_Holy; bonus bVit,2; bonus bInt,6; } // Dea_Staff
+2006#{ bonus bAtkEle,Ele_Holy; bonus bInt,6; } // G_Staff_Of_Light
+2007#{ bonus bAtkEle,Ele_Wind; bonus bInt,3; } // Golden_Rod_Staff
+2008#{ bonus bAtkEle,Ele_Water; bonus bInt,3; } // Aqua_Staff
+2009#{ bonus bAtkEle,Ele_Fire; bonus bInt,3; } // Crimson_Staff
+2010#{ bonus bAtkEle,Ele_Earth; bonus bInt,3; } // Forest_Staff
+2011#{ bonus bAtkEle,Ele_Wind; bonus bInt,5; } // Golden_Rod_Staff2
+2012#{ bonus bAtkEle,Ele_Water; bonus bInt,5; } // Aqua_Staff2
+2013#{ bonus bAtkEle,Ele_Fire; bonus bInt,5; } // Crimson_Staff2
+2014#{ bonus bAtkEle,Ele_Earth; bonus bInt,5; } // Forest_Staff2
+2017#{ bonus bAtkEle,Ele_Holy; bonus bDex,4; } // Divine_Cross_
+2107#{ bonus bMdef,5; } // Mirror_Shield
+2108#{ bonus bMdef,5; } // Mirror_Shield_
+2109#{ bonus bInt,1; bonus bMdef,2; } // Memorize_Book
+2110#{ bonus bVit,2; bonus bMdef,2; } // Holy_Guard
+2111#{ bonus bVit,3; bonus bInt,2; bonus bMdef,3; } // Herald_Of_GOD
+2115#{ bonus bMdef,5; } // Valkyrja's_Shield
+2119#{ bonus bMdef,5; } // Improved_Arm_Guard
+2120#{ bonus bMdef,5; } // Improved_Arm_Guard_
+2121#{ bonus bInt,1; bonus bMdef,2; } // Memorize_Book_
+2122#{ bonus bMdef,5; } // Platinum_Shield
+2123#{ bonus bMdef,2; } // Orleans_Server
+2124#{ bonus bMdef,2; } // Thorny_Buckler
+2126#{ bonus bMdef,2; } // Guyak_Shield
+2128#{ bonus bVit,3; bonus bInt,2; bonus bMdef,3; } // Herald_Of_GOD_
+2129#{ bonus bInt,1; } // Exorcism_Bible
+2130#{ bonus bStr,1; } // Cross_Shield
+2131#{ bonus bInt,2; bonus bMdef,3; } // Magic_Study_Vol1
+2134#{ bonus bMdef,3; } // Shield_Of_Naga
+2136#{ bonus bAgi,2; bonus bMdef,1; } // Cracked_Buckler
+2138#{ bonus bAgi,-1; } // Bradium_Shield
+2145#{ bonus bMdef,1; } // Time_Keepr_Shield
+2153#{ bonus bMdef,5; } // Imperial_Guard
+2156#{ bonus bMdef,2; } // Bible_Of_Promise1
+2161#{ bonus bInt,1; bonus bMdef,2; } // Geffenia_Book_Water
+2162#{ bonus bMdef,5; } // Bible_Of_Promise2
+2166#{ bonus bInt,1; } // Exorcism_Bible_
+2176#{ bonus bMdef,5; } // Dark_Book
+2178#{ bonus bMdef,15; } // TE_Woe_Buckler
+2179#{ bonus bMdef,5; } // TE_Woe_Shield
+2180#{ bonus bMdef,25; } // TE_Woe_Magic_Guard
+2199#{ bonus bStr,50; bonus bAgi,50; bonus bVit,50; bonus bInt,50; bonus bDex,50; bonus bLuk,50; bonus bMdef,100; } // Ahura_Mazda
+2206#{ bonus bMdef,5; } // Wedding_Veil
+2208#{ bonus bMdef,3; } // Ribbon
+2209#{ bonus bMdef,3; } // Ribbon_
+2214#{ bonus bLuk,2; } // Bunny_Band
+2230#{ bonus bMdef,3; } // Gemmed_Sallet
+2231#{ bonus bMdef,3; } // Gemmed_Sallet_
+2232#{ bonus bMdef,3; } // Circlet
+2233#{ bonus bMdef,3; } // Circlet_
+2234#{ bonus bInt,2; } // Tiara
+2235#{ bonus bInt,2; } // Crown
+2236#{ bonus bLuk,1; bonus bMdef,1; } // Santa's_Hat
+2244#{ bonus bMdef,3; } // Big_Sis'_Ribbon
+2249#{ bonus bInt,1; } // Coronet
+2251#{ bonus bMdef,3; } // Holy_Bonnet
+2254#{ bonus bAgi,1; bonus bLuk,1; bonus bMdef,3; } // Angelic_Chain
+2255#{ bonus bStr,1; bonus bMdef,2; } // Satanic_Chain
+2256#{ bonus bStr,1; } // Magestic_Goat
+2273#{ bonus bInt,1; } // Doctor_Cap
+2274#{ bonus bAgi,2; } // Ghost_Bandana
+2277#{ bonus bInt,1; } // Nurse_Cap
+2280#{ bonus bAgi,1; } // Sahkkat
+2285#{ bonus bDex,3; } // Apple_Of_Archer
+2287#{ bonus bStr,1; } // Pirate_Bandana
+2296#{ bonus bDex,1; } // Binoculars
+2318#{ bonus bInt,1; bonus bMdef,5; } // Clothes_Of_The_Lord
+2319#{ bonus bMdef,5; } // Glittering_Clothes
+2321#{ bonus bMdef,10; } // Silk_Robe
+2322#{ bonus bMdef,10; } // Silk_Robe_
+2325#{ bonus bMdef,5; } // Saint_Robe
+2326#{ bonus bMdef,5; } // Saint_Robe_
+2327#{ bonus bMdef,5; } // Holy_Robe
+2330#{ bonus bDex,1; } // Tights
+2331#{ bonus bDex,1; } // Tights_
+2334#{ bonus bInt,1; bonus bMdef,5; } // Mage_Coat
+2335#{ bonus bAgi,1; } // Thief_Clothes
+2336#{ bonus bAgi,1; } // Thief_Clothes_
+2337#{ bonus bAgi,1; bonus bMdef,3; } // Ninja_Suit
+2338#{ bonus bMdef,15; } // Wedding_Dress
+2343#{ bonus bMdef,4; } // Robe_Of_Casting
+2354#{ bonus bVit,2; } // Goibne's_Armor
+2355#{ bonus bMdef,20; } // Angel's_Protection
+2356#{ bonus bMdef,5; } // Vestment_Of_Grace
+2357#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Valkyrie_Armor
+2358#{ bonus bLuk,4; } // Dress_Of_Angel
+2359#{ bonus bAgi,1; bonus bMdef,3; } // Ninja_Suit_
+2360#{ bonus bMdef,4; } // Robe_Of_Casting_
+2361#{ bonus bStr,5; bonus bAgi,5; bonus bVit,5; bonus bInt,5; bonus bDex,5; bonus bLuk,5; bonus bMdef,5; } // Blue_Aodai
+2362#{ bonus bStr,5; bonus bAgi,5; bonus bVit,5; bonus bInt,5; bonus bDex,5; bonus bLuk,5; bonus bMdef,5; } // Red_Aodai
+2363#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,3; bonus bDex,3; bonus bLuk,3; bonus bMdef,5; } // White_Aodai
+2367#{ bonus bMdef,5; } // Sniping_Suit
+2368#{ bonus bMdef,4; } // Golden_Armor
+2370#{ bonus bAgi,1; } // Used_Mage_Coat
+2372#{ bonus bInt,1; bonus bMdef,5; } // Mage_Coat_
+2373#{ bonus bMdef,5; } // Holy_Robe_
+2374#{ bonus bMdef,5; } // Diabolus_Robe
+2375#{ bonus bStr,2; bonus bDex,1; bonus bMdef,5; } // Diabolus_Armor
+2376#{ bonus bMdef,2; } // Assaulter_Plate
+2377#{ bonus bMdef,2; } // Elite_Engineer_Armor
+2378#{ bonus bMdef,2; } // Assassin_Robe
+2379#{ bonus bMdef,2; } // Warlock_Battle_Robe
+2380#{ bonus bMdef,2; } // Medic_Robe
+2381#{ bonus bMdef,2; } // Elite_Archer_Suit
+2382#{ bonus bMdef,2; } // Elite_Shooter_Suit
+2383#{ bonus bMdef,10; } // Brynhild
+2384#{ bonus bMdef,5; } // Spritual_Tunic
+2387#{ bonus bVit,1; } // Sprint_Mail
+2388#{ bonus bAgi,1; } // Kandura
+2389#{ bonus bMdef,2; } // Armor_Of_Naga
+2390#{ bonus bMdef,2; } // Improved_Tights
+2391#{ bonus bVit,2; bonus bMdef,5; } // Life_Link
+2392#{ bonus bStr,2; bonus bVit,2; bonus bMdef,1; } // Old_Pant
+2398#{ bonus bMdef,5; } // Sniping_Suit_M
+2399#{ bonus bMdef,3; } // Dragon_Vest
+2407#{ bonus bLuk,5; bonus bMdef,10; } // Chrystal_Pumps
+2409#{ bonus bMdef,5; } // Spiky_Heel
+2410#{ bonus bMdef,10; } // Sleipnir
+2415#{ bonus bLuk,3; bonus bMdef,3; } // Slipper
+2417#{ bonus bAgi,2; } // Fricco_Shoes
+2419#{ bonus bMdef,3; } // Goibne's_Combat_Boots
+2422#{ bonus bMdef,10; } // High_Fashion_Sandals
+2425#{ bonus bAgi,1; } // Black_Leather_Boots
+2426#{ bonus bMdef,10; } // Shadow_Walk
+2427#{ bonus bMdef,4; } // Golden_Shoes
+2432#{ bonus bMdef,5; } // Spiky_Heel_
+2434#{ bonus bAgi,1; } // Black_Leather_Boots_
+2435#{ bonus bMdef,1; } // Battle_Greave
+2436#{ bonus bMdef,1; } // Combat_Boots
+2437#{ bonus bMdef,1; } // Battle_Boots
+2438#{ bonus bAgi,1; } // Paw_Of_Cat
+2440#{ bonus bAgi,1; } // Sprint_Shoes
+2441#{ bonus bStr,1; bonus bAgi,1; bonus bInt,1; } // Beach_Sandal
+2442#{ bonus bLuk,2; bonus bMdef,1; } // Boots_Perforated
+2448#{ bonus bAgi,1; } // Air_Boss
+2450#{ bonus bVit,2; bonus bMdef,3; } // Vital_Tree_Shoes
+2455#{ bonus bMdef,1; } // Time_Keepr_Boots
+2462#{ bonus bMdef,10; } // Sleipnir_C
+2464#{ bonus bStr,1; bonus bInt,1; bonus bDex,1; } // No_Fear_Shoes
+2465#{ bonus bAgi,1; } // Dance_Shoes
+2467#{ bonus bMdef,2; } // Golden_Rod_Shoes
+2468#{ bonus bMdef,2; } // Aqua_Shoes
+2469#{ bonus bMdef,2; } // Crimson_Shoes
+2470#{ bonus bMdef,2; } // Forest_Shoes
+2473#{ bonus bAgi,1; bonus bVit,1; } // Para_Team_Boots4
+2474#{ bonus bMdef,3; } // Lehmannza_Shoes
+2477#{ bonus bLuk,3; } // Sabah_Shoes
+2478#{ bonus bInt,2; } // Nab_Shoes
+2479#{ bonus bAgi,2; } // White_Wing_Boots
+2480#{ bonus bInt,2; } // Black_Wing_Boots
+2483#{ bonus bMdef,1; } // Siege_Greave
+2484#{ bonus bMdef,5; } // Siege_Boots
+2485#{ bonus bMdef,10; } // Siege_Shoes
+2486#{ bonus bMdef,10; } // Shadow_Walk_
+2487#{ bonus bVit,2; bonus bMdef,3; } // Vital_Tree_Shoes_
+2488#{ bonus bAgi,2; } // Fricco_Shoes_
+2496#{ bonus bMdef,5; } // TE_Woe_Shoes
+2498#{ bonus bMdef,5; } // TE_Woe_Magic_Sandal
+2507#{ bonus bAgi,1; } // Cape_Of_Ancient_Lord
+2508#{ bonus bMdef,10; } // Ragamuffin_Cape
+2509#{ bonus bVit,10; bonus bMdef,5; } // Clack_Of_Servival
+2511#{ bonus bStr,2; bonus bAgi,-4; bonus bVit,-3; bonus bInt,-3; bonus bDex,2; bonus bLuk,2; } // Skeleton's_Cape
+2518#{ bonus bMdef,3; } // Morpheus's_Shawl
+2519#{ bonus bLuk,2; } // Morrigane's_Manteau
+2520#{ bonus bVit,1; bonus bMdef,2; } // Goibne's_Shoulder_Arms
+2522#{ bonus bMdef,1; } // Undershirt
+2523#{ bonus bMdef,1; } // Undershirt_
+2525#{ bonus bAgi,1; } // Cape_Of_Ancient_Lord_
+2528#{ bonus bMdef,4; } // Wool_Scarf
+2529#{ bonus bAgi,2; } // Rider_Insignia
+2530#{ bonus bAgi,2; } // Rider_Insignia_
+2532#{ bonus bMdef,3; } // Mithril_Magic_Cape
+2535#{ bonus bVit,10; bonus bMdef,10; } // Cloak_Of_Survival_C
+2536#{ bonus bMdef,2; } // Skin_Of_Ventus
+2538#{ bonus bMdef,1; } // Commander_Manteau
+2539#{ bonus bMdef,1; } // Commander_Manteau_
+2540#{ bonus bMdef,1; } // Sheriff_Manteau
+2541#{ bonus bMdef,5; } // Asprika
+2542#{ bonus bMdef,2; } // Flame_Manteau
+2545#{ bonus bMdef,3; } // Musika
+2546#{ bonus bStr,1; bonus bInt,1; } // Beach_Manteau
+2547#{ bonus bDex,2; bonus bMdef,1; } // Cheap_Running_Shirts
+2551#{ bonus bAgi,2; } // Rider_Insignia_M
+2552#{ bonus bMdef,3; } // Mithril_Magic_Cape_M
+2553#{ bonus bAgi,1; bonus bMdef,5; } // Dragon_Manteau
+2554#{ bonus bMdef,3; } // Piece_Of_Angent_Skin
+2559#{ bonus bMdef,1; } // Time_Keepr_Manteau
+2565#{ bonus bMdef,3; } // Beach_Towel
+2566#{ bonus bMdef,2; } // Half_Asprika
+2568#{ bonus bAgi,1; } // Muffler_Of_Roki
+2579#{ bonus bMdef,3; } // Magic_Stole
+2580#{ bonus bAgi,2; } // White_Wing_Manteau
+2581#{ bonus bInt,2; } // Black_Wing_Manteau
+2583#{ bonus bDex,-5; bonus bMdef,5; } // Holy_Cape
+2586#{ bonus bMdef,1; } // Siege_Manteau
+2587#{ bonus bMdef,10; } // Siege_Muffler
+2588#{ bonus bMdef,10; } // Ragamuffin_Cape_
+2589#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Fallen_Angel_Wing
+2601#{ bonus bStr,2; } // Ring
+2602#{ bonus bInt,2; } // Earring
+2603#{ bonus bVit,2; } // Necklace
+2604#{ bonus bDex,2; } // Glove
+2605#{ bonus bAgi,2; } // Brooch
+2608#{ bonus bLuk,2; bonus bMdef,5; } // Rosary
+2615#{ bonus bMdef,5; } // Safety_Ring
+2617#{ bonus bInt,1; } // Mitten_Of_Presbyter
+2618#{ bonus bAgi,1; } // Matyr's_Flea_Guard
+2621#{ bonus bStr,1; } // Ring_
+2622#{ bonus bInt,1; } // Earring_
+2623#{ bonus bVit,1; } // Necklace_
+2624#{ bonus bDex,1; } // Glove_
+2625#{ bonus bAgi,1; } // Brooch_
+2626#{ bonus bLuk,1; bonus bMdef,3; } // Rosary_
+2629#{ bonus bMdef,7; } // Magingiorde
+2630#{ bonus bMdef,5; } // Brysinggamen
+2631#{ bonus bStr,5; bonus bAgi,5; bonus bVit,5; bonus bInt,5; bonus bDex,5; bonus bLuk,5; } // First_Age_Ring
+2632#{ bonus bVit,1; bonus bDex,1; bonus bLuk,1; } // Korean_Trinket
+2633#{ bonus bStr,2; bonus bInt,1; } // Jade_Ring
+2636#{ bonus bLuk,1; } // Gold_Ring_
+2637#{ bonus bLuk,1; } // Silver_Ring_
+2638#{ bonus bStr,1; bonus bLuk,1; } // Exorcize_Sachet
+2639#{ bonus bAgi,1; bonus bInt,1; } // Purification_Sachet
+2640#{ bonus bStr,1; bonus bAgi,1; bonus bInt,1; bonus bLuk,1; bonus bMdef,1; } // Kafra_Ring
+2641#{ bonus bStr,2; } // Fashionable_Sack
+2645#{ bonus bMdef,2; } // Moonlight_Ring
+2646#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,3; bonus bDex,3; bonus bLuk,3; } // Bunch_Of_Carnation
+2648#{ bonus bInt,1; } // Morpheus's_Ring
+2649#{ bonus bInt,1; } // Morpheus's_Armlet
+2651#{ bonus bStr,2; } // Morrigane's_Pendant
+2654#{ bonus bStr,1; bonus bAgi,1; bonus bMdef,1; } // Shinobi's_Sash
+2659#{ bonus bInt,2; bonus bMdef,3; } // Vesper_Core01
+2660#{ bonus bStr,3; bonus bMdef,3; } // Vesper_Core02
+2661#{ bonus bAgi,3; bonus bMdef,3; } // Vesper_Core03
+2662#{ bonus bDex,3; bonus bMdef,3; } // Vesper_Core04
+2663#{ bonus bStr,1; } // Gauntlet_Of_Accuracy
+2664#{ bonus bInt,1; bonus bDex,2; } // Scarf_Belt
+2665#{ bonus bMdef,1; } // Ring_Of_Exorcism
+2666#{ bonus bStr,2; } // Lamp_Of_Hope
+2667#{ bonus bDex,1; } // Glove_Of_Archer
+2668#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,3; bonus bDex,3; bonus bLuk,3; } // Women's_Glory
+2672#{ bonus bStr,5; bonus bAgi,5; bonus bVit,5; bonus bInt,5; bonus bDex,5; bonus bLuk,5; } // Anniversary_Ring
+2675#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,3; bonus bDex,3; bonus bLuk,3; } // Lord_Ring
+2677#{ bonus bInt,2; bonus bDex,1; } // Spiritual_Ring
+2678#{ bonus bStr,2; bonus bVit,1; } // Ring_Of_Flame_Lord
+2679#{ bonus bAgi,2; bonus bVit,1; bonus bMdef,2; } // Ring_Of_Resonance
+2680#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Lesser_Elemental_Ring
+2681#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,3; bonus bDex,3; bonus bLuk,3; } // Republic_Ring
+2686#{ bonus bInt,1; } // Elven_Ears_C
+2689#{ bonus bInt,3; } // Earring_C
+2690#{ bonus bStr,4; } // Ring_C
+2691#{ bonus bVit,4; } // Necklace_C
+2692#{ bonus bDex,4; } // Glove_C
+2693#{ bonus bAgi,4; } // Brooch_C
+2694#{ bonus bLuk,4; bonus bMdef,5; } // Rosary_C
+2695#{ bonus bMdef,8; } // Safety_Ring_C
+2696#{ bonus bInt,2; bonus bMdef,3; } // Vesper_Core01_C
+2697#{ bonus bStr,3; bonus bMdef,3; } // Vesper_Core02_C
+2698#{ bonus bAgi,3; bonus bMdef,3; } // Vesper_Core03_C
+2699#{ bonus bDex,3; bonus bMdef,3; } // Vesper_Core04_C
+2701#{ bonus bDex,2; } // Orleans_Glove
+2702#{ bonus bAgi,2; } // Bison_Horn
+2704#{ bonus bMdef,4; } // Golden_Accessory
+2711#{ bonus bInt,2; bonus bDex,2; } // Spiritual_Ring_C
+2712#{ bonus bAgi,3; bonus bVit,3; bonus bLuk,3; } // Ragnarok_Limited_Ed
+2722#{ bonus bMdef,6; } // Medal_Acolyte
+2723#{ bonus bMdef,6; } // Medal_Mage
+2726#{ bonus bDex,3; } // Icarus_Wing
+2727#{ bonus bDex,3; } // Bowman_Scarf
+2736#{ bonus bDex,3; bonus bLuk,3; bonus bMdef,2; } // Navel_Ring
+2737#{ bonus bVit,3; } // Foot_Ring
+2741#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // All_In_One_Ring
+2743#{ bonus bInt,2; bonus bDex,1; bonus bMdef,2; } // Angelic_Ring
+2745#{ bonus bMdef,2; } // Pinguicula_Corsage
+2746#{ bonus bAgi,3; } // Cold_Heart
+2747#{ bonus bDex,3; } // Black_Cat
+2748#{ bonus bDex,2; bonus bLuk,-1; bonus bMdef,3; } // Cursed_Star
+2749#{ bonus bAgi,2; bonus bDex,1; bonus bMdef,1; } // Linen_Glove
+2751#{ bonus bInt,2; } // Academy_Badge
+2766#{ bonus bVit,1; } // Swordman_Figure
+2767#{ bonus bInt,1; } // Acolyte_Figure
+2768#{ bonus bInt,1; } // Mage_Figure
+2769#{ bonus bDex,1; } // Archer_Figure
+2770#{ bonus bAgi,1; } // Thief_Figure
+2771#{ bonus bStr,1; } // Merchant_Figure
+2773#{ bonus bStr,2; bonus bAgi,2; bonus bVit,2; bonus bInt,2; bonus bDex,2; bonus bLuk,2; } // Krieger_Ring2
+2774#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Krieger_Ring3
+2778#{ bonus bInt,2; } // Shaman_Earing
+2779#{ bonus bStr,2; bonus bAgi,1; } // Dark_Knight_Belt
+2781#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; bonus bMdef,1; } // Aumdura's_Grace
+2785#{ bonus bDex,2; } // Orleans_Glove_M
+2786#{ bonus bInt,2; bonus bDex,1; } // Spiritual_Ring_M
+2787#{ bonus bMdef,2; } // Waterdrop_Brooch
+2788#{ bonus bInt,1; bonus bDex,1; } // Bradium_Earing
+2789#{ bonus bStr,1; bonus bVit,1; } // Bradium_Ring
+2790#{ bonus bAgi,1; } // Bradium_Brooch
+2792#{ bonus bStr,2; bonus bVit,1; } // Ring_Of_Flame_Lord_I
+2793#{ bonus bAgi,2; bonus bVit,1; bonus bMdef,2; } // Ring_Of_Resonance_I
+2794#{ bonus bStr,2; } // Magic_Stone_Ring
+2795#{ bonus bStr,6; bonus bAgi,6; bonus bVit,6; bonus bInt,6; bonus bDex,6; bonus bLuk,6; } // Green_Apple_Ring
+2800#{ bonus bAgi,2; } // Accelerator
+2801#{ bonus bAgi,1; } // Hovering_Booster
+2803#{ bonus bInt,3; } // Shape_Shifter
+2804#{ bonus bDex,1; } // Cooling_Device
+2805#{ bonus bDex,1; } // Mag_Field_Generator
+2806#{ bonus bDex,1; } // Barrier_Builder
+2808#{ bonus bAgi,3; } // Camouflage_Generator
+2809#{ bonus bDex,1; } // High_Quality_Cooler
+2810#{ bonus bDex,1; } // Special_Cooler
+2811#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Freyja_SBracelet7
+2812#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Freyja_SBracelet30
+2813#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Freyja_SBracelet60
+2814#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Freyja_SBracelet90
+2815#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; bonus bMdef,2; } // Th_Ring_Of_Water
+2825#{ bonus bInt,2; } // Shaman_EaringB
+2826#{ bonus bAgi,1; bonus bDex,2; } // Dark_Knight_BeltB
+2830#{ bonus bStr,40; bonus bMdef,7; } // Magingiorde_C
+2831#{ bonus bStr,6; bonus bAgi,6; bonus bVit,6; bonus bInt,6; bonus bLuk,10; bonus bMdef,5; } // Brysinggamen_C
+2833#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Odin's_Recall
+2834#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // F_All_In_One_Ring
+2836#{ bonus bDex,4; } // F_Glove_C
+2837#{ bonus bMdef,5; } // F_Safety_Ring_C
+2838#{ bonus bVit,4; } // F_Necklace_C
+2839#{ bonus bStr,4; } // F_Ring_C
+2840#{ bonus bLuk,4; bonus bMdef,5; } // F_Rosary_C
+2841#{ bonus bInt,2; bonus bDex,2; bonus bMdef,2; } // Caracas_Ring
+2842#{ bonus bInt,3; } // F_Earing_C
+2845#{ bonus bMdef,2; } // No_Fear_Belt
+2846#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // E_All_In_One_Ring
+2848#{ bonus bDex,4; } // E_Glove_C
+2849#{ bonus bMdef,5; } // E_Safety_Ring_C
+2850#{ bonus bVit,4; } // E_Ring_C
+2851#{ bonus bStr,4; } // E_Necklace_C
+2852#{ bonus bLuk,4; bonus bMdef,5; } // E_Rosary_C
+2853#{ bonus bInt,3; bonus bMdef,1; } // Telekinetic_Orb
+2854#{ bonus bInt,1; bonus bMdef,2; } // Alchemy_Glove
+2856#{ bonus bStr,20; bonus bMdef,3; } // Half_Megin
+2857#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,5; bonus bDex,3; bonus bLuk,5; bonus bMdef,2; } // Half_Brysing
+2859#{ bonus bInt,1; bonus bMdef,2; } // Golden_Rod_Orb
+2860#{ bonus bInt,1; bonus bMdef,2; } // Aqua_Orb
+2861#{ bonus bInt,1; bonus bMdef,2; } // Crimson_Orb
+2862#{ bonus bInt,1; bonus bMdef,2; } // Forest_Orb
+2864#{ bonus bVit,2; } // Light_Of_Cure
+2865#{ bonus bInt,2; } // Seal_Of_Cathedral
+2866#{ bonus bDex,2; } // Ring_Of_Archbishop
+2867#{ bonus bMdef,2; } // Broken_Bamboo_Piece
+2868#{ bonus bStr,1; bonus bInt,1; bonus bDex,1; bonus bMdef,1; } // Green_Batik
+2869#{ bonus bStr,1; bonus bInt,1; bonus bDex,1; } // Colorful_Ketupat
+2870#{ bonus bStr,5; bonus bAgi,5; bonus bVit,5; bonus bInt,5; bonus bDex,5; bonus bLuk,5; } // Tw_8th_Anni_Ring
+2873#{ bonus bAgi,1; bonus bVit,1; bonus bDex,1; bonus bLuk,1; } // Cat_Hand_Glove
+2876#{ bonus bMdef,1; } // Necklace_Spica
+2877#{ bonus bMdef,1; } // Glove_Sabik
+2878#{ bonus bMdef,1; } // Bracelet_Arunairi
+2879#{ bonus bMdef,1; } // Badge_Giorredart
+2880#{ bonus bMdef,1; } // Ring_Lupak
+2881#{ bonus bDex,2; } // Orleans_Necklace
+2882#{ bonus bVit,1; bonus bLuk,1; } // Ecoro_Cardslip
+2890#{ bonus bDex,2; } // White_Wing_Brooch
+2891#{ bonus bInt,2; } // Black_wing_Brooch
+2894#{ bonus bStr,5; } // Glove_Of_Shura
+2898#{ bonus bMdef,15; } // Black_Rosary
+2901#{ bonus bStr,2; } // Morrigane's_Pendant_
+2902#{ bonus bInt,1; } // Morpheus's_Ring_
+2903#{ bonus bInt,1; } // Morpheus's_Armlet_
+2906#{ bonus bMdef,3; } // Happy_Gauntlet
+2914#{ bonus bInt,4; bonus bMdef,3; } // Wizard_Left_Eye
+2915#{ bonus bMdef,10; } // Ettlang_Keepsake
+2936#{ bonus bVit,1; } // Recovery_Ring
+2959#{ bonus bAgi,2; } // Fidelity_Necklace
+2960#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Badge_Of_Manny
+2986#{ bonus bDex,3; bonus bMdef,2; } // Snake_Ring
+2987#{ bonus bAgi,3; bonus bLuk,2; bonus bMdef,3; } // Snake_Pendant
+5002#{ bonus bInt,2; bonus bLuk,1; bonus bMdef,3; } // Gemmed_Crown
+5003#{ bonus bLuk,2; bonus bMdef,5; } // Joker_Jester
+5007#{ bonus bStr,1; bonus bInt,1; bonus bLuk,1; bonus bMdef,4; } // Loard_Circlet
+5009#{ bonus bMdef,3; } // Safety_Helmet
+5013#{ bonus bStr,5; bonus bAgi,10; bonus bVit,10; bonus bInt,5; bonus bLuk,20; bonus bMdef,10; } // Horn_Of_Lord_Kaho
+5018#{ bonus bAgi,1; } // Feather_Bonnet
+5019#{ bonus bVit,1; } // Corsair
+5020#{ bonus bMdef,5; } // Kafra_Band
+5021#{ bonus bInt,1; bonus bDex,1; } // Bankruptcy_Of_Heart
+5022#{ bonus bStr,3; bonus bInt,2; } // Helm_Of_Sun
+5025#{ bonus bAgi,1; bonus bLuk,1; bonus bMdef,3; } // Helm_Of_Angel
+5026#{ bonus bDex,1; } // Hat_Of_Cook
+5027#{ bonus bInt,2; } // Wizardry_Hat
+5031#{ bonus bDex,2; } // Mine_Helm
+5038#{ bonus bStr,1; bonus bInt,1; } // Deviruchi_Cap
+5044#{ bonus bVit,1; } // Devil's_Wing
+5045#{ bonus bAgi,1; bonus bDex,1; } // Magician_Hat
+5058#{ bonus bMdef,15; } // Drooping_Kitty
+5060#{ bonus bLuk,1; } // Party_Hat
+5062#{ bonus bAgi,1; } // Straw_Hat
+5066#{ bonus bInt,1; bonus bMdef,10; } // Horn_Of_Succubus
+5067#{ bonus bAgi,1; } // Sombrero
+5068#{ bonus bStr,1; } // Ear_Of_Devil's_Wing
+5069#{ bonus bAgi,1; bonus bLuk,1; } // Mask_Of_Fox
+5070#{ bonus bStr,2; } // Headband_Of_Power
+5071#{ bonus bDex,1; } // Indian_Headband
+5072#{ bonus bAgi,1; bonus bMdef,10; } // Inccubus_Horn
+5073#{ bonus bDex,2; } // Cap_Of_Concentration
+5074#{ bonus bStr,1; } // Ear_Of_Angel's_Wing
+5076#{ bonus bLuk,1; } // Fur_Hat
+5078#{ bonus bVit,1; } // Sea_Otter_Cap
+5081#{ bonus bInt,2; } // Mistress_Crown
+5083#{ bonus bMdef,10; } // Red_Tailed_Ribbon
+5094#{ bonus bStr,2; bonus bVit,1; } // Orc_Hero_Helm
+5095#{ bonus bStr,2; bonus bVit,1; } // Orc_Hero_Helm_
+5098#{ bonus bStr,3; } // Tiger_Mask
+5099#{ bonus bLuk,2; bonus bMdef,10; } // Cat_Hat
+5100#{ bonus bStr,1; bonus bAgi,1; bonus bLuk,1; } // Sales_Signboard
+5103#{ bonus bAgi,2; } // Sunflower_Hairpin
+5105#{ bonus bDex,1; } // Hat_Of_Cake_
+5106#{ bonus bMdef,10; } // Cone_Hat_INA
+5112#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Super_Novice_Hat
+5119#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Super_Novice_Hat_
+5122#{ bonus bStr,2; } // Magni_Cap
+5123#{ bonus bAgi,1; bonus bDex,2; } // Ulle_Cap
+5124#{ bonus bInt,2; bonus bMdef,10; } // Fricca_Circlet
+5126#{ bonus bInt,2; } // Morpheus's_Hood
+5127#{ bonus bLuk,2; } // Morrigane's_Helm
+5128#{ bonus bVit,3; bonus bMdef,3; } // Goibne's_Helmet
+5129#{ bonus bAgi,2; } // Bird_Nest
+5130#{ bonus bMdef,1; } // Lion_Mask
+5131#{ bonus bVit,3; } // Close_Helmet
+5137#{ bonus bStr,1; } // Alice_Doll
+5138#{ bonus bMdef,5; } // Magic_Eyes
+5139#{ bonus bInt,1; bonus bDex,1; bonus bMdef,5; } // Hibiscus
+5141#{ bonus bStr,1; } // Marionette_Doll
+5142#{ bonus bVit,1; } // Crescent_Helm
+5144#{ bonus bLuk,5; } // Gambler_Hat
+5145#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,3; bonus bDex,3; bonus bLuk,3; } // Carnival_Joker_Jester
+5146#{ bonus bVit,1; } // Elephant_Hat
+5148#{ bonus bInt,2; } // Phrygian_Cap
+5149#{ bonus bInt,2; } // Silver_Tiara
+5151#{ bonus bMdef,3; } // Headset_OST
+5152#{ bonus bInt,1; bonus bMdef,2; } // Chinese_Crown
+5158#{ bonus bMdef,3; } // Holy_Bonnet_
+5160#{ bonus bStr,1; } // Magestic_Goat_
+5163#{ bonus bVit,1; } // Corsair_
+5164#{ bonus bInt,1; } // Tiara_
+5165#{ bonus bInt,1; } // Crown_
+5170#{ bonus bMdef,1; } // Feather_Beret
+5171#{ bonus bMdef,5; } // Valkyrie_Helm
+5175#{ bonus bMdef,1; } // Censor_Bar
+5178#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Candle_
+5179#{ bonus bInt,2; } // Gold_Tiara
+5180#{ bonus bVit,1; } // Phrygian_Cap_
+5181#{ bonus bStr,2; } // Helm_Of_Darkness
+5182#{ bonus bAgi,1; } // Puppy_Hat
+5183#{ bonus bAgi,1; bonus bDex,1; } // Bird_Nest_Hat
+5185#{ bonus bLuk,3; } // Laurel_Wreath
+5187#{ bonus bMdef,3; } // Twin_Ribbon
+5188#{ bonus bInt,1; bonus bDex,1; } // Minstrel_Hat
+5191#{ bonus bInt,1; bonus bMdef,3; } // Ribbon_Black
+5192#{ bonus bMdef,3; } // Ribbon_Yellow
+5193#{ bonus bMdef,3; } // Ribbon_Green
+5194#{ bonus bMdef,3; } // Ribbon_Pink
+5195#{ bonus bMdef,3; } // Ribbon_Red
+5196#{ bonus bMdef,3; } // Ribbon_Orange
+5197#{ bonus bMdef,3; } // Ribbon_White
+5198#{ bonus bDex,1; } // Drooping_Bunny
+5201#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,3; bonus bDex,3; bonus bLuk,3; } // Party_Hat_B
+5205#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; bonus bMdef,3; } // Wreath
+5207#{ bonus bLuk,1; } // Gold_Spirit_Chain
+5210#{ bonus bAgi,1; bonus bInt,1; } // Flying_Angel
+5211#{ bonus bStr,1; bonus bInt,1; bonus bMdef,7; } // Dress_Hat
+5213#{ bonus bAgi,2; bonus bMdef,3; } // Black_Bunny_Band
+5214#{ bonus bDex,2; } // Moonlight_Flower_Hat
+5215#{ bonus bInt,1; bonus bDex,1; bonus bMdef,3; } // Angelic_Chain_
+5216#{ bonus bStr,1; bonus bAgi,1; } // Satanic_Chain_
+5217#{ bonus bStr,2; } // Magestic_Goat_TW
+5218#{ bonus bInt,2; } // Bunny_Band_
+5219#{ bonus bMdef,18; } // Drooping_Kitty_
+5220#{ bonus bVit,1; } // Smoking_Pipe_
+5222#{ bonus bAgi,1; bonus bDex,1; } // Fish_On_Head_
+5223#{ bonus bAgi,2; } // Big_Golden_Bell_
+5224#{ bonus bStr,2; bonus bVit,1; } // Orc_Hero_Helm_TW
+5225#{ bonus bMdef,2; } // Marcher_Hat
+5226#{ bonus bAgi,2; bonus bDex,1; } // Mini_Propeller_
+5227#{ bonus bStr,1; bonus bInt,1; } // Red_Deviruchi_Cap
+5228#{ bonus bStr,1; bonus bInt,1; } // White_Deviruchi_Cap
+5229#{ bonus bStr,1; bonus bInt,1; } // Gray_Deviruchi_Cap
+5230#{ bonus bMdef,15; } // White_Drooping_Kitty
+5231#{ bonus bMdef,15; } // Gray_Drooping_Kitty
+5232#{ bonus bMdef,15; } // Pink_Drooping_Kitty
+5233#{ bonus bMdef,15; } // Blue_Drooping_Kitty
+5234#{ bonus bMdef,15; } // Yellow_Drooping_Kitty
+5235#{ bonus bLuk,1; } // Gray_Fur_Hat
+5236#{ bonus bLuk,1; } // Blue_Fur_Hat
+5237#{ bonus bLuk,1; } // Pink_Fur_Hat
+5238#{ bonus bInt,2; } // Red_Wizardry_Hat
+5239#{ bonus bInt,2; } // White_Wizardry_Hat
+5240#{ bonus bInt,2; } // Gray_Wizardry_Hat
+5241#{ bonus bInt,2; } // Blue_Wizardry_Hat
+5242#{ bonus bInt,2; } // Yellow_Wizardry_Hat
+5246#{ bonus bAgi,1; bonus bLuk,1; bonus bMdef,3; } // Angelic_Helm
+5247#{ bonus bAgi,1; bonus bLuk,1; bonus bMdef,3; } // Satanic_Helm
+5252#{ bonus bAgi,1; bonus bDex,1; } // Drooping_Nine_Tail
+5253#{ bonus bInt,1; } // Lif_Doll_Hat
+5255#{ bonus bLuk,3; } // Triple_Poring_Hat
+5256#{ bonus bInt,1; } // Valkyrie_Feather_Band
+5257#{ bonus bMdef,2; } // Soulless_Wing
+5259#{ bonus bVit,1; } // Elephant_Hat_
+5260#{ bonus bAgi,1; } // Cookie_Hat
+5261#{ bonus bInt,2; } // Silver_Tiara_
+5262#{ bonus bStr,2; } // Gold_Tiara_
+5264#{ bonus bStr,2; bonus bAgi,2; bonus bVit,2; bonus bInt,2; bonus bDex,2; bonus bLuk,2; } // Aussie_Flag_Hat
+5265#{ bonus bDex,4; } // Apple_Of_Archer_C
+5266#{ bonus bMdef,5; } // Bunny_Band_C
+5267#{ bonus bAgi,3; } // Sahkkat_C
+5268#{ bonus bStr,3; bonus bInt,3; bonus bLuk,3; bonus bMdef,4; } // Lord_Circlet_C
+5269#{ bonus bAgi,1; bonus bInt,1; } // Flying_Angel_
+5271#{ bonus bMdef,3; } // Chinese_Crown_
+5277#{ bonus bVit,2; bonus bLuk,2; } // Yellow_Bandana
+5278#{ bonus bVit,2; bonus bLuk,2; } // Yellow_Ribbon
+5279#{ bonus bMdef,15; } // Drooping_Kitty_C
+5280#{ bonus bStr,1; } // Magestic_Goat_C
+5281#{ bonus bStr,1; bonus bInt,1; } // Deviruchi_Cap_C
+5283#{ bonus bLuk,2; } // Chick_Hat
+5284#{ bonus bAgi,1; bonus bDex,1; bonus bMdef,3; } // Water_Lily_Crown
+5285#{ bonus bAgi,2; } // Vane_Hairpin
+5287#{ bonus bVit,1; } // Vacation_Hat
+5288#{ bonus bInt,1; } // Red_Glasses
+5289#{ bonus bMdef,5; } // Vanilmirth_Hat
+5290#{ bonus bDex,1; } // Drooping_Bunny_
+5293#{ bonus bDex,4; } // Ramen_Hat
+5294#{ bonus bAgi,3; } // Whisper_Mask
+5295#{ bonus bMdef,4; } // Golden_Bandana
+5296#{ bonus bAgi,1; } // Drooping_Nine_Tail_
+5303#{ bonus bMdef,5; } // Flower_Coronet
+5307#{ bonus bMdef,3; } // Carmen_Miranda's_Hat
+5311#{ bonus bMdef,15; } // Large_Hibiscus
+5312#{ bonus bStr,2; } // Ayothaya_Hat
+5313#{ bonus bInt,1; } // Diadem
+5320#{ bonus bStr,2; bonus bAgi,2; bonus bVit,2; bonus bInt,2; bonus bDex,2; bonus bLuk,2; } // Champion_Wreath
+5322#{ bonus bMdef,2; } // Scarf
+5323#{ bonus bStr,2; bonus bAgi,2; bonus bVit,2; bonus bInt,2; bonus bDex,2; bonus bLuk,2; } // Misstrance_Crown
+5324#{ bonus bDex,3; } // Little_Angel_Doll
+5325#{ bonus bDex,1; } // Robo_Eye
+5327#{ bonus bStr,5; bonus bVit,3; } // Orc_Hero_Helm_C
+5328#{ bonus bStr,1; } // Evil_Wing_Ears_C
+5330#{ bonus bMdef,15; } // kRO_Drooping_Kitty_C
+5331#{ bonus bVit,3; bonus bInt,3; } // Corsair_C
+5333#{ bonus bMdef,5; } // Radio_Antenna
+5334#{ bonus bDex,1; bonus bLuk,2; } // Angeling_Wanna_Fly
+5335#{ bonus bLuk,1; } // Jumping_Poring
+5344#{ bonus bVit,2; } // Binit_Doll_Hat
+5348#{ bonus bMdef,3; } // Big_Sis'_Ribbon_
+5350#{ bonus bStr,1; } // Pirate_Bandana_
+5353#{ bonus bStr,3; bonus bInt,2; } // Helm_Of_Sun_
+5357#{ bonus bMdef,10; } // Wings_Of_Victory
+5358#{ bonus bAgi,1; bonus bMdef,2; } // Pecopeco_Wing_Ears
+5359#{ bonus bDex,1; } // J_Captain_Hat
+5366#{ bonus bStr,5; bonus bAgi,5; bonus bVit,5; bonus bInt,5; bonus bDex,5; bonus bLuk,5; } // Hat_0f_King
+5367#{ bonus bMdef,3; } // Hyegun_Hat
+5370#{ bonus bInt,1; } // Orchid_Hairband
+5371#{ bonus bLuk,1; } // Hat_Of_Judge
+5372#{ bonus bInt,1; bonus bMdef,3; } // Drooping_White_Kitty
+5373#{ bonus bDex,3; bonus bMdef,1; } // Darkness_Helm
+5375#{ bonus bStr,2; } // L_Orc_Hero_Helm
+5378#{ bonus bAgi,3; } // Rabbit_Ear_Hat
+5379#{ bonus bMdef,2; } // Balloon_Hat
+5381#{ bonus bMdef,2; } // Santa_Poring_Hat
+5382#{ bonus bVit,1; } // Bell_Ribbon
+5383#{ bonus bLuk,1; } // Hunting_Cap
+5384#{ bonus bLuk,3; } // Santa_Hat_1
+5387#{ bonus bMdef,5; } // Neko_Mimi_Kafra
+5389#{ bonus bStr,2; } // Angel_Spirit
+5392#{ bonus bLuk,2; } // Louyang_Cap
+5395#{ bonus bLuk,3; } // Tiraya_Bonnet
+5396#{ bonus bDex,1; } // Jasper_Crest
+5398#{ bonus bStr,2; bonus bMdef,5; } // Bone_Head
+5399#{ bonus bVit,3; } // Mandragora_Cap
+5400#{ bonus bLuk,1; } // Fox_Hat
+5401#{ bonus bInt,1; bonus bMdef,2; } // Black_Glasses
+5406#{ bonus bVit,1; bonus bInt,1; bonus bDex,2; } // Academy_Freshman_Hat
+5407#{ bonus bInt,2; bonus bDex,2; } // Academy_Graduating_Cap
+5408#{ bonus bInt,2; } // Old_Bandanna
+5409#{ bonus bVit,2; bonus bInt,2; } // New_Cowboy_Hat
+5411#{ bonus bDex,2; } // White_Snake_Hat
+5417#{ bonus bInt,1; } // Crown_Parrot
+5418#{ bonus bStr,1; } // Soldier_Hat
+5419#{ bonus bVit,1; } // Evolved_Leaf
+5420#{ bonus bStr,2; bonus bInt,2; bonus bMdef,5; } // Mask_Of_Ifrit
+5421#{ bonus bStr,1; bonus bInt,1; bonus bMdef,3; } // Ifrit's_Ear
+5422#{ bonus bInt,1; bonus bMdef,2; } // Linguistic_Book_Cap
+5423#{ bonus bDex,3; } // Lovecap_China
+5426#{ bonus bLuk,1; } // Karada_Meguri_Tea_Hat
+5427#{ bonus bAgi,1; } // Royal_Milk_Tea_Hat
+5435#{ bonus bInt,1; bonus bMdef,3; } // Coke_Hat
+5436#{ bonus bLuk,3; bonus bMdef,2; } // Bride's_Corolla
+5437#{ bonus bInt,1; bonus bMdef,1; } // Flower_Of_Fairy
+5442#{ bonus bVit,1; } // Necktie
+5443#{ bonus bMdef,2; } // Status_Of_Baby_Angel
+5447#{ bonus bMdef,1; } // Frog_Cap
+5454#{ bonus bStr,1; bonus bInt,1; } // Dog_Cap_
+5455#{ bonus bInt,1; } // Geographer_Band_
+5456#{ bonus bVit,5; } // Vacation_Hat_
+5459#{ bonus bDex,1; } // Drooping_Bunny_Chusuk
+5460#{ bonus bStr,2; bonus bAgi,2; bonus bVit,2; bonus bInt,2; bonus bDex,2; bonus bLuk,2; } // Adv_Dragon_Skull
+5461#{ bonus bDex,3; } // Adv_Whisper_Mask
+5462#{ bonus bVit,1; } // Spiked_Scarf
+5463#{ bonus bInt,1; bonus bMdef,2; } // Rainbow_Scarf
+5464#{ bonus bInt,3; bonus bMdef,9; } // Zaha_Doll_Hat
+5465#{ bonus bLuk,2; bonus bMdef,5; } // Celestial_Hat
+5466#{ bonus bAgi,2; } // Wind_Milestone
+5467#{ bonus bStr,2; bonus bInt,2; bonus bDex,2; } // Helm_Of_Dragoon
+5468#{ bonus bMdef,2; } // Parade_Cap
+5469#{ bonus bDex,3; } // Noble_Hat
+5470#{ bonus bDex,1; } // Eyes_Of_Darkness
+5475#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Cube_Mask
+5478#{ bonus bStr,2; } // Classic_Hat
+5479#{ bonus bMdef,3; } // Shaman's_Hair_Ornament
+5480#{ bonus bStr,2; bonus bAgi,2; bonus bVit,2; bonus bInt,2; bonus bDex,2; bonus bLuk,2; } // Bizofnil_Wing_Deco
+5482#{ bonus bStr,3; } // Dark_Knight_Mask
+5484#{ bonus bStr,5; bonus bAgi,5; bonus bVit,5; bonus bInt,5; bonus bDex,5; bonus bLuk,5; } // Taiwan_Flag_Hat
+5486#{ bonus bStr,2; bonus bAgi,2; bonus bVit,2; bonus bInt,2; bonus bDex,2; bonus bLuk,2; } // J_Anniversary_Hat
+5487#{ bonus bLuk,2; } // J_Poringcake_Hat
+5488#{ bonus bLuk,1; bonus bMdef,1; } // J_Twin_Santahat
+5489#{ bonus bDex,2; } // Love_Daddy
+5490#{ bonus bMdef,5; } // Anubis_Helm
+5491#{ bonus bStr,2; } // Hat_Of_Outlaw
+5492#{ bonus bMdef,3; } // Boy's_Cap_I
+5493#{ bonus bAgi,1; bonus bDex,2; } // Ulle_Cap_I
+5495#{ bonus bInt,1; bonus bDex,1; bonus bMdef,3; } // Power_Of_Thor
+5496#{ bonus bLuk,4; } // Dice_Hat
+5497#{ bonus bStr,2; bonus bDex,2; } // King_Tiger_Doll_Hat
+5498#{ bonus bVit,5; } // Wondering_Wolf_Helm
+5500#{ bonus bMdef,3; } // Icecream_Hat
+5502#{ bonus bInt,3; bonus bMdef,3; } // Necromencer's_Hood
+5503#{ bonus bAgi,2; bonus bDex,2; bonus bMdef,1; } // Rabbit_Magic_Hat
+5504#{ bonus bMdef,10; } // China_Wedding_Veil
+5505#{ bonus bDex,2; bonus bLuk,2; } // Asara_Fairy_Hat
+5508#{ bonus bStr,1; bonus bAgi,2; bonus bMdef,1; } // Shark_Hat
+5509#{ bonus bStr,2; bonus bVit,1; bonus bMdef,3; } // Sting_Hat
+5510#{ bonus bMdef,3; } // Shower_Cap
+5512#{ bonus bStr,2; } // Aquarius_Diadem
+5513#{ bonus bStr,2; } // Aquarius_Crown
+5514#{ bonus bInt,2; bonus bMdef,5; } // Pisces_Diadem
+5515#{ bonus bInt,2; bonus bMdef,5; } // Pisces_Crown
+5516#{ bonus bDex,1; } // Hawk_Eyes01
+5517#{ bonus bDex,1; } // Hawk_Eyes02
+5519#{ bonus bInt,2; } // Peacock_Feather
+5523#{ bonus bDex,1; } // Sakura_Mist_Hat
+5524#{ bonus bVit,1; } // Sakura_Milk_Tea_Hat
+5526#{ bonus bAgi,2; } // Lady_Tanee_Doll
+5527#{ bonus bLuk,3; } // Lunatic_Hat
+5528#{ bonus bAgi,1; } // King_Frog_Hat
+5529#{ bonus bStr,2; bonus bInt,2; bonus bMdef,2; } // Evil's_Bone_Hat
+5531#{ bonus bDex,2; } // B_Dragon_Hat
+5533#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Emperor_Wreath_J
+5534#{ bonus bAgi,1; } // Fox_Hat_J
+5535#{ bonus bVit,1; bonus bDex,1; bonus bMdef,3; } // Side_Cap
+5536#{ bonus bLuk,1; } // Spare_Card
+5537#{ bonus bAgi,3; } // Quati_Hat
+5538#{ bonus bDex,3; } // Tucan_Hat
+5539#{ bonus bMdef,2; } // Jaguar_Hat
+5540#{ bonus bStr,1; bonus bInt,1; bonus bDex,1; } // Freyja_SCirclet7
+5541#{ bonus bStr,1; bonus bInt,1; bonus bDex,1; } // Freyja_SCirclet30
+5542#{ bonus bStr,1; bonus bInt,1; bonus bDex,1; } // Freyja_SCirclet60
+5543#{ bonus bStr,1; bonus bInt,1; bonus bDex,1; } // Freyja_SCirclet90
+5544#{ bonus bInt,2; } // Time_Keeper_Hat
+5545#{ bonus bVit,1; } // Aries_Diadem
+5546#{ bonus bLuk,2; } // Aries_Crown
+5549#{ bonus bDex,2; } // Taurus_Diadem
+5550#{ bonus bAgi,2; } // Taurus_Crown
+5552#{ bonus bStr,3; bonus bInt,3; bonus bMdef,3; } // Fest_Lord_Circlet
+5553#{ bonus bMdef,4; } // Fest_Bunny_Band
+5554#{ bonus bMdef,3; } // Octopus_Hat
+5555#{ bonus bAgi,2; } // Leaf_Cat_Hat
+5556#{ bonus bInt,1; } // Fur_Seal_Hat
+5557#{ bonus bAgi,3; } // Wild_Rose_Hat
+5561#{ bonus bInt,1; } // Rabbit_Magic_Hat_J
+5562#{ bonus bMdef,10; } // Good_Wedding_Veil_J
+5564#{ bonus bInt,4; bonus bMdef,10; } // Crown_Of_Deceit
+5567#{ bonus bStr,1; } // Bright_Fury
+5568#{ bonus bInt,2; } // Rabbit_Bonnet
+5569#{ bonus bDex,2; } // Gemini_Diadem
+5570#{ bonus bAgi,2; } // Gemini_Crown
+5571#{ bonus bStr,1; } // Rasta_Wig
+5572#{ bonus bVit,2; } // Savage_Baby_Hat
+5577#{ bonus bDex,3; } // Dark_Knight_MaskB
+5578#{ bonus bAgi,2; } // Voyage_Hat
+5580#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,3; bonus bDex,3; bonus bLuk,3; bonus bMdef,3; } // Red_Beret
+5581#{ bonus bInt,2; } // Cancer_Diadem
+5582#{ bonus bStr,2; } // Cancer_Crown
+5588#{ bonus bStr,2; } // Leo_Crown
+5589#{ bonus bDex,2; } // Leo_Diadem
+5590#{ bonus bLuk,3; bonus bMdef,5; } // K_Poring_Cake_Cap
+5595#{ bonus bMdef,2; } // Eye_Of_Juno
+5596#{ bonus bMdef,2; } // 4Leaf_Clover_In_Mouth
+5597#{ bonus bMdef,2; } // Bubble_Gum_In_Mouth
+5598#{ bonus bDex,2; } // Virgo_Crown
+5600#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,3; bonus bDex,3; bonus bLuk,3; bonus bMdef,1; } // Br_Twin_Ribbon
+5601#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,3; bonus bDex,3; bonus bLuk,3; bonus bMdef,1; } // Br_Beret
+5603#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,3; bonus bDex,3; bonus bLuk,3; } // RTC_Winner_Only
+5604#{ bonus bStr,2; bonus bAgi,2; bonus bVit,2; bonus bInt,2; bonus bDex,2; bonus bLuk,2; } // RTC_Second_Best
+5605#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // RTC_Third_Best
+5606#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Campume_Hat
+5609#{ bonus bLuk,3; bonus bMdef,4; } // Chung_Hairband
+5610#{ bonus bLuk,1; } // Ice_Wing_Ear
+5611#{ bonus bAgi,1; } // Turtle_Hat
+5612#{ bonus bMdef,15; } // F_Blue_Drooping_Kitty
+5613#{ bonus bAgi,1; bonus bInt,1; } // F_Flying_Angel
+5614#{ bonus bVit,1; } // F_Smoking_Pipe_
+5616#{ bonus bAgi,1; bonus bDex,1; } // F_Fish_On_Head_
+5617#{ bonus bInt,1; bonus bDex,1; bonus bMdef,5; } // F_Hibiscus
+5618#{ bonus bLuk,2; bonus bMdef,10; } // F_Cat_Hat
+5619#{ bonus bInt,2; } // F_Bunny_Band_
+5620#{ bonus bStr,2; } // F_Magestic_Goat_TW
+5622#{ bonus bAgi,2; bonus bDex,1; } // F_Mini_Propeller_
+5623#{ bonus bStr,1; } // F_Alice_Doll
+5624#{ bonus bInt,1; } // F_Red_Glasses
+5625#{ bonus bLuk,2; } // F_Chick_Hat
+5626#{ bonus bStr,1; bonus bInt,1; } // F_White_Deviruchi_Cap
+5627#{ bonus bAgi,2; } // F_Vane_Hairpin
+5629#{ bonus bVit,1; } // F_Vacation_Hat
+5631#{ bonus bAgi,1; bonus bDex,1; bonus bMdef,3; } // F_Water_Lily_Crown
+5632#{ bonus bMdef,5; } // F_Vanilmirth_Hat
+5633#{ bonus bDex,1; } // F_Drooping_Bunny_
+5636#{ bonus bDex,4; } // F_Ramen_Hat
+5637#{ bonus bLuk,1; } // F_Pink_Fur_Hat
+5638#{ bonus bAgi,1; } // F_Puppy_Hat
+5639#{ bonus bMdef,5; } // F_Magic_Eyes
+5640#{ bonus bLuk,1; } // F_Jumping_Poring
+5641#{ bonus bDex,1; } // F_Robo_Eye
+5642#{ bonus bInt,2; } // F_Yellow_Wizardry_Hat
+5643#{ bonus bVit,1; } // F_Crescent_Helm
+5644#{ bonus bStr,3; } // F_Tiger_Mask
+5646#{ bonus bAgi,3; } // F_Whisper_Mask
+5647#{ bonus bMdef,5; } // F_Bunny_Band_C
+5649#{ bonus bDex,4; } // F_Apple_Of_Archer_C
+5650#{ bonus bInt,1; } // F_Elven_Ears_C
+5651#{ bonus bAgi,4; } // F_Brooch_C
+5652#{ bonus bStr,1; } // F_Magestic_Goat_C
+5654#{ bonus bInt,1; bonus bDex,1; bonus bMdef,5; } // Holy_Marching_Hat_J
+5655#{ bonus bAgi,2; bonus bInt,2; } // Dark_Snake_Lord_Hat_J
+5660#{ bonus bAgi,2; } // Gryphon_Hat
+5661#{ bonus bStr,1; bonus bDex,1; } // Red_Pirate_Bandana
+5662#{ bonus bDex,3; } // Libra_Crown
+5663#{ bonus bDex,3; } // Libra_Diadem
+5665#{ bonus bMdef,5; } // Shaman_Hat
+5666#{ bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Golden_Crown
+5668#{ bonus bMdef,5; } // Weird_Pumpkin_Hat
+5672#{ bonus bInt,1; } // Southern_Cross
+5677#{ bonus bDex,2; } // Scorpio_Diadem
+5681#{ bonus bMdef,3; } // F_Ribbon_Green
+5682#{ bonus bInt,1; } // Triangle_Rune_Cap
+5688#{ bonus bVit,2; } // 2009Love_Daddy
+5690#{ bonus bStr,1; bonus bInt,1; bonus bDex,1; } // Red_Wing_Hat
+5691#{ bonus bDex,1; } // Catain_Bandanna
+5692#{ bonus bDex,1; } // Sea_Cat_Hat
+5693#{ bonus bStr,1; bonus bInt,1; bonus bDex,1; } // No_Fear_Underware
+5694#{ bonus bVit,1; } // No_Fear_P_Headgear
+5695#{ bonus bMdef,15; } // E_Blue_Drooping_Kitty
+5696#{ bonus bAgi,1; bonus bInt,1; } // E_Flying_Angel
+5697#{ bonus bVit,1; } // E_Smoking_Pipe_
+5699#{ bonus bAgi,1; bonus bDex,1; } // E_Fish_On_Head_
+5700#{ bonus bInt,1; bonus bDex,1; bonus bMdef,5; } // E_Hibiscus
+5701#{ bonus bLuk,2; bonus bMdef,10; } // E_Cat_Hat
+5702#{ bonus bInt,2; } // E_Bunny_Band_
+5703#{ bonus bStr,2; } // E_Magestic_Goat_TW
+5705#{ bonus bAgi,2; bonus bDex,1; } // E_Mini_Propeller_
+5706#{ bonus bStr,1; } // E_Alice_Doll
+5707#{ bonus bInt,1; } // E_Red_Glasses
+5708#{ bonus bLuk,2; } // E_Chick_Hat
+5709#{ bonus bStr,1; bonus bInt,1; } // E_White_Deviruchi_Cap
+5710#{ bonus bAgi,2; } // E_Vane_Hairpin
+5712#{ bonus bVit,1; } // E_Vacation_Hat
+5714#{ bonus bAgi,1; bonus bDex,1; bonus bMdef,3; } // E_Water_Lily_Crown
+5715#{ bonus bMdef,5; } // E_Vanilmirth_Hat
+5716#{ bonus bDex,1; } // E_Drooping_Bunny_
+5719#{ bonus bDex,4; } // E_Ramen_Hat
+5720#{ bonus bLuk,1; } // E_Pink_Fur_Hat
+5721#{ bonus bAgi,1; } // E_Puppy_Hat
+5722#{ bonus bMdef,5; } // E_Magic_Eyes
+5723#{ bonus bLuk,1; } // E_Jumping_Poring
+5724#{ bonus bDex,1; } // E_Robo_Eye
+5725#{ bonus bInt,2; } // E_Yellow_Wizardry_Hat
+5726#{ bonus bVit,1; } // E_Crescent_Helm
+5727#{ bonus bStr,3; } // E_Tiger_Mask
+5729#{ bonus bMdef,5; } // E_Bunny_Band_C
+5731#{ bonus bDex,4; } // E_Apple_OE_Archer_C
+5732#{ bonus bInt,1; } // E_Elven_Ears_C
+5733#{ bonus bAgi,4; } // E_Brooch_C
+5734#{ bonus bStr,1; } // E_Magestic_Goat_C
+5735#{ bonus bMdef,3; } // E_Ribbon_Green
+5736#{ bonus bAgi,3; } // EF_Whisper_Mask
+5738#{ bonus bStr,1; bonus bInt,1; bonus bMdef,3; } // Snowman_Hat
+5739#{ bonus bDex,2; } // Sagittarius_Crown
+5740#{ bonus bDex,2; bonus bMdef,3; } // Sagittarius_Diadem
+5742#{ bonus bLuk,1; } // Rudolf_Santa_Hat
+5743#{ bonus bLuk,3; } // Orange_Stem_Hat
+5744#{ bonus bVit,2; bonus bDex,2; } // Capricon_Crown
+5745#{ bonus bDex,2; bonus bMdef,5; } // Capricon_Diadem
+5746#{ bonus bStr,1; bonus bInt,1; bonus bMdef,5; } // Rune_Circlet
+5747#{ bonus bVit,1; bonus bInt,1; bonus bMdef,5; } // Mitra
+5748#{ bonus bAgi,1; bonus bDex,1; bonus bMdef,5; } // Sniper_Goggle
+5749#{ bonus bStr,1; bonus bDex,1; bonus bMdef,5; } // Driver_Band
+5750#{ bonus bAgi,1; bonus bInt,1; bonus bMdef,5; } // Shadow_Handicraft
+5751#{ bonus bInt,1; bonus bLuk,1; bonus bMdef,5; } // Minstrel_Song_Hat
+5752#{ bonus bStr,1; bonus bDex,1; bonus bMdef,5; } // Midas_Whisper
+5753#{ bonus bInt,1; bonus bDex,1; bonus bMdef,5; } // Magic_Stone_Hat
+5754#{ bonus bStr,1; bonus bVit,1; bonus bMdef,5; } // Blazing_Soul
+5755#{ bonus bAgi,1; bonus bMdef,5; } // Silent_Executer
+5756#{ bonus bInt,1; bonus bDex,1; bonus bMdef,5; } // Wind_Whisper
+5757#{ bonus bVit,2; bonus bInt,1; bonus bMdef,5; } // Schmidt_Helm
+5758#{ bonus bInt,1; bonus bLuk,1; bonus bMdef,5; } // Dying_Swan
+5759#{ bonus bMdef,3; } // Noah_Hat
+5760#{ bonus bStr,1; bonus bDex,1; bonus bMdef,5; } // Driver_Band_
+5761#{ bonus bAgi,2; } // Sloth_Hat
+5762#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; bonus bMdef,5; } // Duneyrr_Helm
+5763#{ bonus bAgi,2; bonus bMdef,3; } // Red_Bunny_Band
+5765#{ bonus bMdef,5; } // Black_Tail_Ribbon
+5766#{ bonus bVit,1; } // Amistr_Cap
+5768#{ bonus bMdef,3; } // Sakura_Coronet
+5770#{ bonus bAgi,3; } // Splash_Hat
+5771#{ bonus bDex,1; bonus bMdef,1; } // Family_Hat
+5777#{ bonus bMdef,1; } // Remover_Hat
+5778#{ bonus bStr,2; } // Blue_Arara_Hat
+5779#{ bonus bInt,2; } // Drooping_Boto
+5783#{ bonus bStr,1; bonus bInt,1; bonus bDex,2; } // YellowBunny_Hairband
+5784#{ bonus bStr,1; bonus bInt,2; bonus bDex,1; } // PinkBunny_Hairband
+5785#{ bonus bStr,2; bonus bInt,1; bonus bDex,1; } // Green_Bunny_Hairband
+5786#{ bonus bLuk,1; } // Ancient_Elven_Ear
+5787#{ bonus bMdef,2; } // Tha_Maero_Mask
+5789#{ bonus bVit,1; } // Thanatos_Mal_Mask
+5791#{ bonus bInt,-1; bonus bDex,4; } // Tenkaippin_Ramen
+5793#{ bonus bInt,1; bonus bMdef,2; } // Ribbon_Of_Life
+5795#{ bonus bMdef,7; } // Red_Dress_Hat
+5801#{ bonus bStr,2; bonus bAgi,2; bonus bVit,2; bonus bInt,2; bonus bDex,2; bonus bLuk,2; } // Ribbon_Of_Bride
+5809#{ bonus bStr,5; bonus bAgi,5; bonus bVit,5; bonus bInt,5; bonus bDex,5; bonus bLuk,5; } // Boom_Boom_Hat
+5810#{ bonus bVit,3; bonus bInt,5; bonus bDex,3; } // Ph.D_Hat_V
+5813#{ bonus bInt,1; } // Red_Ph.D_Hat
+5815#{ bonus bStr,1; } // Cowboy_Hat_J
+5817#{ bonus bStr,2; bonus bAgi,2; bonus bVit,2; bonus bInt,2; bonus bDex,2; bonus bLuk,2; bonus bMdef,3; } // Valentine_Pledge
+5818#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,3; bonus bDex,3; bonus bLuk,3; } // Carnival_Hat
+5819#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,3; bonus bDex,3; bonus bLuk,3; } // Carnival_Circlet
+5822#{ bonus bLuk,4; } // Love_Chick_Hat
+5823#{ bonus bAgi,5; bonus bDex,5; } // Love_Arrow
+5825#{ bonus bMdef,1; } // Badge_Of_Order_Grace
+5826#{ bonus bStr,2; bonus bAgi,2; bonus bInt,2; bonus bDex,2; bonus bMdef,5; } // Valkyrie_Helmet
+5827#{ bonus bInt,1; } // Book_File_Hat
+5828#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; bonus bMdef,5; } // Honor_Gold_Ring
+5841#{ bonus bLuk,2; } // Shaman_Hat_
+5843#{ bonus bStr,2; bonus bAgi,2; bonus bVit,2; bonus bInt,2; bonus bDex,2; bonus bLuk,2; } // Loyal_Ring2
+5844#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,3; bonus bDex,3; bonus bLuk,3; } // Loyal_Ring3
+5846#{ bonus bMdef,5; } // Buzzy_Ball_Gum
+5847#{ bonus bVit,-3; bonus bInt,5; } // Fools_Day_Helmet
+5852#{ bonus bDef,-7; bonus bMdef,-7; } // Easter_Egg_Shell
+5856#{ bonus bStr,2; bonus bDex,2; } // Passion_FB_Hat
+5857#{ bonus bVit,2; bonus bInt,2; } // Cool_FB_Hat
+5858#{ bonus bInt,2; bonus bDex,2; } // Victory_FB_Hat
+5859#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Glory_FB_Hat
+5870#{ bonus bAgi,3; } // Bunny_Egg_Shell
+5871#{ bonus bVit,3; bonus bMdef,2; } // Picky_Egg_Shell
+5873#{ bonus bStr,5; bonus bAgi,5; bonus bVit,5; bonus bInt,5; bonus bDex,5; bonus bLuk,5; } // Helmet_Of_Siegfried
+5874#{ bonus bStr,5; bonus bAgi,5; bonus bVit,5; bonus bInt,5; bonus bDex,5; bonus bLuk,5; } // Circlet_Of_Kriemhild
+5875#{ bonus bStr,5; bonus bAgi,5; bonus bVit,5; bonus bInt,5; bonus bDex,5; bonus bLuk,5; } // Diadem_Of_Bruenhild
+5882#{ bonus bInt,2; } // White_Wizardry_Hat_C
+5883#{ bonus bInt,2; } // Gray_Wizardry_Hat_C
+5884#{ bonus bInt,2; } // Blue_Wizardry_Hat_C
+5885#{ bonus bInt,2; } // Red_Wizardry_Hat_C
+5886#{ bonus bInt,2; } // Yellow_Wizardry_Hat_C
+5892#{ bonus bStr,5; bonus bAgi,5; bonus bVit,5; bonus bInt,5; bonus bDex,5; bonus bLuk,5; bonus bMdef,5; } // RCC2013_1ST_CROWN
+5893#{ bonus bStr,4; bonus bAgi,4; bonus bVit,4; bonus bInt,4; bonus bDex,4; bonus bLuk,4; bonus bMdef,4; } // RCC2013_2ND_CROWN
+5894#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,3; bonus bDex,3; bonus bLuk,3; bonus bMdef,3; } // RCC2013_3RD_CROWN
+5895#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // RCC2013_ANV_Hat
+//12900#{ getitem 12208,10; } // Battle_Manual_Box
+//12901#{ getitem 12209,10; } // Insurance_Package
+//12902#{ getitem 12210,10; } // Bubble_Gum_Box
+//12903#{ getitem 12202,10; } // Str_Dish_Box
+//12904#{ getitem 12203,10; } // Agi_Dish_Box
+//12905#{ getitem 12204,10; } // Int_Dish_Box
+//12906#{ getitem 12205,10; } // Dex_Dish_Box
+//12907#{ getitem 12206,10; } // Luk_Dish_Box
+//12908#{ getitem 12207,10; } // Vit_Dish_Box
+//12909#{ getitem 12211,10; } // Kafra_Card_Box
+//12910#{ getitem 12212,10; } // Giant_Fly_Wing_Box
+//12911#{ getitem 12213,1; } // Neuralizer_Box
+//12912#{ getitem 12214,10; } // Convex_Mirror_Box
+//12913#{ getitem 12215,10; } // Blessing_10_Scroll_Box
+//12914#{ getitem 12216,10; } // Inc_Agi_10_Scroll_Box
+//12915#{ getitem 12217,10; } // Aspersio_5_Scroll_Box
+//12916#{ getitem 12218,10; } // Assumptio_5_Scroll_Box
+//12917#{ getitem 12219,10; } // Wind_Walk_10_Scroll_Box
+//12918#{ getitem 12220,10; } // Adrenaline_Scroll_Box
+//12919#{ getitem 12221,10; } // Megaphone_Box
+//12920#{ getitem 7619,10; } // Enriched_Elunium_Box
+//12921#{ getitem 7620,10; } // Enriched_Oridecon_Box
+//12922#{ getitem 7621,10; } // Token_Of_Siegfried_Box
+//12927#{ getitem 12928,10; } // J_Aspersio_5_Scroll_Box
+//12965#{ getitem 12968,1; } // Emergency_Box1
+//12966#{ getitem 12969,1; } // Emergency_Box2
+//12967#{ getitem 12970,1; } // Emergency_Box3
+//12971#{ getitem 12977,10; } // Teleport_Box1
+//12972#{ getitem 12978,10; } // Teleport_Box2
+//12973#{ getitem 12979,10; } // Teleport_Box3
+//12974#{ getitem 12980,10; } // Teleport_Box4
+//12975#{ getitem 12981,10; } // Teleport_Box5
+//12976#{ getitem 12982,10; } // Teleport_Box6
+//12995#{ getitem 509,15; } // White_Herb_Box
+//12996#{ getitem 510,15; } // Blue_Herb_Box
+//12997#{ getitem 985,5; } // Elunium_Box
+//12998#{ getitem 984,5; } // Oridecon_Box
+//12999#{ getitem 604,3; } // Branch_Of_Dead_Tree_Box
+13000#{ bonus bAtkEle,Ele_Wind; } // Jujube_Dagger
+13002#{ bonus bAtkEle,Ele_Dark; } // Ginnungagap
+13006#{ bonus bAtkEle,Ele_Dark; } // Khukri
+13009#{ bonus bAtkEle,Ele_Wind; } // Kamaitachi
+13012#{ bonus bAtkEle,Ele_Water; } // Murasame
+13013#{ bonus bAtkEle,Ele_Water; } // Murasame_
+13014#{ bonus bInt,2; } // Hakujin
+13015#{ bonus bInt,2; } // Hakujin_
+13016#{ bonus bAtkEle,Ele_Poison; } // Poison_Knife_
+13019#{ bonus bAtkEle,Ele_Dark; } // Ginnungagap_
+13020#{ bonus bStr,5; bonus bAgi,5; bonus bVit,5; bonus bInt,5; bonus bDex,5; bonus bLuk,5; } // Warrior_Balmung_
+13033#{ bonus bAtkEle,Ele_Dark; } // Assasin_Dagger_
+13036#{ bonus bStr,1; bonus bAgi,1; } // BF_Dagger1
+13037#{ bonus bStr,1; bonus bAgi,1; } // BF_Dagger2
+13038#{ bonus bStr,1; bonus bAgi,2; bonus bDex,1; } // Dagger_Of_Hunter
+13039#{ bonus bAgi,2; } // Ivory_Knife
+13043#{ bonus bLuk,5; } // Fortune_Sword_I
+13045#{ bonus bAtkEle,Ele_Wind; } // Kamaitachi_I
+13052#{ bonus bAgi,2; } // Tourist_Dagger
+13068#{ bonus bAgi,3; } // Saurel
+13069#{ bonus bAtkEle,Ele_Wind; } // Aztoe_Nail
+13070#{ bonus bAtkEle,Ele_Fire; } // Scarletto_Nail
+13075#{ bonus bInt,3; } // Kurenai
+13076#{ bonus bInt,3; } // Raksasa_Dagger
+13108#{ bonus bDex,2; } // BF_Pistol1
+13111#{ bonus bDex,2; } // Sharpshooter_Revolver
+13167#{ bonus bDex,1; } // Gate_KeeperDD
+13171#{ bonus bDex,2; } // BF_Rifle1
+13172#{ bonus bDex,2; } // BF_Gatling_Gun1
+13173#{ bonus bDex,2; } // BF_Shotgun1
+13174#{ bonus bDex,2; } // BF_Launcher1
+13300#{ bonus bAtkEle,Ele_Wind; bonus bAgi,-1; bonus bDex,-2; } // Huuma_Bird_Wing
+13303#{ bonus bAtkEle,Ele_Fire; bonus bDex,-2; } // Huuma_Blaze
+13305#{ bonus bStr,2; bonus bDex,1; } // BF_Huuma_Shuriken1
+13306#{ bonus bStr,2; bonus bDex,1; } // BF_Huuma_Shuriken2
+13308#{ bonus bAtkEle,Ele_Fire; bonus bDex,2; } // Huuma_Blaze_I
+13311#{ bonus bStr,3; } // Huuma_Shadow
+13314#{ bonus bAtkEle,Ele_Water; } // Huuma_Fluttering_Snow
+13315#{ bonus bAtkEle,Ele_Wind; } // Huuma_Thunderstorm
+13400#{ bonus bStr,2; } // Cutlas_
+13401#{ bonus bAtkEle,Ele_Holy; bonus bInt,10; bonus bLuk,10; } // Excalibur_C
+13402#{ bonus bStr,2; } // Cutlas_C
+13403#{ bonus bAtkEle,Ele_Fire; } // Solar_Sword_C
+13408#{ bonus bAtkEle,Ele_Fire; bonus bInt,2; } // Fire_Brand_C
+13409#{ bonus bAtkEle,Ele_Ghost; } // Immaterial_Sword_C
+13410#{ bonus bStr,1; bonus bDex,1; } // BF_Sword1
+13411#{ bonus bStr,1; bonus bDex,1; } // BF_Sword2
+13412#{ bonus bAtkEle,Ele_Water; } // Twin_Edge_B
+13413#{ bonus bAtkEle,Ele_Fire; } // Twin_Edge_R
+13414#{ bonus bStr,2; bonus bInt,4; bonus bDex,1; } // Elemental_Sword
+13417#{ bonus bInt,6; } // Krieger_Onehand_Sword2
+13418#{ bonus bInt,6; } // Krieger_Onehand_Sword3
+13420#{ bonus bAtkEle,Ele_Fire; bonus bStr,2; bonus bInt,2; } // Honglyun's_Sword
+13425#{ bonus bStr,1; bonus bDex,1; } // Tourist_Sword
+13426#{ bonus bStr,2; } // F_Cutlas_C
+13427#{ bonus bAtkEle,Ele_Fire; } // F_Solar_Sword_C
+13429#{ bonus bStr,2; } // E_Cutlas_C
+13430#{ bonus bAtkEle,Ele_Fire; } // E_Solar_Sword_C
+13431#{ bonus bAgi,1; } // Chrome_Sword
+13449#{ bonus bAtkEle,Ele_Dark; } // Gladius_Daemonicus
+//13500#{ getitem 14500,10; } // Insurance60_Package
+//13515#{ getitem 514,10; } // Grape_Box
+//13516#{ getitem 526,5; } // Royal_Jelly_Box
+//13517#{ getitem 607,3; } // Yggdrasilberry_Box
+//13518#{ getitem 13558,1; } // Weapon_Card_Scroll_Box
+//13519#{ getitem 13559,1; } // Armor_Card_Scroll_Box
+//13520#{ getitem 13560,1; } // Helmet_Card_Scroll_Box
+//13521#{ getitem 13561,1; } // Garment_Card_Scroll_Box
+//13522#{ getitem 13562,1; } // Shield_Card_Scroll_Box
+//13523#{ getitem 13563,1; } // Shoes_Card_Scroll_Box
+//13524#{ getitem 13564,1; } // Accy_Card_Scroll_Box
+//13525#{ getitem 14508,1; } // Zeny_Scroll_Box
+//13526#{ getitem 12925,30; } // Pet_Egg_Scroll_Box1_
+//13527#{ getitem 12926,30; } // Pet_Egg_Scroll_Box2_
+//13528#{ getitem 12932,30; } // Pet_Egg_Scroll_Box3_
+//13529#{ getitem 12933,30; } // Pet_Egg_Scroll_Box4_
+//13530#{ getitem 12934,30; } // Pet_Egg_Scroll_Box5_
+//13531#{ getitem 598,50; } // Light_Red_Pot_Box
+//13532#{ getitem 599,50; } // Light_Orange_Pot_Box
+//13533#{ getitem 11500,50; } // Light_Yellow_Pot_Box
+//13534#{ getitem 11501,50; } // Light_White_Pot_Box
+//13535#{ getitem 14509,20; } // Light_Center_Pot_Box
+//13536#{ getitem 14510,20; } // Light_Awakening_Pot_Box
+//13537#{ getitem 14511,20; } // Light_Berserk_Pot_Box
+//13538#{ getitem 14512,1; } // Meteor_10_Scroll_Box
+//13539#{ getitem 14513,1; } // Storm_10_Scroll_Box
+//13540#{ getitem 14514,1; } // Vermilion_10_Scroll_Box
+//13541#{ getitem 14515,1; } // Lex_Aeterna_Scroll_Box
+//13542#{ getitem 14516,1; } // Magnificat_5_Scroll_Box
+//13548#{ getitem 14522,10; } // Big_Bun_Box
+//13549#{ getitem 14523,10; } // Pill__Box
+//13550#{ getitem 14524,10; } // Superb_Fish_Slice_Box
+//13551#{ getitem 14525,10; } // Chewy_Ricecake_Box
+//13552#{ getitem 14526,10; } // Oriental_Pastry_Box
+//13553#{ getitem 14527,5; } // Dun_Tele_Scroll1_Box
+//13554#{ getitem 13565,1; } // Weapon_Card_Scroll_Box2
+//13555#{ getitem 13566,1; } // Weapon_Card_Scroll_Box3
+//13556#{ getitem 13567,1; } // Armor_Card_Scroll_Box2
+//13557#{ getitem 13568,1; } // Accy_Card_Scroll_Box2
+//13569#{ getitem 14528,10; } // PVP_Tele_Scroll_Box
+//13570#{ getitem 12212,50; } // Giant_Fly_Wing_Box50
+//13571#{ getitem 12212,100; } // Giant_Fly_Wing_Box100
+//13572#{ getitem 12205,30; } // Dex_Dish_Box30
+//13573#{ getitem 12205,50; } // Dex_Dish_Box50
+//13574#{ getitem 12206,30; } // Luk_Dish_Box30
+//13575#{ getitem 12206,50; } // Luk_Dish_Box50
+//13576#{ getitem 12216,30; } // Inc_Agi_10_Box30
+//13577#{ getitem 12216,50; } // Inc_Agi_10_Box50
+//13578#{ getitem 12207,30; } // Vit_Dish_Box30
+//13579#{ getitem 12207,50; } // Vit_Dish_Box50
+//13580#{ getitem 12209,30; } // Insurance_Package30
+//13581#{ getitem 12209,50; } // Insurance_Package50
+//13582#{ getitem 12214,5; } // Convex_Mirror_Box5
+//13583#{ getitem 12214,30; } // Convex_Mirror_Box30
+//13584#{ getitem 12215,30; } // Blessing10_Box30
+//13585#{ getitem 12215,50; } // Blessing10_Box50
+//13586#{ getitem 12220,30; } // Adrenaline10_Box30
+//13587#{ getitem 12220,50; } // Adrenaline10_Box50
+//13588#{ getitem 12218,30; } // Assumptio_5_Box30
+//13589#{ getitem 12218,50; } // Assumptio_5_Box50
+//13592#{ getitem 12203,30; } // Agi_Dish_Box30
+//13593#{ getitem 12203,50; } // Agi_Dish_Box50
+//13594#{ getitem 12219,30; } // Wind_Walk10_Box30
+//13595#{ getitem 12219,50; } // Wind_Walk10_Box50
+//13596#{ getitem 12204,30; } // Int_Dish_Box30
+//13597#{ getitem 12204,50; } // Int_Dish_Box50
+//13598#{ getitem 12208,1; } // Battle_Manual_Box1
+//13599#{ getitem 12208,5; } // Battle_Manual_Box5
+//13600#{ getitem 7621,5; } // Siegfried_Box5
+//13601#{ getitem 7621,20; } // Siegfried_Box20
+//13602#{ getitem 12211,30; } // Kafra_Card_Box30
+//13603#{ getitem 12211,50; } // Kafra_Card_Box50
+//13604#{ getitem 12202,30; } // Str_Dish_Box30
+//13605#{ getitem 12202,50; } // Str_Dish_Box50
+//13606#{ getitem 12210,1; } // Bubble_Gum_Box1
+//13607#{ getitem 12210,5; } // Bubble_Gum_Box5
+//13608#{ getitem 12221,1; } // Megaphone_Box1
+//13609#{ getitem 12221,5; } // Megaphone_Box5
+//13610#{ getitem 7619,5; } // Enriched_Elunium_Box5
+//13611#{ getitem 7620,5; } // Enriched_Oridecon_Box5
+//13613#{ getitem 13617,1; } // Super_Pet_Egg_Box1
+//13614#{ getitem 13618,1; } // Super_Pet_Egg_Box2
+//13615#{ getitem 13619,1; } // Super_Pet_Egg_Box3
+//13616#{ getitem 13620,1; } // Super_Pet_Egg_Box4
+//13621#{ getitem 14529,30; } // Greed_Box30
+//13622#{ getitem 14529,50; } // Greed_Box50
+//13623#{ getitem 14529,100; } // Greed_Box100
+//13624#{ getitem 14530,1; } // Flee_30_Scroll_Box
+//13625#{ getitem 14531,1; } // Accuracy_30_Scroll_Box
+//13626#{ getitem 13630,1; } // Super_Card_Pet_Egg_Box1
+//13627#{ getitem 13631,1; } // Super_Card_Pet_Egg_Box2
+//13628#{ getitem 13632,1; } // Super_Card_Pet_Egg_Box3
+//13629#{ getitem 13633,1; } // Super_Card_Pet_Egg_Box4
+//13689#{ getitem 7766,10; } // Bok_Choy_Box
+//13690#{ getitem 7767,10; } // Chung_E_Cake_Box
+//13695#{ getitem 14532,10; } // Battle_Manual25_Box
+//13696#{ getitem 14533,10; } // Battle_Manual100_Box
+//13697#{ getitem 12215,10; } // J_Blessing10_Box
+//13698#{ getitem 12216,10; } // J_Inc_Agi10_Box
+//13699#{ getitem 12219,10; } // J_Wind_Walk10_Box
+//13700#{ getitem 12220,10; } // J_Adrenaline10_Box
+//13710#{ getitem 7776,1; } // Max_Weight_Up_Box
+//13711#{ getitem 14534,10; } // Small_Life_Potion_Box
+//13712#{ getitem 14534,30; } // Small_Life_Potion_Box30
+//13713#{ getitem 14534,50; } // Small_Life_Potion_Box50
+//13714#{ getitem 14535,10; } // Med_Life_Potion_Box
+//13715#{ getitem 14535,30; } // Med_Life_Potion_Box30
+//13716#{ getitem 14535,50; } // Med_Life_Potion_Box50
+//13717#{ getitem 14536,5; } // Abrasive_Box5
+//13718#{ getitem 14536,10; } // Abrasive_Box10
+//13719#{ getitem 14537,5; } // Regeneration_Box5
+//13720#{ getitem 14537,10; } // Regeneration_Box10
+//13721#{ getitem 14527,10; } // Dun_Tele_Scroll_Box10
+//13728#{ getitem 7779,1; } // Gold_Key1_Box
+//13729#{ getitem 7779,5; } // Gold_Key5_Box
+//13730#{ getitem 7780,1; } // Silver_Key1_Box
+//13731#{ getitem 7780,5; } // Silver_Key5_Box
+//13738#{ getitem 14538,5; } // Glass_Of_Illusion_Box5
+//13739#{ getitem 14538,10; } // Glass_Of_Illusion_Box10
+//13740#{ getitem 14539,5; } // Shadow_Armor_S_Box5
+//13741#{ getitem 14539,10; } // Shadow_Armor_S_Box10
+//13742#{ getitem 14539,30; } // Shadow_Armor_S_Box30
+//13743#{ getitem 14540,5; } // Holy_Armor_S_Box5
+//13744#{ getitem 14540,10; } // Holy_Armor_S_Box10
+//13745#{ getitem 14540,30; } // Holy_Armor_S_Box30
+//13746#{ getitem 14541,10; } // S_Def_Potion_Box10
+//13747#{ getitem 14541,30; } // S_Def_Potion_Box30
+//13748#{ getitem 14541,50; } // S_Def_Potion_Box50
+//13749#{ getitem 14542,10; } // B_Def_Potion_Box10
+//13750#{ getitem 14542,30; } // B_Def_Potion_Box30
+//13751#{ getitem 14542,50; } // B_Def_Potion_Box50
+//13752#{ getitem 14543,10; } // S_Mdef_Potion_Box10
+//13753#{ getitem 14543,30; } // S_Mdef_Potion_Box30
+//13754#{ getitem 14543,50; } // S_Mdef_Potion_Box50
+//13755#{ getitem 14544,10; } // B_Mdef_Potion_Box10
+//13756#{ getitem 14544,30; } // B_Mdef_Potion_Box30
+//13757#{ getitem 14544,50; } // B_Mdef_Potion_Box50
+//13758#{ getitem 14545,20; } // Battle_Manual_X3_Box
+//13759#{ getitem 510,50; } // In_Blue_Herb_Box
+//13760#{ getitem 518,100; } // Honey_Box
+//13761#{ getitem 713,500; } // Empty_Bottle_Box
+//13762#{ getitem 526,70; } // In_Royal_Jelly_Box
+//13764#{ getitem 7803,5; } // Battle_Manual_Box_TW
+//13804#{ getitem 14546,10; } // Fire_Cracker_Love_Box
+//13805#{ getitem 14547,10; } // Fire_Cracker_Wday_Box
+//13806#{ getitem 14548,10; } // Fire_Cracker_Vday_Box
+//13807#{ getitem 14549,10; } // Fire_Cracker_Bday_Box
+//13808#{ getitem 14550,10; } // Fire_Cracker_Xmas_Box
+//13809#{ getitem 717,100; } // Blue_Gemstone_Box
+//13810#{ getitem 11502,25; } // Blue_Potion_Box
+//13815#{ getitem 14569,10; } // Knife_Goblin_Box
+//13816#{ getitem 14570,10; } // Flail_Goblin_Box
+//13817#{ getitem 14571,10; } // Hammer_Goblin_Box
+//13818#{ getitem 14572,10; } // Red_Deleter_Box
+//13819#{ getitem 14573,10; } // Diabolic_Box
+//13820#{ getitem 14574,10; } // Wanderer_Box
+//13821#{ getitem 7821,10; } // Green_Apple_Box
+//13822#{ getitem 7822,10; } // Whole_Barbecue_Box
+//13823#{ getitem 7823,10; } // Meat_Veg_Skewer_Box
+//13824#{ getitem 7824,10; } // Spirit_Liquor_Box
+//13834#{ getitem 14581,5; } // Dun_Tele_Scroll2_Box5
+//13835#{ getitem 14581,10; } // Dun_Tele_Scroll2_Box10
+//13836#{ getitem 12250,1; } // Mbl_Str_Dish_Box
+//13837#{ getitem 12251,1; } // Mbl_Agi_Dish_Box
+//13838#{ getitem 12252,1; } // Mbl_Int_Dish_Box
+//13839#{ getitem 12253,1; } // Mbl_Dex_Dish_Box
+//13840#{ getitem 12254,1; } // Mbl_Luk_Dish_Box
+//13841#{ getitem 12255,1; } // Mbl_Vit_Dish_Box
+//13842#{ getitem 12249,1; } // Mbl_Kafra_Card_Box
+//13843#{ getitem 14532,1; } // Mbl_Battle_Manual_Box
+//13844#{ getitem 7825,1; } // Heroic_Stone_Box
+//13849#{ getitem 14582,5; } // WOB_Box_Rune5
+//13850#{ getitem 14582,10; } // WOB_Box_Rune10
+//13851#{ getitem 14583,5; } // WOB_Box_Schawaltz5
+//13852#{ getitem 14583,10; } // WOB_Box_Schawaltz10
+//13853#{ getitem 14584,5; } // WOB_Box_Rachel5
+//13854#{ getitem 14584,10; } // WOB_Box_Rachel10
+//13855#{ getitem 14585,5; } // WOB_Box_Local5
+//13856#{ getitem 14585,10; } // WOB_Box_Local10
+//13857#{ getitem 14586,5; } // Spark_Candy_Box5
+//13858#{ getitem 14586,10; } // Spark_Candy_Box10
+//13861#{ getitem 12208,4; } // Mini_Battle_Manual_Box
+//13866#{ getitem 5210,1; } // Flying_Angel_Box
+//13867#{ getitem 5099,1; } // Neko_Mimi_Box
+//13868#{ getitem 5214,1; } // MFH_Box
+//13869#{ getitem 5283,1; } // Chick_Hat_Box
+//13870#{ getitem 7622,1; } // New_Style_Box
+//13882#{ getitem 4076,4; } // Curse_Card_Box
+//13883#{ getitem 4024,4; } // Sleep_Card_Box
+//13884#{ getitem 4055,4; } // Freeze_Card_Box
+//13885#{ getitem 4017,4; } // Stun_Card_Box
+//13886#{ getitem 4057,4; } // Silence_Card_Box
+//13887#{ getitem 4020,4; } // Blind_Card_Box
+//13888#{ getitem 4104,4; } // Chaos_Card_Box
+//13889#{ getitem 985,10; } // Elunium_Box_
+//13890#{ getitem 984,10; } // Oridecon_Box_
+//13891#{ getitem 12114,10; } // Fire_Converter_Box
+//13892#{ getitem 12115,10; } // Water_Converter_Box
+//13893#{ getitem 12117,10; } // Wind_Converter_Box
+//13894#{ getitem 12116,10; } // Earth_Converter_Box
+//13896#{ getitem 12276,5; } // Mimic_Scroll_Box5
+//13897#{ getitem 12277,5; } // Disguise_Scroll_Box5
+//13898#{ getitem 12278,5; } // Alice_Scroll_Box5
+//13899#{ getitem 12276,10; } // Mimic_Scroll_Box10
+//13900#{ getitem 12277,10; } // Disguise_Scroll_Box10
+//13901#{ getitem 12278,10; } // Alice_Scroll_Box10
+//13902#{ getitem 5380,1; } // Fish_Head_Hat_Box
+//13903#{ getitem 5381,1; } // Santa_Poring_Hat_Box
+//13904#{ getitem 5382,1; } // Bell_Ribbon_Box
+//13912#{ getitem 14588,10; } // Pty_Blessing_Box
+//13913#{ getitem 14589,10; } // Pty_Inc_Agi_Box
+//13914#{ getitem 14590,10; } // Pty_Assumptio_Box
+//13918#{ getitem 5372,1; } // Drooping_W_Kitty_Box
+//13919#{ getitem 5374,1; } // L_Magestic_Goat_Box
+//13920#{ getitem 5376,1; } // Satanic_Chain_P_Box
+//13921#{ getitem 5377,1; } // Antique_Pipe_Box
+//13922#{ getitem 5378,1; } // Rabbit_Ear_Hat_Box
+//13923#{ getitem 5373,1; } // Darkness_Helm_Box
+//13924#{ getitem 5375,1; } // L_Orc_Hero_Helm_Box
+//13932#{ getitem 4345,4; } // Sylph_Box
+//13933#{ getitem 4350,4; } // Undine_Box
+//13934#{ getitem 4380,4; } // Salamander_Box
+//13935#{ getitem 4388,4; } // Soul_Box
+//13936#{ getitem 4335,4; } // Noum_Bpx
+//13937#{ getitem 5325,1; } // Robo_Eye_Box
+//13938#{ getitem 5187,1; } // Twin_Ribbon_Box
+//13939#{ getitem 5313,1; } // Diadem_Box
+//13940#{ getitem 14591,100; } // Siege_Tele_Scroll_Box
+//13960#{ getitem 7623,1; } // Name_Change_Coupon_Box
+//13961#{ getitem 554,5; } // Mojji_Box
+//13962#{ getitem 5340,1; } // Deprotai_Doll_Hat_Box
+//13963#{ getitem 5341,1; } // Claris_Doll_Hat_Box
+//13964#{ getitem 5342,1; } // Sorin_Doll_Hat_Box
+//13965#{ getitem 5343,1; } // Tayelin_Doll_Hat_Box
+//13966#{ getitem 5344,1; } // Binit_Doll_Hat_Box
+//13967#{ getitem 5345,1; } // Debril_Doll_Hat_Box
+//13970#{ getitem 998,10; } // Iron_10_Box
+//13971#{ getitem 999,10; } // Steel_10_Box
+//13972#{ getitem 1003,10; } // Coal_10_Box
+//13973#{ getitem 678,30; } // Poison_Bottle_30_Box
+//13987#{ getitem 756,5; } // Ori_Stone_5_Box
+//13988#{ getitem 756,50; } // Ori_Stone_50_Box
+//13990#{ getitem 14592,10; } // Job_Manual50_Box
+//13991#{ getitem 5098,1; } // Tiger_Mask_Box
+//13992#{ getitem 5099,1; } // Cat_Hat_Box
+//13993#{ getitem 5137,1; } // Alice_Doll_Box
+//13994#{ getitem 12016,5; } // Speed_Up_Potion_Box5
+//13995#{ getitem 12016,10; } // Speed_Up_Potion_Box10
+//13996#{ getitem 14522,100; } // Big_Bun_Box100
+//13997#{ getitem 14522,500; } // Big_Bun_Box500
+//13998#{ getitem 12212,500; } // Giant_Fly_Wing_Box500
+//13999#{ getitem 14523,100; } // Pill__Box100
+//14000#{ getitem 14523,500; } // Pill__Box500
+//14004#{ getitem 678,10; } // Poison_Bottle_10_Box
+//14005#{ getitem 678,5; } // Poison_Bottle_5_Box
+//14006#{ getitem 5372,1; } // F_Drooping_W_Kitty_Box
+//14007#{ getitem 5378,1; } // F_Rabbit_Ear_Hat_Box
+//14008#{ getitem 5375,1; } // F_L_Orc_Hero_Helm_Box
+//14024#{ getitem 5325,1; } // F_Robo_Eye_Box
+//14025#{ getitem 5187,1; } // F_Twin_Ribbon_Box
+//14026#{ getitem 5313,1; } // F_Diadem_Box
+//14027#{ getitem 5380,1; } // F_Fish_Head_Hat_Box
+//14028#{ getitem 5381,1; } // F_Santa_Poring_Hat_Box
+//14029#{ getitem 5382,1; } // F_Bell_Ribbon_Box
+//14030#{ getitem 12276,5; } // F_Mimic_Scroll_Box5
+//14031#{ getitem 12277,5; } // F_Disguise_Scroll_Box5
+//14032#{ getitem 12278,5; } // F_Alice_Scroll_Box5
+//14033#{ getitem 12276,10; } // F_Mimic_Scroll_Box10
+//14034#{ getitem 12277,10; } // F_Disguise_Scroll_Box10
+//14035#{ getitem 12278,10; } // F_Alice_Scroll_Box10
+//14036#{ getitem 7622,1; } // F_New_Style_Coupon_Box
+//14041#{ getitem 14582,5; } // F_WOB_Rune_Box5
+//14042#{ getitem 14582,10; } // F_WOB_Rune_Box10
+//14043#{ getitem 14583,5; } // F_WOB_Schwaltz_Box5
+//14044#{ getitem 14583,10; } // F_WOB_Schwaltz_Box10
+//14045#{ getitem 14584,5; } // F_WOB_Rachel_Box5
+//14046#{ getitem 14584,10; } // F_WOB_Rachel_Box10
+//14047#{ getitem 14585,5; } // F_WOB_Local_Box5
+//14048#{ getitem 14585,10; } // F_WOB_Local_Box10
+//14049#{ getitem 14586,5; } // F_Spark_Candy_Box5
+//14050#{ getitem 14586,10; } // F_Spark_Candy_Box10
+//14051#{ getitem 14581,5; } // F_Dun_Tel_Scroll2_Box5
+//14052#{ getitem 14581,10; } // F_Dun_Tel_Scroll2_Box10
+//14053#{ getitem 5324,1; } // F_Little_Angel_Doll_Box
+//14054#{ getitem 5255,1; } // F_Triple_Poring_Hat_Box
+//14074#{ getitem 14538,5; } // F_G_O_I_Box5
+//14075#{ getitem 14538,10; } // F_G_O_I_Box10
+//14076#{ getitem 14539,5; } // F_Shadow_Armor_S_Box5
+//14077#{ getitem 14539,10; } // F_Shadow_Armor_S_Box10
+//14078#{ getitem 14539,30; } // F_Shadow_Armor_S_Box30
+//14079#{ getitem 14540,5; } // F_Holy_Armor_S_Box5
+//14080#{ getitem 14540,10; } // F_Holy_Armor_S_Box10
+//14081#{ getitem 14540,30; } // F_Holy_Armor_S_Box30
+//14082#{ getitem 14541,10; } // FS_Def_Potion_Box10
+//14083#{ getitem 14541,30; } // FS_Def_Potion_Box30
+//14084#{ getitem 14541,50; } // FS_Def_Potion_Box50
+//14085#{ getitem 14542,10; } // FB_Def_Potion_Box10
+//14086#{ getitem 14542,30; } // FB_Def_Potion_Box30
+//14087#{ getitem 14542,50; } // FB_Def_Potion_Box50
+//14088#{ getitem 14543,10; } // FS_Mdef_Potion_Box10
+//14089#{ getitem 14543,30; } // FS_Mdef_Potion_Box30
+//14090#{ getitem 14543,50; } // FS_Mdef_Potion_Box50
+//14091#{ getitem 14544,10; } // FB_Mdef_Potion_Box10
+//14092#{ getitem 14544,30; } // FB_Mdef_Potion_Box30
+//14093#{ getitem 14544,50; } // FB_Mdef_Potion_Box50
+//14094#{ getitem 5210,1; } // F_Flying_Angel_Box
+//14095#{ getitem 5099,1; } // F_Cat_Hat_Box
+//14096#{ getitem 5214,1; } // F_M_F_H_Box
+//14097#{ getitem 5283,1; } // F_Chick_Hat_Box
+//14102#{ getitem 14527,5; } // F_Dun_Tele_Scroll1_Box
+//14103#{ getitem 7776,1; } // F_Max_Weight_Up_Box
+//14104#{ getitem 14534,10; } // F_S_Life_Potion_Box
+//14105#{ getitem 14534,30; } // F_S_Life_Potion_Box30
+//14106#{ getitem 14534,50; } // F_S_Life_Potion_Box50
+//14107#{ getitem 14535,10; } // F_M_Life_Potion_Box
+//14108#{ getitem 14535,30; } // F_M_Life_Potion_Box30
+//14109#{ getitem 14535,50; } // F_M_Life_Potion_Box50
+//14110#{ getitem 14536,5; } // F_Abrasive_Box5
+//14111#{ getitem 14536,10; } // F_Abrasive_Box10
+//14112#{ getitem 14537,5; } // F_Regeneration_Box5
+//14113#{ getitem 14537,10; } // F_Regeneration_Box10
+//14114#{ getitem 14527,10; } // F_Dun_Tele_Scroll_Box10
+//14156#{ getitem 12208,10; } // F_Battle_Manual_Box
+//14157#{ getitem 12209,10; } // F_Insurance_Package
+//14158#{ getitem 12210,10; } // F_Bubble_Gum_Box
+//14159#{ getitem 12202,10; } // F_Str_Dish_Box
+//14160#{ getitem 12203,10; } // F_Agi_Dish_Box
+//14161#{ getitem 12204,10; } // F_Int_Dish_Box
+//14162#{ getitem 12205,10; } // F_Dex_Dish_Box
+//14163#{ getitem 12206,10; } // F_Luk_Dish_Box
+//14164#{ getitem 12207,10; } // F_Vit_Dish_Box
+//14165#{ getitem 12211,10; } // F_Kafra_Card_Box
+//14166#{ getitem 12212,10; } // F_Giant_Fly_Wing_Box
+//14167#{ getitem 12213,1; } // F_Neuralizer_Box
+//14168#{ getitem 12214,10; } // F_Convex_Mirror_Box
+//14169#{ getitem 12215,10; } // F_Blessing_10_Scroll_Box
+//14170#{ getitem 12216,10; } // F_Inc_Agi_10_Scroll_Box
+//14172#{ getitem 12218,10; } // F_Assumptio_5_Scroll_Box
+//14173#{ getitem 12219,10; } // F_Wind_Walk_10_Scroll_Box
+//14174#{ getitem 12220,10; } // F_Adrenaline_Scroll_Box
+//14175#{ getitem 12221,10; } // F_Megaphone_Box
+//14176#{ getitem 7619,10; } // F_Enriched_Elunium_Box
+//14177#{ getitem 7620,10; } // F_Enriched_Oridecon_Box
+//14178#{ getitem 7621,10; } // F_Token_Of_Siegfried_Box
+//14179#{ getitem 12212,50; } // F_Giant_Fly_Wing_Box50
+//14180#{ getitem 12212,100; } // F_Giant_Fly_Wing_Box100
+//14181#{ getitem 12205,30; } // F_Dex_Dish_Box30
+//14182#{ getitem 12205,50; } // F_Dex_Dish_Box50
+//14183#{ getitem 12206,30; } // F_Luk_Dish_Box30
+//14184#{ getitem 12206,50; } // F_Luk_Dish_Box50
+//14185#{ getitem 12216,30; } // F_Inc_Agi_10_Box30
+//14186#{ getitem 12216,50; } // F_Inc_Agi_10_Box50
+//14187#{ getitem 12207,30; } // F_Vit_Dish_Box30
+//14188#{ getitem 12207,50; } // F_Vit_Dish_Box50
+//14189#{ getitem 12209,30; } // F_Insurance_Package30
+//14190#{ getitem 12209,50; } // F_Insurance_Package50
+//14191#{ getitem 12214,5; } // F_Convex_Mirror_Box5
+//14192#{ getitem 12214,30; } // F_Convex_Mirror_Box30
+//14193#{ getitem 12215,30; } // F_Blessing10_Box30
+//14194#{ getitem 12215,50; } // F_Blessing10_Box50
+//14195#{ getitem 12220,30; } // F_Adrenaline10_Box30
+//14196#{ getitem 12220,50; } // F_Adrenaline10_Box50
+//14197#{ getitem 12218,30; } // F_Assumptio_5_Box30
+//14198#{ getitem 12218,50; } // F_Assumptio_5_Box50
+//14201#{ getitem 12203,30; } // F_Agi_Dish_Box30
+//14202#{ getitem 12203,50; } // F_Agi_Dish_Box50
+//14203#{ getitem 12219,30; } // F_Wind_Walk10_Box30
+//14204#{ getitem 12219,50; } // F_Wind_Walk10_Box50
+//14205#{ getitem 12204,30; } // F_Int_Dish_Box30
+//14206#{ getitem 12204,50; } // F_Int_Dish_Box50
+//14207#{ getitem 12208,1; } // F_Battle_Manual_Box1
+//14208#{ getitem 12208,5; } // F_Battle_Manual_Box5
+//14209#{ getitem 7621,5; } // F_Siegfried_Box5
+//14210#{ getitem 7621,20; } // F_Siegfried_Box20
+//14211#{ getitem 12211,30; } // F_Kafra_Card_Box30
+//14212#{ getitem 12211,50; } // F_Kafra_Card_Box50
+//14213#{ getitem 12202,30; } // F_Str_Dish_Box30
+//14214#{ getitem 12202,50; } // F_Str_Dish_Box50
+//14215#{ getitem 12210,1; } // F_Bubble_Gum_Box1
+//14216#{ getitem 12210,5; } // F_Bubble_Gum_Box5
+//14217#{ getitem 12221,1; } // F_Megaphone_Box1
+//14218#{ getitem 12221,5; } // F_Megaphone_Box5
+//14219#{ getitem 7619,5; } // F_Enriched_Elunium_Box5
+//14220#{ getitem 7620,5; } // FEnriched_Oridecon_Box5
+//14221#{ getitem 14593,10; } // MP_Scroll_Box
+//14222#{ getitem 14593,30; } // MP_Scroll_Box30
+//14223#{ getitem 14593,50; } // MP_Scroll_Box50
+//14224#{ getitem 14594,10; } // Quagmire_Scroll_Box
+//14225#{ getitem 14594,30; } // Quagmire_Scroll_Box30
+//14226#{ getitem 14594,50; } // Quagmire_Scroll_Box50
+//14232#{ getitem 607,10; } // Yggdrasilberry_Box_
+//14233#{ getitem 604,10; } // Dead_Tree_Branch_Box1
+//14234#{ getitem 604,25; } // Dead_Tree_Branch_Box2
+//14283#{ getitem 6026,1; } // Marriage_Covenant_Box
+//14289#{ getitem 6046,1; } // Cloth_Dye_Coupon_Box
+//14290#{ getitem 6047,1; } // Cloth_Dye_Coupon2_Box
+//14300#{ getitem 5420,1; } // Mask_Of_Ifrit_Box
+//14301#{ getitem 5421,1; } // Ifrit's_Ear_Box
+//14304#{ getitem 5397,1; } // Scuba_Mask_Box
+//14314#{ getitem 14597,10; } // PhreeoniS_Box
+//14315#{ getitem 14598,10; } // GhostringS_Box
+//14343#{ getitem 5462,1; } // Spiked_Scarf_Box
+//14344#{ getitem 5463,1; } // Rainbow_Scarf_Box
+//14349#{ getitem 14600,20; } // Mental_Potion20_Box
+//14350#{ getitem 14600,50; } // Mental_Potion50_Box
+//14351#{ getitem 14601,20; } // Tyr's_Blessing20_Box
+//14352#{ getitem 14601,50; } // Tyr's_Blessing50_Box
+//14361#{ getitem 14604,10; } // Orc_HeroS_Box
+//14362#{ getitem 14605,10; } // Orc_LoadS_Box
+//14372#{ getitem 12317,1; } // Powder_Snow_Box
+//14375#{ getitem 1383,1; } // Holy_Celestial_Axe_Box
+//14376#{ getitem 12350,1; } // Angeling_Pot_Box
+//14377#{ getitem 12351,1; } // Shout_Megaphone_Box
+//14379#{ getitem 5489,1; } // Love_Daddy_Box
+//14380#{ getitem 5490,1; } // Anubis_Helm_Box
+//14381#{ getitem 1644,1; } // Piercing_Box_M
+//14382#{ getitem 1645,1; } // Lich_Bone_Box_M
+//14383#{ getitem 1428,1; } // Long_Horn_Box_M
+//14384#{ getitem 1429,1; } // Hunting_Spear_Box_M
+//14385#{ getitem 1579,1; } // Death_Note_Box_M
+//14386#{ getitem 2003,1; } // Destruction_Box_M
+//14387#{ getitem 2551,1; } // Rider_Insignia_Box_M
+//14388#{ getitem 2552,1; } // Mithril_Cape_Box_M
+//14389#{ getitem 2398,1; } // Sniping_Box_M
+//14390#{ getitem 2785,1; } // Orleans_Box_M
+//14391#{ getitem 2786,1; } // Spiritual_Box_M
+//14392#{ getitem 2449,1; } // Variant_Box_M
+//14393#{ getitem 7945,1; } // Almighty_Charm_Box
+//14438#{ getitem 13420,1; } // Honglyun's_Sword_Box
+//14439#{ getitem 5495,1; } // Power_Of_Thor_Box
+//14440#{ getitem 5496,1; } // Dice_Hat_Box
+//14441#{ getitem 5497,1; } // King_Tiger_Doll_Hat_Box
+//14442#{ getitem 5498,1; } // Wondering_Wolf_Helm_Box
+//14443#{ getitem 5499,1; } // Pizza_Hat_Box
+//14444#{ getitem 5500,1; } // Icecream_Hat_Box
+//14447#{ getitem 5501,1; } // Pirate's_Pride_Box
+//14448#{ getitem 5502,1; } // Necromencer's_Hood_Box
+//14459#{ getitem 5503,1; } // Rabbit_Magic_Hat_Box
+//14460#{ getitem 5504,1; } // China_Wedding_Veil_Box
+//14461#{ getitem 5505,1; } // Asara_Fairy_Hat_Box
+//14485#{ getitem 2751,1; } // Academy_Badge_Box
+//14486#{ getitem 5406,1; } // Academy_Fresh_Hat_Box
+//14487#{ getitem 5407,1; } // Academy_Gradu_Cap_Box
+//14488#{ getitem 5506,1; } // Blue_Pajamas_Hat_Box
+//14489#{ getitem 5507,1; } // Pink_Pajamas_Hat_Box
+//14490#{ getitem 5508,1; } // Shark_Hat_Box
+//14494#{ getitem 5511,1; } // Samambaia_Box
+//14495#{ getitem 5512,1; } // Aquarius_Diadem_Box
+//14496#{ getitem 5513,1; } // Aquarius_Crown_Box
+//14497#{ getitem 5514,1; } // Pisces_Diadem_Box
+//14498#{ getitem 5515,1; } // Pisces_Crown_Box
+//14499#{ getitem 5519,1; } // Peacock_Feather_Box
+15000#{ bonus bStr,1; bonus bMdef,3; } // Bone_Plate
+15007#{ bonus bStr,2; bonus bMdef,1; } // Time_Keepr_Robe
+15008#{ bonus bMdef,1; } // Flame_Sprits_Armor__
+15011#{ bonus bMdef,5; } // Para_Team_Uniform3
+15017#{ bonus bMdef,5; } // Upg_Saint_Robe
+15018#{ bonus bDex,1; } // Upg_Tights
+15019#{ bonus bAgi,1; } // Upg_Thief_Cloth
+15022#{ bonus bStr,4; bonus bInt,4; bonus bMdef,3; } // Brazil_Swimsuit
+15023#{ bonus bMdef,10; } // Half_Brynhild
+15025#{ bonus bInt,1; bonus bMdef,10; } // Golden_Rod_Robe
+15026#{ bonus bInt,1; bonus bMdef,10; } // Aqua_Robe
+15027#{ bonus bInt,1; bonus bMdef,10; } // Crimson_Robe
+15028#{ bonus bInt,1; bonus bMdef,10; } // Forest_Robe
+15029#{ bonus bInt,1; bonus bMdef,10; } // Robe_Of_Affection
+15030#{ bonus bStr,1; bonus bInt,1; bonus bMdef,10; } // Robe_Of_Judgement
+15031#{ bonus bStr,1; bonus bInt,1; bonus bDex,1; bonus bMdef,5; } // Para_Team_Armor
+15032#{ bonus bMdef,10; } // Tidung
+15035#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // 2010Love_Daddy
+15036#{ bonus bMdef,10; } // Ur_Plate
+15037#{ bonus bMdef,10; } // Peuz_Plate
+15038#{ bonus bLuk,3; } // Sabah_Cloth
+15039#{ bonus bStr,2; bonus bInt,2; } // Nab_Cloth
+15041#{ bonus bMdef,3; } // Boitata_Armor
+15043#{ bonus bInt,2; } // Black_Wing_Suits
+15044#{ bonus bDex,1; } // Green_Operation_Coat
+15046#{ bonus bMdef,5; } // Siege_Plate
+15047#{ bonus bMdef,10; } // Siege_Suits
+15048#{ bonus bMdef,20; } // Siege_Robe
+15049#{ bonus bStr,4; bonus bAgi,4; bonus bVit,4; bonus bInt,4; bonus bDex,4; bonus bLuk,4; } // Armor_Of_Faith
+15050#{ bonus bStr,4; bonus bAgi,4; bonus bVit,4; bonus bInt,4; bonus bDex,4; bonus bLuk,4; } // Armor_Of_Sanctity
+15051#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Bakonawa_Armor
+15052#{ bonus bStr,2; bonus bAgi,2; bonus bVit,2; bonus bInt,2; bonus bDex,2; bonus bLuk,2; } // Bayani_Bakonawa_Armor
+15053#{ bonus bAgi,1; } // Special_Ninja_Suit
+15055#{ bonus bAgi,1; } // Tenebris_Latitantes
+15056#{ bonus bAgi,1; } // Special_Ninja_Suit_
+15058#{ bonus bAgi,1; } // Rider_Suit
+15061#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Egir_Armor
+15062#{ bonus bMdef,15; } // TE_Woe_Coat
+15063#{ bonus bMdef,5; } // TE_Woe_Chain_Mail
+15064#{ bonus bMdef,25; } // TE_Woe_Mage_Coat
+15088#{ bonus bAgi,2; bonus bLuk,1; } // School_Uniform
+15105#{ bonus bMdef,3; } // Kaftan
+16006#{ bonus bAgi,1; bonus bInt,1; } // Tourist_Mace
+16007#{ bonus bAtkEle,Ele_Wind; bonus bStr,15; bonus bDex,40; } // Mjolnir_C
+16013#{ bonus bAtkEle,Ele_Holy; bonus bStr,1; bonus bInt,1; } // Mace_Of_Judgement
+16017#{ bonus bAtkEle,Ele_Dark; } // Bloody_Cross
+16018#{ bonus bAtkEle,Ele_Holy; bonus bStr,2; bonus bInt,2; } // Mace_Of_Judgement2
+16022#{ bonus bAtkEle,Ele_Holy; } // Nemesis_
+//16131#{ getitem 5526,1; } // Lady_Tanee_Doll_Box
+//16132#{ getitem 5527,1; } // Lunatic_Hat_Box
+//16133#{ getitem 2006,1; } // G_Staff_Of_Light_Box
+//16134#{ getitem 5528,1; } // King_Frog_Hat_Box
+//16135#{ getitem 5529,1; } // Evil's_Bone_Hat_Box
+//16185#{ getitem 5530,1; } // Raven_Cap_Box
+//16186#{ getitem 5531,1; } // B_Dragon_Hat_Box
+//16192#{ getitem 5537,1; } // Quati_Hat_Box
+//16193#{ getitem 5538,1; } // Tucan_Hat_Box
+//16194#{ getitem 5539,1; } // Jaguar_Hat_Box
+//16226#{ getitem 5545,1; } // Aries_Diadem_Box
+//16227#{ getitem 5546,1; } // Aries_Crown_Box
+//16228#{ getitem 5547,1; } // RJC_Katusa_Box
+//16229#{ getitem 5548,1; } // Scarlet_Rose_Box
+//16230#{ getitem 5549,1; } // Taurus_Diadem_Box
+//16231#{ getitem 5550,1; } // Taurus_Crown_Box
+//16232#{ getitem 5471,1; } // Reginleif_Box
+//16235#{ getitem 5554,1; } // Octopus_Hat_Box
+//16236#{ getitem 5555,1; } // Leaf_Cat_Hat_Box
+//16237#{ getitem 5556,1; } // Fur_Seal_Hat_Box
+//16238#{ getitem 5557,1; } // Wild_Rose_Hat_Box
+//16239#{ getitem 5558,1; } // Saci_Hat_Box
+//16244#{ getitem 5563,1; } // Dolor_Hat_Box
+//16246#{ getitem 5564,1; } // Crown_Of_Deceit_Box
+//16247#{ getitem 5565,1; } // Dragon_Arhat_Mask_Box
+//16248#{ getitem 5566,1; } // Tiger_Arhat_Mask_Box
+//16251#{ getitem 5569,1; } // Gemini_Diadem_Box
+//16252#{ getitem 5570,1; } // Gemini_Crown_Box
+//16258#{ getitem 6226,5; } // HD_Bradium_Box5
+//16259#{ getitem 6225,5; } // HD_Carnium_Box5
+//16260#{ getitem 6226,10; } // HD_Bradium_Box10
+//16261#{ getitem 6225,10; } // HD_Carnium_Box10
+//16269#{ getitem 5581,1; } // Cancer_Diadem_Box
+//16270#{ getitem 5582,1; } // Cancer_Crown_Box
+//16305#{ getitem 2149,1; } // Upg_Guard_Box
+//16306#{ getitem 2149,1; } // F_Upg_Guard_Box
+//16307#{ getitem 2150,1; } // Upg_Buckler_Box
+//16308#{ getitem 2150,1; } // F_Upg_Buckler_Box
+//16309#{ getitem 2151,1; } // Upg_Shield_Box
+//16310#{ getitem 2151,1; } // F_Upg_Shield_Box
+//16311#{ getitem 2459,1; } // Upg_Shoes_Box
+//16312#{ getitem 2459,1; } // F_Upg_Shoes_Box
+//16313#{ getitem 2460,1; } // Upg_Boots_Box
+//16314#{ getitem 2460,1; } // F_Upg_Boots_Box
+//16315#{ getitem 2461,1; } // Upg_Greave_Box
+//16316#{ getitem 2461,1; } // F_Upg_Greave_Box
+//16317#{ getitem 2561,1; } // Upg_Hood_Box
+//16318#{ getitem 2561,1; } // F_Upg_Hood_Box
+//16319#{ getitem 2562,1; } // Upg_Muffler_Box
+//16320#{ getitem 2562,1; } // F_Upg_Muffler_Box
+//16321#{ getitem 2563,1; } // Upg_Manteau_Box
+//16322#{ getitem 2563,1; } // F_Upg_Manteau_Box
+//16323#{ getitem 2828,1; } // Upg_Clip_Box
+//16324#{ getitem 2828,1; } // F_Upg_Clip_Box
+//16327#{ getitem 15015,1; } // Upg_Adv_Suit_Box
+//16328#{ getitem 15015,1; } // F_Upg_Adv_Suit_Box
+//16329#{ getitem 15016,1; } // Upg_Coat_Box
+//16330#{ getitem 15016,1; } // F_Upg_Coat_Box
+//16331#{ getitem 15017,1; } // Upg_Saint_Robe_Box
+//16332#{ getitem 15017,1; } // F_Upg_Saint_Robe_Box
+//16333#{ getitem 15018,1; } // Upg_Tights_Box
+//16334#{ getitem 15018,1; } // F_Upg_Tights_Box
+//16335#{ getitem 15019,1; } // Upg_Thief_Cloth_Box
+//16336#{ getitem 15019,1; } // F_Upg_Thief_Cloth_Box
+//16337#{ getitem 15020,1; } // Upg_Mail_Box
+//16338#{ getitem 15020,1; } // F_Upg_Mail_Box
+//16339#{ getitem 15021,1; } // Upg_Formal_Dress_Box
+//16340#{ getitem 15021,1; } // F_Upg_Formal_Dress_Box
+//16341#{ getitem 2829,1; } // Greed_Clip_Box
+//16342#{ getitem 2829,1; } // F_Greed_Clip_Box
+//16343#{ getitem 5588,1; } // Leo_Crown_Box
+//16344#{ getitem 5589,1; } // Leo_Diadem_Box
+//16345#{ getitem 5588,1; } // F_Leo_Crown_Box
+//16346#{ getitem 5589,1; } // F_Leo_Diadem_Box
+//16360#{ getitem 5591,1; } // Desert_Prince_Box
+//16361#{ getitem 5591,1; } // FDesert_Prince_Box
+//16362#{ getitem 5592,1; } // Sigrun's_Wing_Box
+//16363#{ getitem 5592,1; } // FSigrun's_Wing_Box
+//16368#{ getitem 5598,1; } // Virgo_Crown_Box
+//16393#{ getitem 6240,5; } // HD_Ori_Box5
+//16394#{ getitem 6240,10; } // HD_Ori_Box10
+//16395#{ getitem 6241,5; } // HD_Elu_Box5
+//16396#{ getitem 6241,10; } // HD_Elu_Box10
+//16397#{ getitem 5599,1; } // Virgo_Diadem_Box
+//16405#{ getitem 6242,1; } // Midgard_Coin_Box
+//16406#{ getitem 6242,1; } // FMidgard_Coin_Box
+//16410#{ getitem 5609,1; } // Chung_Hairband_Box
+//16411#{ getitem 5609,1; } // FChung_Hairband_Box
+//16412#{ getitem 5610,1; } // Ice_Wing_Ear_Box
+//16413#{ getitem 5610,1; } // FIce_Wing_Ear_Box
+//16414#{ getitem 5611,1; } // Turtle_Hat_Box
+//16415#{ getitem 5611,1; } // FTurtle_Hat_Box
+//16436#{ getitem 5662,1; } // Libra_Crown_Box
+//16438#{ getitem 5663,1; } // Libra_Diadem_Box
+//16440#{ getitem 5664,1; } // Filir_Wing_Box
+//16447#{ getitem 5676,1; } // Scorpio_Crown_Box
+//16448#{ getitem 5677,1; } // Scorpio_Diadem_Box
+//16450#{ getitem 5677,1; } // FScorpio_Diadem_Box
+//16461#{ getitem 5690,1; } // Red_Wing_Hat_Box
+//16462#{ getitem 5690,1; } // FRed_Wing_Hat_Box
+//16503#{ getitem 12209,10; } // E_Insurance_Package
+//16543#{ getitem 5738,1; } // Snowman_Hat_Box
+//16544#{ getitem 5738,1; } // FSnowman_Hat_Box
+//16548#{ getitem 5739,1; } // Sagittarius_Crown_Box
+//16549#{ getitem 5740,1; } // Sagittarius_Diadem_Box
+//16557#{ getitem 14517,10; } // CP_Helm_Scroll10
+//16558#{ getitem 14518,10; } // CP_Shield_Scroll10
+//16559#{ getitem 14519,10; } // CP_Armor_Scroll10
+//16560#{ getitem 14520,10; } // CP_Weapon_Scroll10
+//16563#{ getitem 14533,5; } // BM100_Box_5
+//16565#{ getitem 5744,1; } // Capricorn_Crown_Box
+//16567#{ getitem 5745,1; } // Capricorn_Diadem_Box
+//16568#{ getitem 5745,1; } // FCapricorn_Diadem_Box
+//16582#{ getitem 5763,1; } // Red_Bunny_Band_Box
+//16584#{ getitem 5761,1; } // Sloth_Hat_Box
+//16585#{ getitem 5761,1; } // F_Sloth_Hat_Box
+//16586#{ getitem 5762,1; } // Duneyrr_Helm_Box
+//16587#{ getitem 5762,1; } // F_Duneyrr_Helm_Box
+//16601#{ getitem 5778,1; } // Blue_Arara_Hat_Box
+//16602#{ getitem 5778,1; } // F_Blue_Arara_Hat_Box
+//16619#{ getitem 5783,1; } // Yellow_Bunnyband_Box
+//16653#{ getitem 12563,10; } // BM75_10Box
+//16682#{ getitem 12622,1; } // Boarding_Halter_Box
+//16684#{ getitem 601,10; } // Wing_Of_Fly_Box10
+//16685#{ getitem 601,50; } // Wing_Of_Fly_Box50
+//16686#{ getitem 601,100; } // Wing_Of_Fly_Box100
+//16753#{ getitem 6438,1; } // Unbreak_Weap_Box
+//16754#{ getitem 6438,1; } // F_Unbreak_Weap_Box
+//16755#{ getitem 6439,1; } // Unbreak_Def_Box
+//16756#{ getitem 6439,1; } // F_Unbreak_Def_Box
+//16973#{ getitem 19515,1; } // Yellow_Hat_Box
+//16975#{ getitem 19516,1; } // Singing_Bird_Box
+//16977#{ getitem 19522,1; } // Red_Minicrown_Box
+//16992#{ getitem 602,20; } // Butterfly_Wing_Box20
+//16993#{ getitem 602,50; } // Butterfly_Wing_Box50
+//16999#{ getitem 2576,1; } // Bravery_Bag_Box
+//17000#{ getitem 12626,5; } // Wander_Man_Box5
+//17001#{ getitem 12626,10; } // Wander_Man_Box10
+//17002#{ getitem 12627,5; } // Wicked_Nymph_Box5
+//17003#{ getitem 12627,10; } // Wicked_Nymph_Box10
+//17004#{ getitem 12628,5; } // Kasa_Scroll_Box5
+//17005#{ getitem 12628,10; } // Kasa_Scroll_Box10
+//17006#{ getitem 12629,5; } // Salamander_Box5
+//17007#{ getitem 12629,10; } // Salamander_Box10
+//17008#{ getitem 12630,5; } // Teddy_Bear_Box5
+//17009#{ getitem 12630,10; } // Teddy_Bear_Box10
+//17014#{ getitem 19509,1; } // Butterfly_ear_Box
+//17015#{ getitem 19510,1; } // Stuckhead_Screw_Box
+//17030#{ getitem 18565,1; } // St_Pat_Hat_box
+//17042#{ getitem 12663,10; } // Trans_Box_Poring
+//17052#{ getitem 6472,1; } // Holy_Mom_Blaze_Box
+//17066#{ getitem 678,50; } // Poison_Bottle_Box50
+//17067#{ getitem 678,100; } // Poison_Bottle_Box100
+//17071#{ getitem 14524,50; } // Superb_Fish_Box50
+//17072#{ getitem 14524,100; } // Superb_Fish_Box100
+//17073#{ getitem 14524,500; } // Superb_Fish_Box500
+//17074#{ getitem 713,10; } // Empty_Bottle_Box10
+//17075#{ getitem 713,100; } // Empty_Bottle_Box100
+//17076#{ getitem 713,500; } // Empty_Bottle_Box500
+//17081#{ getitem 18580,1; } // Yggdrasil_Crown_Box
+//17084#{ getitem 1292,1; } // Upg_Katar_Box
+//17085#{ getitem 1394,1; } // Upg_Two_Handed_Axe_Box
+//17086#{ getitem 1491,1; } // Upg_Lance_Box
+//17087#{ getitem 1585,1; } // Upg_Book_Box
+//17088#{ getitem 2015,1; } // Upg_Staff_Box
+//17089#{ getitem 13071,1; } // Upg_Dagger_Box
+//17090#{ getitem 13115,1; } // Upg_Revolver_Box
+//17091#{ getitem 16019,1; } // Upg_Mace_Box
+//17092#{ getitem 18112,1; } // Upg_Bow_Box
+//17093#{ getitem 21000,1; } // Upg_Twohand_Sword_Box
+//17104#{ getitem 6240,50; } // HD_Oridecon_50Box
+//17105#{ getitem 6241,50; } // HD_Elunium_50Box
+//17106#{ getitem 7776,10; } // Max_Weight_Up_10Box
+//17114#{ getitem 18595,1; } // Horn_Of_Ancient_Box
+//17115#{ getitem 18596,1; } // Sprout_Hat_Box
+//17116#{ getitem 18597,1; } // Mercury_Helm_Box
+//17122#{ getitem 2168,1; } // Immuned_Shield_Box
+//17123#{ getitem 18599,1; } // Black_Devil_Mask_Box
+//17124#{ getitem 18600,1; } // Cat_Ears_Beret_Box
+//17125#{ getitem 18601,1; } // Red_Bread_Hat_Box
+//17126#{ getitem 12684,10; } // ASPD_Potion_Box10_2
+//17146#{ getitem 18630,1; } // Dep_Alice_Hat_Box
+//17147#{ getitem 18631,1; } // Ribbon_Chef_Hat_Box
+//17152#{ getitem 18636,1; } // Bridal_Ribbon_Box
+//17155#{ getitem 13316,1; } // Upg_Huuma_Shuriken_Box
+//17157#{ getitem 6113,10; } // Vital_Flower_Box
+//17158#{ getitem 6114,10; } // Flame_Gemstone_Box
+//17184#{ getitem 6583,1; } // 3rd_Test_Pass_Box
+//17253#{ getitem 2966,1; } // RWC_2012_Ring_Box
+//17254#{ getitem 2968,1; } // RWC_2012_Pendant_Box
+//17270#{ getitem 14616,20; } // STR_Biscuit_Stick_Box
+//17271#{ getitem 14617,20; } // VIT_Biscuit_Stick_Box
+//17272#{ getitem 14618,20; } // AGI_Biscuit_Stick_Box
+//17273#{ getitem 14619,20; } // INT_Biscuit_Stick_Box
+//17274#{ getitem 14620,20; } // DEX_Biscuit_Stick_Box
+//17275#{ getitem 14621,20; } // LUK_Biscuit_Stick_Box
+//17335#{ getitem 7674,50; } // Mysterious_Ingredient_B
+18101#{ bonus bAtkEle,Ele_Holy; bonus bInt,5; } // F_Bow_Of_Rudra_C
+18102#{ bonus bAtkEle,Ele_Holy; bonus bInt,5; } // E_Bow_Of_Rudra_C
+18103#{ bonus bInt,4; } // Mystic_Bow
+18107#{ bonus bLuk,3; } // Malang_Snow_Crab
+18108#{ bonus bAgi,3; } // Brindle_Eel
+18111#{ bonus bDex,1; } // Creeper_Bow
+18508#{ bonus bLuk,5; bonus bMdef,3; } // Garuda_Hat
+18509#{ bonus bLuk,5; } // RWC2010_Indonesia
+18513#{ bonus bLuk,2; } // Shining_Sunflower
+18515#{ bonus bStr,5; bonus bAgi,5; bonus bVit,5; bonus bInt,5; bonus bDex,5; bonus bLuk,5; } // RTC_1st_Helm
+18516#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,3; bonus bDex,3; bonus bLuk,3; } // RTC_2nd_Helm
+18517#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // RTC_3rd_Helm
+18518#{ bonus bStr,1; } // Ear_Of_Angel's_Wing_
+18519#{ bonus bStr,1; } // Ear_Of_Devil's_Wing_
+18521#{ bonus bLuk,1; } // Lucky_Clover
+18522#{ bonus bStr,2; bonus bMdef,1; } // Evil_Marcher_Hat
+18524#{ bonus bStr,2; } // Dokkebi_Mask
+18525#{ bonus bVit,1; bonus bLuk,1; bonus bMdef,4; } // Watermelon_Hat
+18527#{ bonus bMdef,5; } // Gloomy_Pumpkin_Hat
+18528#{ bonus bInt,2; bonus bMdef,5; } // Tare_Neko_Cru
+18530#{ bonus bLuk,-5; } // Tha_Despero_Mask
+18532#{ bonus bInt,2; } // Heart_Ribbon_Band
+18533#{ bonus bMdef,3; } // Honeybee_Hat
+18534#{ bonus bStr,1; } // Fancy_Phantom_Mask
+18538#{ bonus bMdef,3; } // Evil_Whisper
+18541#{ bonus bDex,2; } // Little_Feather_Hat
+18543#{ bonus bInt,1; bonus bDex,1; bonus bMdef,5; } // Witchs_Hat
+18548#{ bonus bAgi,1; bonus bInt,1; } // Tiny_Hat
+18549#{ bonus bAgi,1; bonus bInt,1; bonus bMdef,3; } // Nabi_Hair_Pin
+18550#{ bonus bStr,2; bonus bAgi,2; bonus bVit,2; bonus bInt,2; bonus bDex,2; bonus bLuk,2; } // Asgard_Blessing
+18551#{ bonus bMdef,5; } // Galaxy_Circlet
+18552#{ bonus bLuk,2; } // Proba_Angel_Blessing
+18555#{ bonus bMdef,3; } // General_Helmet
+18561#{ bonus bVit,2; bonus bMdef,3; } // B_Feather_Beret
+18562#{ bonus bMdef,3; } // Bone_Hat
+18565#{ bonus bStr,1; bonus bInt,1; bonus bMdef,4; } // Leprechaun_Hat
+18568#{ bonus bMdef,6; } // Humming_Bird
+18572#{ bonus bMdef,2; } // Korean_Judge_Hat
+18574#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; bonus bMdef,5; } // Lord_of_Death
+18575#{ bonus bMdef,10; } // Wunderkammer
+18579#{ bonus bMdef,9; } // 9th_Anni_Hat
+18580#{ bonus bMdef,3; } // Yggdrasil_Crown
+18581#{ bonus bStr,3; } // Red_Tiger_Mask
+18582#{ bonus bStr,3; } // Blue_Tiger_Mask
+18583#{ bonus bMdef,15; } // Navy_Drooping_Kitty
+18584#{ bonus bMdef,15; } // Brown_Drooping_Kitty
+18585#{ bonus bStr,1; bonus bVit,3; bonus bInt,2; } // Orange_Bunny_Hairband
+18586#{ bonus bStr,1; bonus bVit,2; bonus bInt,3; bonus bDex,1; } // Violet_Bunny_Hairband
+18587#{ bonus bStr,3; bonus bVit,2; bonus bInt,1; bonus bDex,1; } // Blue_Bunny_Hairband
+18588#{ bonus bStr,2; bonus bVit,1; bonus bInt,3; bonus bDex,1; } // Silver_Bunny_Hairband
+18590#{ bonus bMdef,3; } // Gemma_Hairband
+18592#{ bonus bMdef,5; } // Nestea_Hat
+18593#{ bonus bInt,1; bonus bMdef,5; } // Fancy_Mini_Crown
+18594#{ bonus bStr,2; } // Magni_Cap_
+18598#{ bonus bMdef,20; } // Mini_Tree_J
+18599#{ bonus bStr,2; bonus bAgi,2; bonus bVit,2; bonus bInt,2; bonus bDex,2; bonus bLuk,2; } // Black_Devil_Mask
+18601#{ bonus bMdef,5; } // Red_Bread_Hat
+18603#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Black_Devil_Mask_
+18605#{ bonus bMdef,3; } // Dark_Age
+18610#{ bonus bStr,5; bonus bAgi,5; bonus bVit,5; bonus bInt,5; bonus bDex,5; bonus bLuk,5; bonus bMdef,4; } // 7th_Anni_Hat_B
+18611#{ bonus bInt,1; bonus bMdef,2; } // Black_Glasses_
+18612#{ bonus bStr,2; bonus bVit,2; bonus bLuk,1; } // White_Musang_Hat
+18613#{ bonus bAgi,1; bonus bInt,2; bonus bDex,2; } // Black_Musang_Hat
+18622#{ bonus bStr,5; bonus bAgi,5; bonus bVit,5; bonus bInt,5; bonus bDex,5; bonus bLuk,5; bonus bMdef,5; } // Rocket_Helm1
+18623#{ bonus bStr,4; bonus bAgi,4; bonus bVit,4; bonus bInt,4; bonus bDex,4; bonus bLuk,4; bonus bMdef,5; } // Rocket_Helm2
+18624#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,3; bonus bDex,3; bonus bLuk,3; bonus bMdef,5; } // Rocket_Helm3
+18625#{ bonus bStr,2; bonus bAgi,2; bonus bVit,2; bonus bInt,2; bonus bDex,2; bonus bLuk,2; bonus bMdef,5; } // Rocket_Helm_RWC
+18628#{ bonus bMdef,5; } // Tare_Brownie
+18631#{ bonus bDex,3; bonus bLuk,1; } // Ribbon_Chef_Hat
+18636#{ bonus bDex,1; } // Bridal_Ribbon
+18637#{ bonus bStr,2; bonus bVit,1; } // Ancient_Admiral_Helm
+18638#{ bonus bLuk,3; } // Citron_Hat
+18639#{ bonus bLuk,3; } // Naval_Officer_Hat
+18645#{ bonus bInt,1; } // Sailor_Hat
+18646#{ bonus bDex,2; } // Cow_Hat
+18653#{ bonus bMdef,4; } // Deviruchi_Headphone
+18655#{ bonus bAgi,2; } // Goedo_Monocle
+18656#{ bonus bStr,2; bonus bInt,2; bonus bMdef,10; } // Wit_Pumpkin_Hat
+18660#{ bonus bAgi,2; } // Indi_Feather_Band
+18661#{ bonus bStr,2; } // Trident_Helmet
+18662#{ bonus bInt,3; } // Antler_Fedora
+18663#{ bonus bInt,3; } // Sunglasses_Bball_Hat
+18667#{ bonus bDex,3; } // Cat_Lace_Hairband
+18669#{ bonus bDex,2; } // Cowhide_Hat
+18670#{ bonus bDex,3; } // Hankie_In_Mouth
+18672#{ bonus bMdef,1; } // Tare_Pope
+18673#{ bonus bMdef,7; } // Tare_Pope_
+18674#{ bonus bAgi,3; } // Planewing_Hat
+18675#{ bonus bDex,2; } // Green_Apple_Hat
+18680#{ bonus bAgi,1; } // Tw_Frog_Hat
+18681#{ bonus bVit,2; } // Puppy_Ears_Hat
+18684#{ bonus bStr,3; bonus bInt,2; } // Showy_High_Cap
+18686#{ bonus bStr,5; bonus bAgi,5; bonus bVit,5; bonus bInt,5; bonus bDex,5; bonus bLuk,5; } // 2011_RMSC_1
+18687#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,3; bonus bDex,3; bonus bLuk,3; } // 2011_RMSC_2
+18688#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // 2011_RMSC_3
+18690#{ bonus bStr,1; } // Sirt_Evil_Eye
+18692#{ bonus bDex,2; bonus bLuk,1; } // Mike_Hat
+18695#{ bonus bInt,2; } // Phoenix_Crown
+18700#{ bonus bInt,1; } // Rabbit_Ribbon
+18701#{ bonus bInt,3; bonus bDex,2; bonus bLuk,1; } // Ancient_Civil_Man
+18704#{ bonus bMdef,4; } // Drosera_Hairpin
+18706#{ bonus bLuk,3; } // Can_Hat
+18713#{ bonus bAgi,1; bonus bDex,1; } // Monkey_On_Fur_Hat
+18715#{ bonus bInt,2; bonus bMdef,5; } // Helm_Of_Thoth
+18718#{ bonus bVit,1; bonus bInt,1; } // Rose_Hairband
+18728#{ bonus bMdef,5; } // Egir_Helm
+18739#{ bonus bLuk,1; } // Carnation_Hairband
+18746#{ bonus bInt,1; } // Chilly_Breath
+18747#{ bonus bDex,1; } // Eyes_Of_Ifrit
+18748#{ bonus bDex,2; bonus bLuk,2; } // Gold_Ingot_Poring_Hat
+18749#{ bonus bStr,2; } // Majoruros_Horn
+18753#{ bonus bLuk,1; } // Tw_Rice_Ball
+18782#{ bonus bDex,2; } // Butterfly_Wing_Ear_J
+18785#{ bonus bDex,1; bonus bLuk,1; } // King_Poring_Hat
+18805#{ bonus bLuk,3; bonus bMdef,5; } // Eclipse_Hat
+18806#{ bonus bAgi,3; bonus bDex,2; } // Black_Rabbit_Hat
+18807#{ bonus bVit,2; bonus bLuk,3; } // Yellow_Yuzu_Hat
+18808#{ bonus bAgi,1; } // Wing_Form_Spectacle
+18810#{ bonus bMdef,12; } // Hell_Pumpkin_Hat
+18814#{ bonus bVit,1; bonus bInt,2; } // Angel_School_Cap
+18815#{ bonus bStr,2; bonus bVit,1; } // Devil_School_Cap
+18816#{ bonus bVit,2; bonus bInt,2; bonus bLuk,1; } // Adv_Angel_School_Cap
+18817#{ bonus bStr,2; bonus bVit,2; bonus bLuk,1; } // Adv_Devil_School_Cap
+18828#{ bonus bStr,5; bonus bAgi,5; bonus bVit,5; bonus bInt,5; bonus bDex,5; bonus bLuk,5; bonus bMdef,5; } // 2012RMSCNO1
+18829#{ bonus bStr,4; bonus bAgi,4; bonus bVit,4; bonus bInt,4; bonus bDex,4; bonus bLuk,4; bonus bMdef,5; } // 2012RMSCNO2
+18830#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,3; bonus bDex,3; bonus bLuk,3; bonus bMdef,5; } // 2012RMSCNO3
+18831#{ bonus bStr,2; bonus bAgi,2; bonus bVit,2; bonus bInt,2; bonus bDex,2; bonus bLuk,2; bonus bMdef,5; } // 2012RMSCNO4
+18839#{ bonus bDex,1; } // Poring_Sunglasses
+18844#{ bonus bStr,2; bonus bAgi,2; bonus bVit,2; bonus bInt,2; bonus bDex,2; bonus bLuk,2; } // Blue_Poring_Bubble
+18850#{ bonus bAgi,1; bonus bDex,1; bonus bMdef,3; } // Polar_Bear_Cap
+18856#{ bonus bStr,2; bonus bDex,2; } // W_King_Tiger_Doll_Hat
+18872#{ bonus bStr,3; bonus bInt,3; bonus bMdef,5; } // Snake_Hat
+18879#{ bonus bMdef,5; } // Angry_Scorpion_Hat
+18885#{ bonus bStr,2; bonus bInt,3; } // Jejecap
+18887#{ bonus bVit,3; bonus bMdef,5; } // Aqua_Bunny_Band
+18888#{ bonus bInt,5; bonus bLuk,5; } // Maroon_Bunny_Band
+18889#{ bonus bAgi,5; bonus bLuk,5; } // Golden_Bunny_Band
+18890#{ bonus bInt,5; bonus bLuk,5; } // Gray_Bunny_Band
+18892#{ bonus bMdef,5; } // Ufo_Poring_Hat
+18898#{ bonus bStr,5; bonus bAgi,5; bonus bVit,5; bonus bInt,5; bonus bDex,5; bonus bLuk,5; } // Yggdrasil_Herald_Crown
+18901#{ bonus bVit,3; } // Seppl_Hat
+18902#{ bonus bVit,3; } // Shovel_Hat
+18987#{ bonus bStr,2; bonus bAgi,2; bonus bVit,2; bonus bInt,2; bonus bDex,2; bonus bLuk,2; } // RWC13_Jormungandr_Hat
+19500#{ bonus bStr,2; } // T_Mr_Smile
+19529#{ bonus bAgi,1; bonus bVit,1; } // C_Angelic_Chain
+19532#{ bonus bDex,1; } // C_Red_Bunny_Band
+19533#{ bonus bVit,1; } // C_Spore_Hat
+19535#{ bonus bStr,1; } // C_Sinsuncho_Hat
+19536#{ bonus bInt,1; } // C_Rose_Corsage
+19539#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // C_Reginleif_Hairband
+19540#{ bonus bAgi,1; } // C_Rabbit_Earplug
+19588#{ bonus bStr,3; bonus bAgi,3; bonus bVit,3; bonus bInt,3; bonus bDex,3; bonus bLuk,3; } // C_Cat_Hat_J
+19733#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // C_Panda_Cap
+19779#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // C_Persika
+20702#{ bonus bMdef,5; } // TE_Woe_Muffler
+20707#{ bonus bStr,1; bonus bAgi,1; bonus bVit,1; bonus bInt,1; bonus bDex,1; bonus bLuk,1; } // Kirin_Wing
+20711#{ bonus bInt,1; bonus bDex,1; bonus bMdef,3; } // Manteau_Of_Diego
+20725#{ bonus bInt,1; bonus bDex,1; } // Ribbon_Piamat

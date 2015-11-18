@@ -908,6 +908,27 @@ static bool itemdb_read_flag(char* fields[], int columns, int current) {
 	return true;
 }
 
+static bool itemdb_read_script(char *fields[], int column, int current) {
+	unsigned short nameid = atoi(fields[0]);
+	struct item_data *id;
+	struct script_code *script = NULL;
+
+	if (!(id = itemdb_exists(nameid))) {
+		ShowError("itemdb_read_flag: Invalid item item with id %hu\n", nameid);
+		return false;
+	}
+
+	if (id->abs_script)
+		script_free_code(id->abs_script);
+	id->abs_script = NULL;
+
+	if (!(script = parse_script(fields[1], __SV_READDB_FILE__, __SV_READDB_LINE__, 0)))
+		return false;
+
+	id->abs_script = script;
+	return true;
+}
+
 /**
  * @return: amount of retrieved entries.
  **/
@@ -1606,6 +1627,7 @@ static void itemdb_read(void) {
 		sv_readdb(dbsubpath2, "item_delay.txt",         ',', 2, 3, -1, &itemdb_read_itemdelay, i);
 		sv_readdb(dbsubpath2, "item_buyingstore.txt",   ',', 1, 1, -1, &itemdb_read_buyingstore, i);
 		sv_readdb(dbsubpath2, "item_flag.txt",          ',', 2, 2, -1, &itemdb_read_flag, i);
+		sv_readdb(dbsubpath2, "item_script.txt",        '#', 2, 2, -1, &itemdb_read_script, i);
 		aFree(dbsubpath1);
 		aFree(dbsubpath2);
 	}
@@ -1624,6 +1646,8 @@ static void destroy_item_data(struct item_data* self) {
 	// free scripts
 	if( self->script )
 		script_free_code(self->script);
+	if( self->abs_script )
+		script_free_code(self->abs_script);
 	if( self->equip_script )
 		script_free_code(self->equip_script);
 	if( self->unequip_script )

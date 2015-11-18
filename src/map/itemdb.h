@@ -421,6 +421,7 @@ struct item_data
 		int id;
 	} mob[MAX_SEARCH]; //Holds the mobs that have the highest drop rate for this item. [Skotlex]
 	struct script_code *script;	//Default script for everything.
+	struct script_code *abs_script;	//Default script beyond everything.
 	struct script_code *equip_script;	//Script executed once when equipping.
 	struct script_code *unequip_script;//Script executed once when unequipping.
 	struct {

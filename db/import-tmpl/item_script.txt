@@ -1,0 +1,8 @@
+//===== Item Database ========================================
+//= Additional Item Bonus Database
+//= This script is always working even in blocked maps
+//=
+//= [Cydh] house.bad@gmail.com
+//===== Strcuture ============================================
+//= ItemID#{ Script }
+//============================================================

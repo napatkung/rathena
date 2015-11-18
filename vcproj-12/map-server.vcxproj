@@ -320,6 +320,7 @@
     <Copy SourceFiles="..\db\import-tmpl\item_group_db.txt" DestinationFolder="..\db\import\" ContinueOnError="true" Condition="!Exists('..\db\import\item_group_db.txt')" />
     <Copy SourceFiles="..\db\import-tmpl\item_noequip.txt" DestinationFolder="..\db\import\" ContinueOnError="true" Condition="!Exists('..\db\import\item_noequip.txt')" />
     <Copy SourceFiles="..\db\import-tmpl\item_nouse.txt" DestinationFolder="..\db\import\" ContinueOnError="true" Condition="!Exists('..\db\import\item_nouse.txt')" />
+    <Copy SourceFiles="..\db\import-tmpl\item_script.txt" DestinationFolder="..\db\import\" ContinueOnError="true" Condition="!Exists('..\db\import\item_script.txt')" />
     <Copy SourceFiles="..\db\import-tmpl\item_stack.txt" DestinationFolder="..\db\import\" ContinueOnError="true" Condition="!Exists('..\db\import\item_stack.txt')" />
     <Copy SourceFiles="..\db\import-tmpl\item_trade.txt" DestinationFolder="..\db\import\" ContinueOnError="true" Condition="!Exists('..\db\import\item_trade.txt')" />
     <Copy SourceFiles="..\db\import-tmpl\job_basehpsp_db.txt" DestinationFolder="..\db\import\" ContinueOnError="true" Condition="!Exists('..\db\import\job_basehpsp_db.txt')" />

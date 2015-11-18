@@ -9,6 +9,10 @@
 #include <stdlib.h>
 
 
+char *__SV_READDB_FILE__;
+unsigned int __SV_READDB_LINE__;
+
+
 #define J_MAX_MALLOC_SIZE 65535
 
 // escapes a string in-place (' -> \' , \ -> \\ , % -> _)
@@ -1006,6 +1010,8 @@ bool sv_readdb(const char* directory, const char* filename, char delim, int minc
 	fields = (char**)aMalloc(nb_cols*sizeof(char*));
 	line = (char*)aMalloc(nb_cols*colsize);
 
+	__SV_READDB_FILE__ = aStrdup(path);
+
 	// process rows one by one
 	while( fgets(line, maxcols*colsize, fp) )
 	{
@@ -1039,7 +1045,7 @@ bool sv_readdb(const char* directory, const char* filename, char delim, int minc
 			ShowError("sv_readdb: Reached the maximum allowed number of entries (%d) when parsing file \"%s\".\n", maxrows, path);
 			break;
 		}
-
+		__SV_READDB_LINE__ = lines;
 		// parse this row
 		if( !parseproc(fields+1, columns, entries) )
 		{
@@ -1052,6 +1058,9 @@ bool sv_readdb(const char* directory, const char* filename, char delim, int minc
 		// success!
 		entries++;
 	}
+
+	aFree(__SV_READDB_FILE__);
+	__SV_READDB_LINE__ = 0;
 
 	aFree(fields);
 	aFree(line);
