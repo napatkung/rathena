@@ -35,7 +35,8 @@ msgctxt "Sprakki#newbe01::NvSprakkiA"
 msgid "Hello there! Welcome to the World of Ragnarok Online. My name is Sprakki and I'm in charge of giving you basic gameplay tips."
 msgstr ""
 ````
-* Add/edit the dialog inside `msgstr ""` (Example in Indonesian from idRO) ````
+* Add/edit the dialog inside `msgstr ""` (Example in Indonesian from idRO)
+````
 #: npc/re/jobs/novice/novice.txt
 # mes "Hello there! Welcome to the World of Ragnarok Online. My name is Sprakki and I'm in charge of giving you basic gameplay tips.";
 msgctxt "Sprakki#newbe01::NvSprakkiA"
@@ -43,7 +44,7 @@ msgid "Hello there! Welcome to the World of Ragnarok Online. My name is Sprakki 
 msgstr "Halo! Selamat datang di Ragnarok Online Indonesia. Namaku adalah Sprakki dan aku disini untuk membantumu mengenai pengetahuan dasar bermain."
 ````
 * Save the file.
-**PS:** Steps above are translating manual using text editor.
+**NOTE:** Steps above are translating manual using text editor.
 
 ## 3. Adding New Language
 ---------
