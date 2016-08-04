@@ -262,6 +262,7 @@ struct map_session_data {
 		unsigned int perfect_hiding : 1; // [Valaris]
 		unsigned int no_knockback : 1;
 		unsigned int bonus_coma : 1;
+		unsigned int no_elestone : 1; // bNoEleStone [Cydh]
 	} special_state;
 	uint32 login_id1, login_id2;
 	unsigned short class_;	//This is the internal job ID used by the map server to simplify comparisons/queries/etc. [Skotlex]

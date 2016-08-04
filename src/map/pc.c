@@ -3044,6 +3044,10 @@ void pc_bonus(struct map_session_data *sd,int type,int val)
 			if (sd->state.lr_flag != 2)
 				sd->bonus.weapon_matk_rate += val;
 			break;
+		case SP_NO_ELESTONE: // bonus bNoEleStone,n;
+			if(sd->state.lr_flag != 2)
+				sd->special_state.no_elestone = 1;
+			break;
 		default:
 			if (running_npc_stat_calc_event) {
 				ShowWarning("pc_bonus: unknown bonus type %d %d in OnPCStatCalcEvent!\n", type, val);

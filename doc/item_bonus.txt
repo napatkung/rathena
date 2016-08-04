@@ -441,6 +441,7 @@ bonus2 bAddSkillBlow,sk,n;		Knock back the target by n cells when using skill sk
 bonus bNoKnockback,n;     		Character is no longer knocked back by enemy skills with such effect (n is meaningless)
 bonus bNoGemStone,n;      		Skills requiring Gemstones do no require them (n is meaningless)
                           		NOTE: Hocus Pocus still requires 1 Yellow Gemstone, Ganbantein requirements not reduced
+bonus bNoEleStone,n;      		Removes Flame, Ice, Wind Stone, or Shadow Orb from skill requirement. 'n' is meaningless
 bonus bIntravision,n;     		Always see Hiding and Cloaking players/mobs (n is meaningless)
 bonus bPerfectHide,n;     		Hidden/cloaked character is no longer detected by monsters with 'detector' mode (n is meaningless)
 bonus bRestartFullRecover,n;	When reviving, HP and SP are fully healed (n is meaningless)

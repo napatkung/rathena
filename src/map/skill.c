@@ -16018,6 +16018,8 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 						}
 					}
 				}
+				else if (sd->special_state.no_elestone && itemid_iselestone(req.itemid[i]))
+					req.itemid[i] = req.amount[i] = 0;
 			}
 			break;
 	}

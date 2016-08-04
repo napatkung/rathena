@@ -3082,6 +3082,8 @@
 	export_constant(MOBG_Red_Pouch_Of_Surprise);
 	export_constant(MOBG_ClassChange);
 
+	script_set_constant("bNoEleStone",SP_NO_ELESTONE,false);
+
 	#undef export_constant
 
 #endif /* _SCRIPT_CONSTANTS_H_ */
