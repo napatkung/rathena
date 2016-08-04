@@ -15964,6 +15964,8 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 						}
 					}
 				}
+				else if (sd->special_state.no_elestone && itemid_iselestone(req.itemid[i]))
+					req.itemid[i] = req.amount[i] = 0;
 				// Check requirement for Magic Gear Fuel
 				if (req.itemid[i] == ITEMID_MAGIC_GEAR_FUEL) {
 					if (sd->special_state.no_mado_fuel)

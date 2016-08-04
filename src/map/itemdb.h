@@ -93,6 +93,10 @@ enum item_itemid
 	ITEMID_COATING_BOTTLE				= 7139,
 	ITEMID_FRAGMENT_OF_CRYSTAL			= 7321,
 	ITEMID_SKULL_						= 7420,
+	ITEMID_FLAME_STONE					= 7521,
+	ITEMID_ICE_STONE					= 7522,
+	ITEMID_WIND_STONE					= 7523,
+	ITEMID_SHADOW_ORB					= 7524,
 	ITEMID_TOKEN_OF_SIEGFRIED			= 7621,
 	ITEMID_TRAP_ALLOY					= 7940,
 	ITEMID_CATNIP_FRUIT					= 11602,
@@ -489,6 +493,7 @@ struct item_data* itemdb_exists(unsigned short nameid);
 #define itemdb_iscashfood(id) ( (id) >= ITEMID_STR_DISH10_ && (id) <= ITEMID_VIT_DISH10_ )
 #define itemdb_is_GNbomb(n) (n >= ITEMID_APPLE_BOMB && n <= ITEMID_VERY_HARD_LUMP)
 #define itemdb_is_GNthrowable(n) (n >= ITEMID_MYSTERIOUS_POWDER && n <= ITEMID_BLACK_THING_TO_THROW)
+#define itemid_iselestone(id) ( (id) >= ITEMID_FLAME_STONE && (id) <= ITEMID_SHADOW_ORB )
 const char* itemdb_typename(enum item_types type);
 const char *itemdb_typename_ammo (enum e_item_ammo ammo);
 bool itemdb_is_spellbook2(unsigned short nameid);

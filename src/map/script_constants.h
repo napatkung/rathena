@@ -3174,6 +3174,8 @@
 	export_constant(STOR_MODE_GET);
 	export_constant(STOR_MODE_PUT);
 
+	script_set_constant("bNoEleStone",SP_NO_ELESTONE,false);
+
 	#undef export_constant
 
 #endif /* _SCRIPT_CONSTANTS_H_ */
