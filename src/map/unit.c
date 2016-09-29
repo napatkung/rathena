@@ -407,10 +407,11 @@ static int unit_walktoxy_timer(int tid, unsigned int tick, int id, intptr_t data
 	map_foreachinmovearea(clif_insight, bl, AREA_SIZE, -dx, -dy, sd?BL_ALL:BL_PC, bl);
 	ud->walktimer = INVALID_TIMER;
 
-	if (ud->state.walk_script && bl->x == ud->to_x && bl->y == ud->to_y) {
+	if (bl->x == ud->to_x && bl->y == ud->to_y) {
 		if (ud->walk_done_event[0])
 			npc_event_do_id(ud->walk_done_event,bl->id);
-		ud->state.walk_script = 0;
+		if (ud->state.walk_script)
+			ud->state.walk_script = 0;
 	}
 
 	switch(bl->type) {
@@ -1830,7 +1831,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 
 		mobskill_event(md, src, tick, -1); // Cast targetted skill event.
 
-		if (status_has_mode(tstatus,MD_CASTSENSOR_IDLE|MD_CASTSENSOR_CHASE) && battle_check_target(target, src, BCT_ENEMY) > 0) {
+		if ((status_has_mode(tstatus,MD_CASTSENSOR_IDLE) || status_has_mode(tstatus,MD_CASTSENSOR_CHASE)) && battle_check_target(target, src, BCT_ENEMY) > 0) {
 			switch (md->state.skillstate) {
 				case MSS_RUSH:
 				case MSS_FOLLOW:
@@ -3210,6 +3211,14 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 				sd->qi_display = NULL;
 			}
 			sd->qi_count = 0;
+
+#if PACKETVER >= 20150513
+			if( sd->hatEffectCount > 0 ){
+				aFree(sd->hatEffectIDs);
+				sd->hatEffectIDs = NULL;
+				sd->hatEffectCount = 0;
+			}
+#endif
 
 			// Clearing...
 			if (sd->bonus_script.head)

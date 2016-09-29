@@ -104,10 +104,6 @@ struct s_randomsummon_group {
 
 static DBMap *mob_summon_db; /// Random Summon DB. struct s_randomsummon_group -> group_id
 
-//Defines the Manuk/Splendide mob groups for the status reductions [Epoque]
-const int mob_manuk[8] = { MOBID_TATACHO, MOBID_CENTIPEDE, MOBID_NEPENTHES, MOBID_HILLSRION, MOBID_HARDROCK_MOMMOTH, MOBID_G_TATACHO, MOBID_G_HILLSRION, MOBID_CENTIPEDE_LARVA };
-const int mob_splendide[5] = { MOBID_TENDRILRION, MOBID_CORNUS, MOBID_NAGA, MOBID_LUCIOLA_VESPA, MOBID_PINGUICULA };
-
 /*==========================================
  * Local prototype declaration   (only required thing)
  *------------------------------------------*/
@@ -144,11 +140,43 @@ static int mobdb_searchname_array_sub(struct mob_db* mob, const char *str)
 }
 
 /**
+ * Tomb spawn time calculations
+ * @param nd: NPC data
+ */
+int mvptomb_setdelayspawn(struct npc_data *nd) {
+	if (nd->u.tomb.spawn_timer != INVALID_TIMER)
+		delete_timer(nd->u.tomb.spawn_timer, mvptomb_delayspawn);
+	nd->u.tomb.spawn_timer = add_timer(gettick() + battle_config.mvp_tomb_delay, mvptomb_delayspawn, nd->bl.id, 0);
+	return 0;
+}
+
+/**
+ * Tomb spawn with delay (timer function)
+ * @param tid: Timer ID
+ * @param tick: Time
+ * @param id: Block list ID
+ * @param data: Used for add_timer_func_list
+ */
+int mvptomb_delayspawn(int tid, unsigned int tick, int id, intptr_t data) {
+	struct npc_data *nd = BL_CAST(BL_NPC, map_id2bl(id));
+
+	if (nd) {
+		if (nd->u.tomb.spawn_timer != tid) {
+			ShowError("mvptomb_delayspawn: Timer mismatch: %d != %d\n", tid, nd->u.tomb.spawn_timer);
+			return 0;
+		}
+		nd->u.tomb.spawn_timer = INVALID_TIMER;
+		clif_spawn(&nd->bl);
+	}
+	return 0;
+}
+
+/**
  * Create and display a tombstone on the map
+ * @param md: the mob to create a tombstone for
+ * @param killer: name of player who killed the mob
+ * @param time: time of mob's death
  * @author [GreenBox]
- * @param md : the mob to create a tombstone for
- * @param killer : name of who has killed the mob
- * @param time : time at wich the killed happen
  */
 void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 {
@@ -175,6 +203,7 @@ void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 
 	nd->u.tomb.md = md;
 	nd->u.tomb.kill_time = time;
+	nd->u.tomb.spawn_timer = INVALID_TIMER;
 
 	if (killer)
 		safestrncpy(nd->u.tomb.killer_name, killer, NAME_LENGTH);
@@ -187,13 +216,14 @@ void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 	status_set_viewdata(&nd->bl, nd->class_);
 	status_change_init(&nd->bl);
 	unit_dataset(&nd->bl);
-	clif_spawn(&nd->bl);
 
+	mvptomb_setdelayspawn(nd);
 }
 
-/** Destroys MVP Tomb
-* @param md
-*/
+/**
+ * Destroys MVP Tomb
+ * @param md: Mob data
+ */
 void mvptomb_destroy(struct mob_data *md) {
 	struct npc_data *nd;
 
@@ -2527,18 +2557,33 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				if (battle_config.drops_by_luk2)
 					drop_rate += (int)(0.5+drop_rate*status_get_luk(src)*battle_config.drops_by_luk2/10000.);
 			}
-			if (sd && battle_config.pk_mode &&
-				(int)(md->level - sd->status.base_level) >= 20)
-				drop_rate = (int)(drop_rate*1.25); // pk_mode increase drops if 20 level difference [Valaris]
 
-			// Increase drop rate if user has SC_ITEMBOOST
-			if (sd && sd->sc.data[SC_ITEMBOOST]) // now rig the drop rate to never be over 90% unless it is originally >90%.
-				drop_rate = max(drop_rate,cap_value((int)(0.5+drop_rate*(sd->sc.data[SC_ITEMBOOST]->val1)/100.),0,9000));
-			// Increase item drop rate for VIP.
-			if (battle_config.vip_drop_increase && (sd && pc_isvip(sd))) {
-				drop_rate += (int)(0.5 + (drop_rate * battle_config.vip_drop_increase) / 100);
-				drop_rate = min(drop_rate,10000); //cap it to 100%
+			// Player specific drop rate adjustments
+			if( sd ){
+				int drop_rate_bonus = 0;
+
+				// pk_mode increase drops if 20 level difference [Valaris]
+				if( battle_config.pk_mode && (int)(md->level - sd->status.base_level) >= 20 )
+					drop_rate = (int)(drop_rate*1.25);
+
+				// Add class and race specific bonuses
+				drop_rate_bonus += sd->dropaddclass[md->status.class_] + sd->dropaddclass[CLASS_ALL];
+				drop_rate_bonus += sd->dropaddrace[md->status.race] + sd->dropaddrace[RC_ALL];
+
+				// Increase drop rate if user has SC_ITEMBOOST
+				if (&sd->sc && sd->sc.data[SC_ITEMBOOST])
+					drop_rate_bonus += sd->sc.data[SC_ITEMBOOST]->val1;
+
+				drop_rate_bonus = (int)(0.5 + drop_rate * drop_rate_bonus / 100.);
+				// Now rig the drop rate to never be over 90% unless it is originally >90%.
+				drop_rate = i32max(drop_rate, cap_value(drop_rate_bonus, 0, 9000));
+
+				if (pc_isvip(sd)) { // Increase item drop rate for VIP.
+					drop_rate += (int)(0.5 + (drop_rate * battle_config.vip_drop_increase) / 100);
+					drop_rate = min(drop_rate,10000); //cap it to 100%
+				}
 			}
+
 #ifdef RENEWAL_DROP
 			if( drop_modifier != 100 ) {
 				drop_rate = apply_rate(drop_rate, drop_modifier);
@@ -2790,9 +2835,11 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 		if( md->npc_event[0] && !md->state.npc_killmonster ) {
 			if( sd && battle_config.mob_npc_event_type ) {
+				pc_setparam(sd, SP_KILLEDRID, md->mob_id);
 				pc_setparam(sd, SP_KILLERRID, sd->bl.id);
 				npc_event(sd,md->npc_event,0);
 			} else if( mvp_sd ) {
+				pc_setparam(mvp_sd, SP_KILLEDRID, md->mob_id);
 				pc_setparam(mvp_sd, SP_KILLERRID, sd?sd->bl.id:0);
 				npc_event(mvp_sd,md->npc_event,0);
 			} else
@@ -3148,8 +3195,8 @@ int mob_summonslave(struct mob_data *md2,int *value,int amount,uint16 skill_id)
 		if (hp_rate) //Scale HP
 			md->status.hp = md->status.max_hp*hp_rate/100;
 
-		//Inherit the aggressive mode of the master.
-		status_calc_slave_mode(md, md2);
+		if (skill_id == NPC_SUMMONSLAVE) // Only appies to NPC_SUMMONSLAVE
+			status_calc_slave_mode(md, md2); // Inherit the aggressive mode of the master.
 
 		if (md2->state.copy_master_mode)
 			md->status.mode = md2->status.mode;
@@ -3599,7 +3646,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 
 	//Go Backwards to give better priority to advanced skills.
 	for (i=0,j = MAX_SKILL_TREE-1;j>=0 && i< MAX_MOBSKILL ;j--) {
-		uint16 skill_id = skill_tree[pc_class2idx(sd->status.class_)][j].id;
+		uint16 skill_id = skill_tree[pc_class2idx(sd->status.class_)][j].skill_id;
 		uint16 sk_idx = 0;
 		if (!skill_id || !(sk_idx = skill_get_index(skill_id)) || sd->status.skill[sk_idx].lv < 1 ||
 			(skill_get_inf2(skill_id)&(INF2_WEDDING_SKILL|INF2_GUILD_SKILL)) ||
@@ -4153,100 +4200,50 @@ static bool mob_readdb_mobavail(char* str[], int columns, int current)
  * Reading of random monster data
  * MobGroup,MobID,DummyName,Rate
  *------------------------------------------*/
-static int mob_read_randommonster_sub(const char* filename, bool silent) {
-	FILE *fp;
-	char line[1024];
-	unsigned int entries = 0;
+static bool mob_readdb_group(char* str[], int columns, int current){
+	struct s_randomsummon_group *msummon = NULL;
+	int mob_id, group = 0;
+	unsigned short i = 0;
+	bool set_default = false;
 
-	if ((fp = fopen(filename,"r")) == NULL) {
-		if (!silent)
-			ShowError("mob_read_randommonster: can't read %s\n",filename);
-		return -1;
+	if (ISDIGIT(str[0][0]) && ISDIGIT(str[0][1]))
+		group = atoi(str[0]);
+	else if (!script_get_constant(str[0], &group)) {
+		ShowError("mob_readdb_group: Invalid random monster group '%s'\n", str[0]);
+		return false;
 	}
 
-	while(fgets(line, sizeof(line), fp)) {
-		struct s_randomsummon_group *msummon = NULL;
-		int mob_id, group = 0;
-		unsigned short i = 0;
-		char *str[4], *p;
-		bool set_default = false;
-
-		if (line[0] == '/' && line[1] == '/')
-			continue;
-		if (strstr(line,"import")) {
-			char w1[16], w2[64];
-
-			if (sscanf(line,"%15[^:]: %63[^\r\n]",w1,w2) == 2 &&
-				strcmpi(w1,"import") == 0)
-			{
-				mob_read_randommonster_sub(w2, 0);
-				continue;
-			}
+	mob_id = atoi(str[1]);
+	if (mob_id != 0 && mob_db(mob_id) == mob_dummy) {
+		ShowError("mob_readdb_group: Invalid random monster group '%s'\n", str[0]);
+		return false;
+	}
+	else if (mob_id == 0){
+		mob_id = atoi(str[3]);
+		if (mob_db(mob_id) == mob_dummy) {
+			ShowError("mob_readdb_group: Invalid random monster group '%s'\n", str[0]);
+			return false;
 		}
-		p = line;
-		while(ISSPACE(*p))
-			++p;
-		memset(str,0,sizeof(str));
-		for (i = 0; i < 5 && p; i++) {
-			str[i] = p;
-			p = strchr(p,',');
-			if (p)
-				*p++=0;
-		}
-
-		if (str[0] == NULL || str[2] == NULL)
-			continue;
-
-		if (ISDIGIT(str[0][0]) && ISDIGIT(str[0][1]))
-			group = atoi(str[0]);
-		else if (!script_get_constant(str[0], &group)) {
-			ShowError("mob_read_randommonster_sub: Invalid random monster group '%s' at line '%s'.\n", str[0], line);
-			continue;
-		}
-
-		mob_id = atoi(str[1]);
-		if (mob_id != 0 && mob_db(mob_id) == mob_dummy) {
-			ShowError("mob_read_randommonster_sub: Invalid random monster group '%s' at line '%s'.\n", str[0], line);
-			continue;
-		}
-		else if (mob_id == 0){
-			mob_id = atoi(str[3]);
-			if (mob_db(mob_id) == mob_dummy) {
-				ShowError("mob_read_randommonster_sub: Invalid random monster group '%s' at line '%s'.\n", str[0], line);
-				continue;
-			}
-			set_default = true;
-		}
-
-		if (!(msummon = (struct s_randomsummon_group *)idb_get(mob_summon_db, group))) {
-			CREATE(msummon, struct s_randomsummon_group, 1);
-			CREATE(msummon->list, struct s_randomsummon_entry, (msummon->count = 1));
-			msummon->list[0].mob_id = mob_id;
-			msummon->list[0].rate = atoi(str[3]);
-			msummon->random_id = group;
-			idb_put(mob_summon_db, group, msummon);
-		}
-		else {
-			ARR_FIND(0, msummon->count, i, set_default || (i > 0 && msummon->list[i].mob_id == mob_id));
-			if (i >= msummon->count)
-				RECREATE(msummon->list, struct s_randomsummon_entry, ++msummon->count);
-			msummon->list[i].mob_id = mob_id;
-			msummon->list[i].rate = atoi(str[3]);
-		}
-
-		entries++;
+		set_default = true;
 	}
 
-	fclose(fp);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", entries, filename);
-	return 0;
-}
+	if (!(msummon = (struct s_randomsummon_group *)idb_get(mob_summon_db, group))) {
+		CREATE(msummon, struct s_randomsummon_group, 1);
+		CREATE(msummon->list, struct s_randomsummon_entry, (msummon->count = 1));
+		msummon->list[0].mob_id = mob_id;
+		msummon->list[0].rate = atoi(str[3]);
+		msummon->random_id = group;
+		idb_put(mob_summon_db, group, msummon);
+	}
+	else {
+		ARR_FIND(0, msummon->count, i, set_default || (i > 0 && msummon->list[i].mob_id == mob_id));
+		if (i >= msummon->count)
+			RECREATE(msummon->list, struct s_randomsummon_entry, ++msummon->count);
+		msummon->list[i].mob_id = mob_id;
+		msummon->list[i].rate = atoi(str[3]);
+	}
 
-static void mob_read_randommonster(const char* basedir, bool silent) {
-	char filepath[256];
-	sprintf(filepath, "%s/%s", basedir, "mob_random_db.txt");
-	mob_read_randommonster_sub(filepath, silent);
-	return;
+	return true;
 }
 
 //processes one mob_chat_db entry [SnakeDrak]
@@ -4620,7 +4617,12 @@ static bool mob_readdb_race2(char* fields[], int columns, int current)
 {
 	int race, i;
 
-	race = atoi(fields[0]);
+	if( ISDIGIT(fields[0][0]) )
+		race = atoi(fields[0]);
+	else if( !script_get_constant( fields[0], &race ) ){
+		ShowWarning("mob_readdb_race2: Unknown race2 constant \"%s\".\n", fields[0]);
+		return false;
+	}
 
 	if (!CHK_RACE2(race)) {
 		ShowWarning("mob_readdb_race2: Unknown race2 %d.\n", race);
@@ -4964,6 +4966,27 @@ static void mob_load(void)
 		"/"DBIMPORT,
 	};
 
+	// First we parse all the possible monsters to add additional data in the second loop
+	if( db_use_sqldbs ){
+		mob_read_sqldb();
+		mob_read_sqlskilldb();
+	}else{
+		for(i=0; i<ARRAYLENGTH(dbsubpath); i++){
+			int n2 = strlen(db_path)+strlen(DBPATH)+strlen(dbsubpath[i])+1;
+			char* dbsubpath2 = (char*)aMalloc(n2+1);
+
+			if( i == 0 ){
+				safesnprintf(dbsubpath2,n2,"%s/%s%s",db_path,DBPATH,dbsubpath[i]);
+			}else{
+				safesnprintf(dbsubpath2,n2,"%s%s",db_path,dbsubpath[i]);
+			}
+
+			sv_readdb(dbsubpath2, "mob_db.txt", ',', 31+2*MAX_MVP_DROP+2*MAX_MOB_DROP, 31+2*MAX_MVP_DROP+2*MAX_MOB_DROP, -1, &mob_readdb_sub, i);
+
+			aFree(dbsubpath2);
+		}
+	}
+
 	for(i=0; i<ARRAYLENGTH(dbsubpath); i++){	
 		int n1 = strlen(db_path)+strlen(dbsubpath[i])+1;
 		int n2 = strlen(db_path)+strlen(DBPATH)+strlen(dbsubpath[i])+1;
@@ -4980,12 +5003,7 @@ static void mob_load(void)
 			safesnprintf(dbsubpath2,n1,"%s%s",db_path,dbsubpath[i]);
 		}
 		
-		if (db_use_sqldbs && i==0) //only read once for sql
-		{
-			mob_read_sqldb();
-			mob_read_sqlskilldb();
-		} else {
-			sv_readdb(dbsubpath2, "mob_db.txt", ',', 31+2*MAX_MVP_DROP+2*MAX_MOB_DROP, 31+2*MAX_MVP_DROP+2*MAX_MOB_DROP, -1, &mob_readdb_sub, i);
+		if( !db_use_sqldbs ){
 			mob_readskilldb(dbsubpath2,i);
 		}
 
@@ -4993,7 +5011,12 @@ static void mob_load(void)
 		sv_readdb(dbsubpath2, "mob_race2_db.txt", ',', 2, MAX_RACE2_MOBS, -1, &mob_readdb_race2, i);
 		sv_readdb(dbsubpath1, "mob_item_ratio.txt", ',', 2, 2+MAX_ITEMRATIO_MOBS, -1, &mob_readdb_itemratio, i);
 		sv_readdb(dbsubpath1, "mob_chat_db.txt", '#', 3, 3, MAX_MOB_CHAT, &mob_parse_row_chatdb, i);
-		mob_read_randommonster(dbsubpath2, i);
+		sv_readdb(dbsubpath2, "mob_random_db.txt", ',', 4, 4, -1, &mob_readdb_group, i );
+		sv_readdb(dbsubpath2, "mob_branch.txt", ',', 4, 4, -1, &mob_readdb_group, i );
+		sv_readdb(dbsubpath2, "mob_poring.txt", ',', 4, 4, -1, &mob_readdb_group, i );
+		sv_readdb(dbsubpath2, "mob_boss.txt", ',', 4, 4, -1, &mob_readdb_group, i );
+		sv_readdb(dbsubpath1, "mob_pouch.txt", ',', 4, 4, -1, &mob_readdb_group, i );
+		sv_readdb(dbsubpath1, "mob_classchange.txt", ',', 4, 4, -1, &mob_readdb_group, i );
 		
 		aFree(dbsubpath1);
 		aFree(dbsubpath2);
@@ -5050,6 +5073,7 @@ void do_init_mob(void){
 	add_timer_func_list(mob_timer_delete,"mob_timer_delete");
 	add_timer_func_list(mob_spawn_guardian_sub,"mob_spawn_guardian_sub");
 	add_timer_func_list(mob_respawn,"mob_respawn");
+	add_timer_func_list(mvptomb_delayspawn,"mvptomb_delayspawn");
 	add_timer_interval(gettick()+MIN_MOBTHINKTIME,mob_ai_hard,0,0,MIN_MOBTHINKTIME);
 	add_timer_interval(gettick()+MIN_MOBTHINKTIME*10,mob_ai_lazy,0,0,MIN_MOBTHINKTIME*10);
 }

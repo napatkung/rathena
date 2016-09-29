@@ -822,7 +822,7 @@ int npc_event_sub(struct map_session_data* sd, struct event_data* ev, const char
 		ARR_FIND( 0, MAX_EVENTQUEUE, i, sd->eventqueue[i][0] == '\0' );
 		if( i < MAX_EVENTQUEUE )
 		{
-			safestrncpy(sd->eventqueue[i],eventname,50); //Event enqueued.
+			safestrncpy(sd->eventqueue[i],eventname,EVENT_NAME_LENGTH); //Event enqueued.
 			return 0;
 		}
 
@@ -975,6 +975,8 @@ int npc_touch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
 		case NPCTYPE_WARP:
 			if (pc_ishiding(sd) || (sd->sc.count && sd->sc.data[SC_CAMOUFLAGE]) || pc_isdead(sd))
 				break; // hidden or dead chars cannot use warps
+			if (!pc_job_can_entermap((enum e_job)sd->status.class_, map_mapindex2mapid(map[m].npc[i]->u.warp.mapindex), sd->group_level))
+				break;
 			if(sd->count_rewarp > 10){
 				ShowWarning("Prevented infinite warp loop for player (%d:%d). Please fix NPC: '%s', path: '%s'\n", sd->status.account_id, sd->status.char_id, map[m].npc[i]->exname, map[m].npc[i]->path);
 				sd->count_rewarp=0;
@@ -3169,8 +3171,8 @@ int npc_duplicate4instance(struct npc_data *snd, int16 m) {
 		int dm = map_mapindex2mapid(snd->u.warp.mapindex), imap = 0, i;
 		if( dm < 0 ) return 1;
 
-		for(i = 0; i < MAX_MAP_PER_INSTANCE; i++)
-			if(im->map[i].m && map_mapname2mapid(map[im->map[i].src_m].name) == dm) {
+		for(i = 0; i < im->cnt_map; i++)
+			if(im->map[i]->m && map_mapname2mapid(map[im->map[i]->src_m].name) == dm) {
 				imap = map_mapname2mapid(map[m].name);
 				break; // Instance map matches destination, update to instance map
 			}
@@ -4091,6 +4093,8 @@ static const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, con
 		map[m].flag.nolockon = state;
 	else if (!strcmpi(w3,"notomb"))
 		map[m].flag.notomb = state;
+	else if (!strcmpi(w3,"nocostume"))
+		map[m].flag.nocostume = state;
 	else if (!strcmpi(w3,"skill_damage")) {
 #ifdef ADJUST_SKILL_DAMAGE
 		char skill[SKILL_NAME_LENGTH];

@@ -6,6 +6,10 @@
 
 	#define export_constant(a) script_set_constant(#a,a,false)
 
+	/* min and maximum variable value */
+	export_constant(INT_MIN);
+	export_constant(INT_MAX);
+
 	/* server defines */
 	export_constant(PACKETVER);
 	export_constant(MAX_LEVEL);
@@ -21,6 +25,10 @@
 	export_constant(MAX_CHAT_USERS);
 	export_constant(VIP_SCRIPT);
 	export_constant(MIN_STORAGE);
+	export_constant(MAX_SLOTS);
+	export_constant(MAX_ITEM_RDM_OPT);
+	export_constant(NAME_LENGTH);
+	export_constant(PASSWD_LENGTH);
 
 	/* boolean values */
 	export_constant(true);
@@ -182,6 +190,8 @@
 
 	export_constant(JOB_REBELLION);
 
+	export_constant(JOB_SUMMONER);
+
 	/* EA jobs */
 	script_set_constant("EAJL_2_1",JOBL_2_1,false);
 	script_set_constant("EAJL_2_2",JOBL_2_2,false);
@@ -317,6 +327,8 @@
 	script_set_constant("EAJ_SUPER_NOVICE_E",MAPID_SUPER_NOVICE_E,false);
 	script_set_constant("EAJ_SUPER_BABY_E",MAPID_SUPER_BABY_E,false);
 
+	script_set_constant("EAJ_SUMMONER",MAPID_SUMMONER,false);
+
 	/* broadcasts */
 	export_constant(BC_ALL);
 	export_constant(BC_MAP);
@@ -392,6 +404,7 @@
 	export_constant(MF_NOLOCKON);
 	export_constant(MF_NOTOMB);
 	export_constant(MF_SKILL_DAMAGE);
+	export_constant(MF_NOCOSTUME);
 
 	/* setcell types */
 	export_constant(CELL_WALKABLE);
@@ -453,9 +466,9 @@
 	script_set_constant("CharRename",SP_CHARRENAME,true);
 	script_set_constant("Font",SP_CHARFONT,true);
 	script_set_constant("BankVault",SP_BANK_VAULT,true);
-	script_set_constant("RouletteBronze",SP_ROULETTE_BRONZE,true);
-	script_set_constant("RouletteSilver",SP_ROULETTE_SILVER,true);
-	script_set_constant("RouletteGold",SP_ROULETTE_GOLD,true);
+	script_set_constant(ROULETTE_BRONZE_VAR,SP_ROULETTE_BRONZE,true);
+	script_set_constant(ROULETTE_SILVER_VAR,SP_ROULETTE_SILVER,true);
+	script_set_constant(ROULETTE_GOLD_VAR,SP_ROULETTE_GOLD,true);
 
 	script_set_constant("bMaxHP",SP_MAXHP,false);
 	script_set_constant("bMaxSP",SP_MAXSP,false);
@@ -505,9 +518,11 @@
 	script_set_constant("bDoubleAddRate",SP_DOUBLE_ADD_RATE,false);
 	script_set_constant("bSkillHeal",SP_SKILL_HEAL,false);
 	script_set_constant("bMatkRate",SP_MATK_RATE,false);
+	script_set_constant("bWeaponMatkRate",SP_WEAPON_MATK_RATE,false);
 	script_set_constant("bIgnoreDefEle",SP_IGNORE_DEF_ELE,false);
 	script_set_constant("bIgnoreDefRace",SP_IGNORE_DEF_RACE,false);
 	script_set_constant("bAtkRate",SP_ATK_RATE,false);
+	script_set_constant("bWeaponAtkRate",SP_WEAPON_ATK_RATE,false);
 	script_set_constant("bSpeedAddRate",SP_SPEED_ADDRATE,false);
 	script_set_constant("bSPRegenRate",SP_SP_REGEN_RATE,false);
 	script_set_constant("bMagicAtkDef",SP_MAGIC_ATK_DEF,false);
@@ -560,7 +575,7 @@
 	script_set_constant("bHPDrainValue",SP_HP_DRAIN_VALUE,false);
 	script_set_constant("bSPDrainValue",SP_SP_DRAIN_VALUE,false);
 	script_set_constant("bWeaponAtk",SP_WEAPON_ATK,false);
-	script_set_constant("bWeaponAtkRate",SP_WEAPON_ATK_RATE,false);
+	script_set_constant("bWeaponDamageRate",SP_WEAPON_DAMAGE_RATE,false);
 	script_set_constant("bDelayrate",SP_DELAYRATE,false);
 	script_set_constant("bHPDrainValueRace",SP_HP_DRAIN_VALUE_RACE,false);
 	script_set_constant("bSPDrainValueRace",SP_SP_DRAIN_VALUE_RACE,false);
@@ -652,8 +667,16 @@
 	script_set_constant("bSubDefEle",SP_SUBDEF_ELE,false);
 	script_set_constant("bStateNoRecoverRace",SP_STATE_NORECOVER_RACE,false);
 	script_set_constant("bCriticalLong",SP_CRITICAL_RANGEATK,false);
+	script_set_constant("bMagicAddRace2", SP_MAGIC_ADDRACE2, false);
+	script_set_constant("bIgnoreMdefRace2Rate", SP_IGNORE_MDEF_RACE2_RATE, false);
+	script_set_constant("bDropAddRace", SP_DROP_ADDRACE, false);
+	script_set_constant("bDropAddClass", SP_DROP_ADDCLASS, false);
+	script_set_constant("bNoMadoFuel", SP_NO_MADO_FUEL, false);
+	script_set_constant("bIgnoreDefClassRate", SP_IGNORE_DEF_CLASS_RATE, false);
+	script_set_constant("bRegenPercentHP", SP_REGEN_PERCENT_HP, false);
+	script_set_constant("bRegenPercentSP", SP_REGEN_PERCENT_SP, false);
 
-	/* equip positions */
+	/* equip indices */
 	export_constant(EQI_HEAD_TOP);
 	export_constant(EQI_ARMOR);
 	export_constant(EQI_HAND_L);
@@ -675,6 +698,31 @@
 	export_constant(EQI_SHADOW_SHOES);
 	export_constant(EQI_SHADOW_ACC_R);
 	export_constant(EQI_SHADOW_ACC_L);
+
+	/* equip positions */
+	export_constant(EQP_ACC_L);
+	export_constant(EQP_ACC_R);
+	export_constant(EQP_SHOES);
+	export_constant(EQP_GARMENT);
+	export_constant(EQP_HEAD_LOW);
+	export_constant(EQP_HEAD_MID);
+	export_constant(EQP_HEAD_TOP);
+	export_constant(EQP_ARMOR);
+	export_constant(EQP_HAND_L);
+	export_constant(EQP_HAND_R);
+	export_constant(EQP_COSTUME_HEAD_TOP);
+	export_constant(EQP_COSTUME_HEAD_MID);
+	export_constant(EQP_COSTUME_HEAD_LOW);
+	export_constant(EQP_COSTUME_GARMENT);
+	export_constant(EQP_AMMO);
+	export_constant(EQP_SHADOW_ARMOR);
+	export_constant(EQP_SHADOW_WEAPON);
+	export_constant(EQP_SHADOW_SHIELD);
+	export_constant(EQP_SHADOW_SHOES);
+	export_constant(EQP_SHADOW_ACC_R);
+	export_constant(EQP_SHADOW_ACC_L);
+	export_constant(EQP_ACC_RL);
+	export_constant(EQP_SHADOW_ACC_RL);
 
 	/* looks */
 	export_constant(LOOK_BASE);
@@ -979,7 +1027,7 @@
 	export_constant(SC_INCCRI);
 	//export_constant(SC_INCDEF);
 	//export_constant(SC_INCBASEATK);
-	//export_constant(SC_FASTCAST 264);
+	//export_constant(SC_FASTCAST);
 	export_constant(SC_MDEF_RATE);
 	//export_constant(SC_HPREGEN);
 	export_constant(SC_INCHEALRATE);
@@ -1353,6 +1401,26 @@
 	export_constant(SC_TUNAPARTY);
 	export_constant(SC_SHRIMP);
 	export_constant(SC_FRESHSHRIMP);
+	export_constant(SC_ACTIVE_MONSTER_TRANSFORM);
+	export_constant(SC_CLOUD_KILL);
+	export_constant(SC_LJOSALFAR);
+	export_constant(SC_MERMAID_LONGING);
+	export_constant(SC_HAT_EFFECT);
+	export_constant(SC_FLOWERSMOKE);
+	export_constant(SC_FSTONE);
+	export_constant(SC_HAPPINESS_STAR);
+	export_constant(SC_MAPLE_FALLS);
+	export_constant(SC_TIME_ACCESSORY);
+	export_constant(SC_MAGICAL_FEATHER);
+	export_constant(SC_GVG_GIANT);
+	export_constant(SC_GVG_GOLEM);
+	export_constant(SC_GVG_STUN);
+	export_constant(SC_GVG_STONE);
+	export_constant(SC_GVG_FREEZ);
+	export_constant(SC_GVG_SLEEP);
+	export_constant(SC_GVG_CURSE);
+	export_constant(SC_GVG_SILENCE);
+	export_constant(SC_GVG_BLIND);
 #ifdef RENEWAL
 	export_constant(SC_EXTREMITYFIST2);
 #endif
@@ -2310,6 +2378,8 @@
 	export_constant(SI_MTF_MARIONETTE);
 	export_constant(SI_MTF_LUDE);
 	export_constant(SI_MTF_CRUISER);
+	export_constant(SI_MERMAID_LONGING);
+	export_constant(SI_MAGICAL_FEATHER);
 	export_constant(SI_DRACULA_CARD);
 	export_constant(SI_LIMIT_POWER_BOOSTER);
 	export_constant(SI_TIME_ACCESSORY);
@@ -2376,6 +2446,24 @@
 	export_constant(SI_DORAM_BUF_01);
 	export_constant(SI_DORAM_BUF_02);
 	export_constant(SI_SPRITEMABLE);
+	export_constant(SI_AID_PERIOD_RECEIVEITEM);
+	export_constant(SI_AID_PERIOD_PLUSEXP);
+	export_constant(SI_AID_PERIOD_PLUSJOBEXP);
+	export_constant(SI_AID_PERIOD_DEADPENALTY);
+	export_constant(SI_AID_PERIOD_ADDSTOREITEMCOUNT);
+	export_constant(SI_HISS);
+	export_constant(SI_NYANGGRASS);
+	export_constant(SI_CHATTERING);
+	export_constant(SI_GROOMING);
+	export_constant(SI_PROTECTIONOFSHRIMP);
+	export_constant(SI_EP16_2_BUFF_SS);
+	export_constant(SI_EP16_2_BUFF_SC);
+	export_constant(SI_EP16_2_BUFF_AC);
+	export_constant(SI_GS_MAGICAL_BULLET);
+	export_constant(SI_FALLEN_ANGEL);
+	export_constant(SI_GLOOM_CARD);
+	export_constant(SI_PHARAOH_CARD);
+	export_constant(SI_KIEL_CARD);
 
 	/* elements */
 	export_constant(ELE_NEUTRAL);
@@ -2414,6 +2502,10 @@
 	export_constant(RC2_GVG);
 	export_constant(RC2_BATTLEFIELD);
 	export_constant(RC2_TREASURE);
+	export_constant(RC2_BIOLAB);
+	export_constant(RC2_MANUK);
+	export_constant(RC2_SPLENDIDE);
+	export_constant(RC2_MAX);
 
 	/* classes */
 	export_constant(CLASS_NORMAL);
@@ -3052,6 +3144,28 @@
 	export_constant(DIR_SOUTHEAST);
 	export_constant(DIR_EAST);
 	export_constant(DIR_NORTHEAST);
+
+	/* instance modes */
+	export_constant(IM_NONE);
+	export_constant(IM_CHAR);
+	export_constant(IM_PARTY);
+	export_constant(IM_GUILD);
+
+	/* mob random groups */
+	export_constant(MOBG_Branch_Of_Dead_Tree);
+	export_constant(MOBG_Poring_Box);
+	export_constant(MOBG_Bloody_Dead_Branch);
+	export_constant(MOBG_Red_Pouch_Of_Surprise);
+	export_constant(MOBG_ClassChange);
+
+	/* random option attributes */
+	export_constant(ROA_ID);
+	export_constant(ROA_VALUE);
+	export_constant(ROA_PARAM);
+
+	export_constant(CARD0_FORGE);
+	export_constant(CARD0_CREATE);
+	export_constant(CARD0_PET);
 
 	#undef export_constant
 

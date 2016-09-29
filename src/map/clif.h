@@ -142,6 +142,26 @@ enum e_adopt_reply {
 	ADOPT_REPLY_MARRIED,
 };
 
+enum e_wip_block {
+	WIP_DISABLE_NONE = 0x0,
+	WIP_DISABLE_SKILLITEM = 0x1,
+	WIP_DISABLE_NPC = 0x2,
+	WIP_DISABLE_ALL = 0x3,
+};
+
+enum e_party_invite_reply {
+	PARTY_REPLY_JOIN_OTHER_PARTY = 0,   ///< result=0 : "The Character already joined another party." -> MsgStringTable[80]
+	PARTY_REPLY_REJECTED,			    ///< result=1 : "Request for party rejected." -> MsgStringTable[81]
+	PARTY_REPLY_ACCEPTED,			    ///< result=2 : "Request for party accepted." -> MsgStringTable[82]
+	PARTY_REPLY_FULL,				    ///< result=3 : "Party Capacity exceeded." -> MsgStringTable[83]
+	PARTY_REPLY_DUAL,				    ///< result=4 : "Character in the same account already joined." -> MsgStringTable[608]
+	PARTY_REPLY_JOINMSG_REFUSE,		    ///< result=5 : !TODO "The character blocked the party invitation." -> MsgStringTable[1324] (since 20070904)
+	PARTY_REPLY_UNKNOWN_ERROR,		    ///< result=6 : ??
+	PARTY_REPLY_OFFLINE,			    ///< result=7 : "The Character is not currently online or does not exist." -> MsgStringTable[71] (since 20070904)
+	PARTY_REPLY_INVALID_MAPPROPERTY,    ///< result=8 : !TODO "Unable to organize a party in this map" -> MsgStringTable[1388] (since 20080527)
+	PARTY_REPLY_INVALID_MAPPROPERTY_ME, ///< return=9 : !TODO "Cannot join a party in this map" -> MsgStringTable[1871] (since 20110205)
+};
+
 // packet_db[SERVER] is reserved for server use
 #define SERVER 0
 #define packet_len(cmd) packet_db[SERVER][cmd].len
@@ -462,7 +482,7 @@ enum clif_messages {
 	ITEM_PRODUCE_FAIL = 0x628,
 	ITEM_UNIDENTIFIED = 0x62d,
 	ITEM_REUSE_LIMIT = 0x746,
-	USAGE_FAIL = 0x783,
+	WORK_IN_PROGRESS = 0x783,
 	NEED_REINS_OF_MOUNT = 0x78c,
 	MERGE_ITEM_NOT_AVAILABLE = 0x887,
 };
@@ -618,8 +638,8 @@ void clif_skillcasting(struct block_list* bl, int src_id, int dst_id, int dst_x,
 void clif_skillcastcancel(struct block_list* bl);
 void clif_skill_fail(struct map_session_data *sd,uint16 skill_id,enum useskill_fail_cause cause,int btype);
 void clif_skill_cooldown(struct map_session_data *sd, uint16 skill_id, unsigned int tick);
-int clif_skill_damage(struct block_list *src,struct block_list *dst,unsigned int tick,int sdelay,int ddelay,int64 sdamage,int div,uint16 skill_id,uint16 skill_lv,int type);
-//int clif_skill_damage2(struct block_list *src,struct block_list *dst,unsigned int tick,int sdelay,int ddelay,int damage,int div,uint16 skill_id,uint16 skill_lv,int type);
+int clif_skill_damage(struct block_list *src,struct block_list *dst,unsigned int tick,int sdelay,int ddelay,int64 sdamage,int div,uint16 skill_id,uint16 skill_lv,enum e_damage_type type);
+//int clif_skill_damage2(struct block_list *src,struct block_list *dst,unsigned int tick,int sdelay,int ddelay,int damage,int div,uint16 skill_id,uint16 skill_lv,enum e_damage_type type);
 int clif_skill_nodamage(struct block_list *src,struct block_list *dst,uint16 skill_id,int heal,int fail);
 void clif_skill_poseffect(struct block_list *src,uint16 skill_id,int val,int x,int y,int tick);
 void clif_skill_estimation(struct map_session_data *sd,struct block_list *dst);
@@ -644,7 +664,8 @@ void clif_changemapcell(int fd, int16 m, int x, int y, int type, enum send_targe
 
 #define clif_status_load(bl, type, flag) clif_status_change((bl), (type), (flag), 0, 0, 0, 0)
 void clif_status_change(struct block_list *bl, int type, int flag, int tick, int val1, int val2, int val3);
-void clif_status_change2(struct block_list *bl, int tid, enum send_target target, int type, int val1, int val2, int val3);
+void clif_efst_status_change(struct block_list *bl, int tid, enum send_target target, int type, int tick, int val1, int val2, int val3);
+void clif_efst_status_change_sub(struct map_session_data *sd, struct block_list *bl, enum send_target target);
 
 void clif_wis_message(int fd, const char* nick, const char* mes, int mes_len);
 void clif_wis_end(int fd, int result);
@@ -671,6 +692,8 @@ void clif_item_repair_list(struct map_session_data *sd, struct map_session_data 
 void clif_item_repaireffect(struct map_session_data *sd, int idx, int flag);
 void clif_item_damaged(struct map_session_data* sd, unsigned short position);
 void clif_item_refine_list(struct map_session_data *sd);
+void clif_hat_effects( struct map_session_data* sd, struct block_list* bl, enum send_target target );
+void clif_hat_effect_single( struct map_session_data* sd, uint16 effectId, bool enable );
 
 void clif_item_skill(struct map_session_data *sd,uint16 skill_id,uint16 skill_lv);
 
@@ -696,7 +719,7 @@ void clif_party_created(struct map_session_data *sd,int result);
 void clif_party_member_info(struct party_data *p, struct map_session_data *sd);
 void clif_party_info(struct party_data* p, struct map_session_data *sd);
 void clif_party_invite(struct map_session_data *sd,struct map_session_data *tsd);
-void clif_party_inviteack(struct map_session_data* sd, const char* nick, int result);
+void clif_party_invite_reply(struct map_session_data* sd, const char* nick, enum e_party_invite_reply reply);
 void clif_party_option(struct party_data *p,struct map_session_data *sd,int flag);
 void clif_party_withdraw(struct party_data* p, struct map_session_data* sd, uint32 account_id, const char* name, int flag);
 void clif_party_message(struct party_data* p, uint32 account_id, const char* mes, int len);
@@ -745,10 +768,10 @@ void clif_sendbgemblem_area(struct map_session_data *sd);
 void clif_sendbgemblem_single(int fd, struct map_session_data *sd);
 
 // Instancing
-void clif_instance_create(struct map_session_data *sd, const char *name, int num, int flag);
-void clif_instance_changewait(struct map_session_data *sd, int num, int flag);
-void clif_instance_status(struct map_session_data *sd, const char *name, unsigned int limit1, unsigned int limit2, int flag);
-void clif_instance_changestatus(struct map_session_data *sd, int type, unsigned int limit, int flag);
+void clif_instance_create(unsigned short instance_id, int num);
+void clif_instance_changewait(unsigned short instance_id, int num);
+void clif_instance_status(unsigned short instance_id, unsigned int limit1, unsigned int limit2);
+void clif_instance_changestatus(unsigned int instance_id, int type, unsigned int limit);
 
 // Custom Fonts
 void clif_font(struct map_session_data *sd);
