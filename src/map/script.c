@@ -4945,12 +4945,23 @@ void do_final_script() {
 }
 
 /**
- *
+ * Add language name to library
+ * @param name Language name
+ * @return The Language ID
  **/
-uint8 script_add_language(const char *name)
-{
+uint8 script_add_language(const char *name) {
 	uint8 lang_id = max_lang_id;
-	
+
+	if (languages) {
+		int i;
+		for (i = 0; i < max_lang_id; i++) {
+			if (languages[i] && strcmpi(languages[i], name) == 0) {
+				//ShowInfo("script_add_language: Found '%s' in %d\n", name, i);
+				return i;
+			}
+		}
+	}
+
 	RECREATE(languages, char *, ++max_lang_id);
 	RECREATE(lang_motd_txt, char *, max_lang_id);
 	RECREATE(lang_help_txt, char *, max_lang_id);
@@ -4963,11 +4974,25 @@ uint8 script_add_language(const char *name)
 	return lang_id;
 }
 
+/**
+ * Add MOTD file for specified language
+ * @param lang_id ID of the language in the library
+ * @param filepath MOTD file path
+ **/
 static void script_add_motd_language(uint8 lang_id, const char *filepath) {
+	if (!languages || lang_id > max_lang_id || lang_motd_txt[lang_id] == NULL)
+		return;
 	lang_motd_txt[lang_id] = aStrdup(filepath);
 }
 
+/**
+ * Add Help message file for specified language
+ * @param lang_id ID of the language in the library
+ * @param filepath Help file path
+ **/
 static void script_add_help_language(uint8 lang_id, const char *filepath) {
+	if (!languages || lang_id > max_lang_id || lang_help_txt[lang_id] == NULL)
+		return;
 	lang_help_txt[lang_id] = aStrdup(filepath);
 }
 

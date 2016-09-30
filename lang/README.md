@@ -44,6 +44,8 @@ msgid "Hello there! Welcome to the World of Ragnarok Online. My name is Sprakki 
 msgstr "Halo! Selamat datang di Ragnarok Online Indonesia. Namaku adalah Sprakki dan aku disini untuk membantumu mengenai pengetahuan dasar bermain."
 ````
 * Save the file.
+* Make sure the EOL as UNIX.
+
 **NOTE:** Steps above are translating manual using text editor.
 
 ## 3. Adding New Language
@@ -74,7 +76,7 @@ default_language: "My_Language"
 
 ## 5. Change Language
 ---------
-Use **@langtype** in-game. Example: `@langtype My_Language`.
+Use **`@langtype`** in-game. Example: `@langtype My_Language`.
 The language changed will be stored stored as player's account variable.
 
 
@@ -82,7 +84,7 @@ The language changed will be stored stored as player's account variable.
 ---------
 Besides NPC dialogs, translation is also available for:
 * Atcommand messages (since multilanguage of msg_conf was depreciated).
-* Atcommand Help message (@help)
+* Atcommand Help message (`@help`)
 * Message of The Day (MoTD)
 ````
 translations: {
@@ -101,7 +103,10 @@ translations: {
 * rAthena **DOES NOT** officially manage the translation files. Please contact respective community that provide translation project.
 * rAthena **ONLY** will lists the translation project that fit our regulations.
 * Try visit [rAthena International Forums](https://rathena.org/board/forum/6-international-forums/) to dig informations.
-* Originally by @Hercules https://github.com/HerculesWS/Hercules/commit/330e31cc71ece055908acb1eb967b4009ebc9c46, first ported to rAthena by @aleos89, restructured by @cydh.
+* Credits:
+  * Originally by [@HerculesWS](https://github.com/HerculesWS) on https://github.com/HerculesWS/Hercules/commit/330e31cc71ece055908acb1eb967b4009ebc9c46.
+  * [@aleos89](https://github.com/aleos89), adapted to [@rAthena](https://github.com/rAthena).
+  * [@cydh](https://github.com/cydh), restructured.
 
 ## 8. Known Translation Project
 ---------
