@@ -39,7 +39,6 @@ char* LOGIN_CONF_NAME;
 char* LAN_CONF_NAME; //char-login
 char* MSG_CONF_NAME_EN; //all
 char* TRANSLATION_CONF_FILE;
-FILE *lang_export_fp;
 char *lang_export_file;
 
 /**
@@ -186,10 +185,6 @@ int cli_get_options(int argc, char ** argv) {
 						lang_export_file = aStrdup(argv[++i]);
 					else
 						lang_export_file = aStrdup("./lang/generated_translations.pot");
-	
-					if (!(lang_export_fp = fopen(lang_export_file,"wb")))
-						ShowError("export-dialog: failed to open '%s' for writing!\n", lang_export_file);
-	
 					runflag = CORE_ST_STOP;
 				}
 				else {
