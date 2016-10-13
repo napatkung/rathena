@@ -9,6 +9,7 @@
 #include "../common/mmo.h"
 #include "../common/mapindex.h"
 #include "../common/db.h"
+#include "../common/utils.h"
 
 #include "../config/core.h"
 

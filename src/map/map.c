@@ -54,6 +54,7 @@ char map_server_db[32] = "ragnarok";
 Sql* mmysql_handle;
 Sql* qsmysql_handle; /// For query_sql
 
+FILE *lang_export_fp;
 const char *default_lang_str = "English";
 uint8 default_lang_id = 0;
 
@@ -4663,7 +4664,9 @@ int do_init(int argc, char *argv[])
 
 	npc_event_do_oninit();	// Init npcs (OnInit)
 
-	if (lang_export_fp) {
+	if (!(lang_export_fp = fopen(lang_export_file,"wb")))
+		ShowError("export-dialog: failed to open '%s' for writing!\n", lang_export_file);
+	else {
 		ShowInfo("Lang exported to '"CL_WHITE"%s"CL_RESET"'\n", lang_export_file);
 		fclose(lang_export_fp);
 		aFree(lang_export_file);

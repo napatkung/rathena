@@ -25,7 +25,6 @@ extern "C" {
  extern char* SCRIPT_CONF_NAME;
  extern char* GRF_PATH_FILENAME;
 // Set during startup when attempting to export the lang, unset after server initialization is over
- extern FILE *lang_export_fp;
  extern char *lang_export_file; // for lang_export_fp
 //char
  extern char* CHAR_CONF_NAME;
