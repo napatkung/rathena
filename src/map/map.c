@@ -4377,7 +4377,7 @@ void do_final(void)
 		ShowStatus("Cleaning up maps [%d/%d]: %s..."CL_CLL"\r", i+1, map_num, map[i].name);
 		if (map[i].m >= 0) {
 			map_foreachinmap(cleanup_sub, i, BL_ALL);
-			channel_delete(map[i].channel);
+			channel_delete(map[i].channel,false);
 		}
 	}
 	ShowStatus("Cleaned up %d maps."CL_CLL"\n", map_num);
@@ -4728,12 +4728,12 @@ int do_init(int argc, char *argv[])
 	do_init_atcommand();
 	do_init_battle();
 	do_init_instance();
-	do_init_channel();
 	do_init_chrif();
 	do_init_clan();
 	do_init_clif();
 	do_init_script();
 	do_init_itemdb();
+	do_init_channel();
 	do_init_cashshop();
 	do_init_skill();
 	do_init_mob();
