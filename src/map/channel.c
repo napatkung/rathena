@@ -1358,10 +1358,11 @@ void channel_read_config(void) {
 	config_setting_t *chsys = NULL;
 	config_setting_t *colors = NULL;
 	config_setting_t *chan_setting = NULL;
-	const char *config_filename = "conf/channels.conf"; // FIXME hardcoded name
 
-	if (conf_read_file(&channels_conf, config_filename))
+	if (conf_read_file(&channels_conf, channel_conf)) {
+		ShowError("Cannot read file '%s' for channel connfig.\n", channel_conf);
 		return;
+	}
 
 	chan_setting = config_lookup(&channels_conf, "channel_config");
 	if (chan_setting != NULL) {
@@ -1449,7 +1450,7 @@ void channel_read_config(void) {
 			}
 		}
 
-		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' channels in '"CL_WHITE"%s"CL_RESET"'.\n", db_size(channel_db), config_filename);
+		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' channels in '"CL_WHITE"%s"CL_RESET"'.\n", db_size(channel_db), channel_conf);
 		config_destroy(&channels_conf);
 	}
 }
