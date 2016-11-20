@@ -190,6 +190,12 @@ struct s_pc_itemgrouphealrate {
 	short rate; /// Rate
 };
 
+/// bResEff2 struct
+struct s_pc_resSC {
+	sc_type sc;
+	short rate;
+};
+
 ///Timed bonus 'bonus_script' struct [Cydh]
 struct s_bonus_script_entry {
 	struct script_code *script;
@@ -705,6 +711,9 @@ struct map_session_data {
 	struct s_pc_itemgrouphealrate **itemgrouphealrate; /// List of Item Group Heal rate bonus
 	uint8 itemgrouphealrate_count; /// Number of rate bonuses
 
+	struct s_pc_resSC **resSC, **resSC2;
+	unsigned short resSC_count, resSC2_count;
+
 	/* Expiration Timer ID */
 	int expiration_tid;
 	time_t expiration_time;
@@ -740,6 +749,8 @@ struct map_session_data {
 
 extern struct eri *pc_sc_display_ers; /// Player's SC display table
 extern struct eri *pc_itemgrouphealrate_ers; /// Player's Item Group Heal Rate table
+extern struct eri *pc_resSC_ers; /// Player's bResSC table
+extern struct eri *pc_resSC2_ers; /// Player's bResSC2 table
 
 /**
  * ERS for the bulk of pc vars
@@ -1325,6 +1336,11 @@ void pc_show_questinfo(struct map_session_data *sd);
 void pc_show_questinfo_reinit(struct map_session_data *sd);
 
 bool pc_job_can_entermap(enum e_job jobid, int m, int group_lv);
+
+short pc_resSC(struct map_session_data *sd, sc_type type);
+void pc_resSC_clear(struct map_session_data *sd);
+short pc_resSC2(struct map_session_data *sd, sc_type type);
+void pc_resSC2_clear(struct map_session_data *sd);
 
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 int pc_level_penalty_mod(int level_diff, uint32 mob_class, enum e_mode mode, int type);

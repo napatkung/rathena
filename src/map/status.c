@@ -3448,6 +3448,8 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 	pc_delautobonus(sd,sd->autobonus3,ARRAYLENGTH(sd->autobonus3),true);
 
 	pc_itemgrouphealrate_clear(sd);
+	pc_resSC_clear(sd);
+	pc_resSC2_clear(sd);
 
 	running_npc_stat_calc_event = true;
 	npc_script_event(sd, NPCE_STATCALC);
@@ -8041,6 +8043,12 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 			tick_def2 = status->luk * 100;
 			break;
 		default:
+			if (sd) { // Adjust the rate from bResSC and bResSC2 [Cydh]
+				if (sd->resSC2 && sd->resSC2_count)
+					rate -= pc_resSC2(sd, type);
+				if (sd->resSC && sd->resSC_count)
+					rate -= rate * pc_resSC(sd, type) / 10000;
+			}
 			// Effect that cannot be reduced? Likely a buff.
 			if (!(rnd()%10000 < rate))
 				return 0;
@@ -8093,6 +8101,9 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 		rate -= rate*sc_def/10000;
 		rate -= sc_def2;
 
+		if (sd && sd->resSC2 && sd->resSC2_count)
+			rate -= pc_resSC2(sd, type);
+
 		// Minimum chances
 		switch (type) {
 			case SC_BITE:
@@ -8107,6 +8118,9 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 			if( sd->sc.data[SC_COMMONSC_RESIST] )
 				rate -= rate*sd->sc.data[SC_COMMONSC_RESIST]->val1/100;
 		}
+
+		if (sd && sd->resSC && sd->resSC_count)
+			rate -= rate * pc_resSC(sd, type) / 10000;
 
 		// Aegis accuracy
 		if(rate > 0 && rate%10 != 0) rate += (10 - rate%10);
