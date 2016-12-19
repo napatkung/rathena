@@ -213,21 +213,21 @@ int quest_delete(TBL_PC *sd, int quest_id)
  */
 int quest_update_objective_sub(struct block_list *bl, va_list ap)
 {
-	struct map_session_data *sd;
-	int mob_id, party_id;
+	struct map_session_data *sd = NULL, *killer = NULL;
+	struct mob_data *md = NULL;
 
 	nullpo_ret(bl);
 	nullpo_ret(sd = (struct map_session_data *)bl);
 
-	party_id = va_arg(ap,int);
-	mob_id = va_arg(ap,int);
+	killer = va_arg(ap,struct map_session_data *);
+	md = va_arg(ap,struct mob_data *);
 
 	if( !sd->avail_quests )
 		return 0;
-	if( sd->status.party_id != party_id )
+	if( sd->status.party_id != killer->status.party_id )
 		return 0;
 
-	quest_update_objective(sd, mob_id);
+	quest_update_objective(sd, md, killer);
 
 	return 1;
 }
@@ -237,25 +237,58 @@ int quest_update_objective_sub(struct block_list *bl, va_list ap)
  * @param sd : Character's data
  * @param mob_id : Monster ID
  */
-void quest_update_objective(TBL_PC *sd, int mob_id)
+void quest_update_objective(TBL_PC *sd, struct mob_data *md, struct map_session_data *killer)
 {
 	int i, j;
 
+	nullpo_retv(sd);
+	nullpo_retv(md);
+
 	for( i = 0; i < sd->avail_quests; i++ ) {
 		struct quest_db *qi = NULL;
+		int dist = 0;
+		bool objective_updated = false;
 
 		if( sd->quest_log[i].state == Q_COMPLETE ) // Skip complete quests
 			continue;
 
-		qi = quest_search(sd->quest_log[i].quest_id);
+		qi = (struct quest_db *)idb_get(questdb, sd->quest_log[i].quest_id);
+
+		if (!qi)
+			continue;
+
+		// Distance checking
+		if (sd != killer && !(dist = check_distance_bl(&sd->bl, (qi->flag.killer_as_center) ? &killer->bl : &md->bl, qi->range)))
+			continue;
 
 		for( j = 0; j < qi->objectives_count; j++ ) {
-			if( qi->objectives[j].mob == mob_id && sd->quest_log[i].count[j] < qi->objectives[j].count )  {
+			if( qi->objectives[j].mob == md->mob_id && sd->quest_log[i].count[j] < qi->objectives[j].count) {
 				sd->quest_log[i].count[j]++;
 				sd->save_quest = true;
-				clif_quest_update_objective(sd, &sd->quest_log[i], mob_id);
+				clif_quest_update_objective(sd, &sd->quest_log[i], md->mob_id);
+				objective_updated = true;
 			}
 		}
+
+		// Checking for autocomplete
+		if (qi->flag.autocomplete) {
+			uint8 completes = 0;
+
+			for( j = 0; j < qi->objectives_count; j++ ) {
+				if( sd->quest_log[i].count[j] >= qi->objectives[j].count)
+					++completes;
+			}
+
+			if (completes == qi->objectives_count) {
+				quest_update_status(sd, qi->id, Q_COMPLETE);
+				pc_show_questinfo(sd);
+			}
+		}
+
+		// Item drop skipping
+		if ((!objective_updated && qi->flag.nomore_drop) || // Objectives are complete
+			(qi->flag.drop_killer_only && sd != killer)) // Only for killer
+			continue;
 
 		// process quest-granted extra drop bonuses
 		for (j = 0; j < qi->dropitem_count; j++) {
@@ -263,7 +296,7 @@ void quest_update_objective(TBL_PC *sd, int mob_id)
 			struct item item;
 			int temp;
 
-			if (dropitem->mob_id != 0 && dropitem->mob_id != mob_id)
+			if (dropitem->mob_id != 0 && dropitem->mob_id != md->mob_id)
 				continue;
 			// TODO: Should this be affected by server rates?
 			if (dropitem->rate < 10000 && rnd()%10000 >= dropitem->rate)
@@ -496,6 +529,7 @@ void quest_read_txtdb(void)
 
 			if (!quest->id) {
 				quest->id = quest_id;
+				quest->range = AREA_SIZE;
 				idb_put(questdb, quest->id, quest);
 			}
 			count++;
@@ -506,12 +540,60 @@ void quest_read_txtdb(void)
 	}
 }
 
+static bool questdb_read_miscdb(char* str[], int columns, int current) {
+	int quest_id = strtoul(str[0], NULL, 0);
+	int flag = strtoul(str[1], NULL, 0);
+	unsigned short range = (unsigned short)strtoul(str[2], NULL, 0);
+	struct quest_db *quest = (struct quest_db *)idb_get(questdb, quest_id);
+
+	if (!quest) {
+		ShowError("questdb_read_miscdb: Invalid quest with ID '%s'.\n", str[0]);
+		return false;
+	}
+
+	quest->flag.autocomplete = (flag&1)?1:0;
+	quest->flag.nomore_drop = (flag&2)?1:0;
+	quest->flag.drop_killer_only = (flag&4)?1:0;
+	quest->flag.killer_as_center = (flag&8)?1:0;
+	if (range)
+		quest->range = range;
+
+	return true;
+}
+
 /**
  * Loads Quest DB
  */
 static void quest_read_db(void)
 {
+	int i;
+	const char* dbsubpath[] = {
+		"",
+		"/"DBIMPORT,
+	};
+
 	quest_read_txtdb();
+	
+	for(i=0; i<ARRAYLENGTH(dbsubpath); i++){
+		uint8 n1 = (uint8)(strlen(db_path)+strlen(dbsubpath[i])+1);
+		uint8 n2 = (uint8)(strlen(db_path)+strlen(DBPATH)+strlen(dbsubpath[i])+1);
+		char* dbsubpath1 = (char*)aMalloc(n1+1);
+		char* dbsubpath2 = (char*)aMalloc(n2+1);
+		
+
+		if(i==0) {
+			safesnprintf(dbsubpath1,n1,"%s%s",db_path,dbsubpath[i]);
+			safesnprintf(dbsubpath2,n2,"%s/%s%s",db_path,DBPATH,dbsubpath[i]);
+		}
+		else {
+			safesnprintf(dbsubpath1,n1,"%s%s",db_path,dbsubpath[i]);
+			safesnprintf(dbsubpath2,n1,"%s%s",db_path,dbsubpath[i]);
+		}
+
+		sv_readdb(dbsubpath2, "quest_misc.txt", ',', 3, 3, -1, &questdb_read_miscdb, i);
+		aFree(dbsubpath1);
+		aFree(dbsubpath2);
+	}
 }
 
 /**

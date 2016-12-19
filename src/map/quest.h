@@ -27,6 +27,13 @@ struct quest_db {
 	struct quest_objective *objectives;
 	uint8 dropitem_count;
 	struct quest_dropitem *dropitem;
+	unsigned short range;  ///< Add custom range for party member get monster's kill counter [Cydh]
+	struct {
+		unsigned autocomplete : 1;	   ///< Makes quest with kill mission set to complete state automatically [Cydh]
+		unsigned nomore_drop : 1;	   ///< Makes quest doesn't give drop item if the objective is complete [Cydh]
+		unsigned drop_killer_only : 1; ///< Only drop the item only for the killer [Cydh]
+		unsigned killer_as_center: 1;  ///< Makes killer as center for distance checking, instead using killed mob [Cydh]
+	} flag;
 	StringBuf name;
 };
 
@@ -45,7 +52,7 @@ int quest_add(TBL_PC * sd, int quest_id);
 int quest_delete(TBL_PC * sd, int quest_id);
 int quest_change(TBL_PC * sd, int qid1, int qid2);
 int quest_update_objective_sub(struct block_list *bl, va_list ap);
-void quest_update_objective(TBL_PC * sd, int mob_id);
+void quest_update_objective(TBL_PC * sd, struct mob_data *md, struct map_session_data *killer);
 int quest_update_status(TBL_PC * sd, int quest_id, enum quest_state status);
 int quest_check(TBL_PC * sd, int quest_id, enum quest_check_type type);
 

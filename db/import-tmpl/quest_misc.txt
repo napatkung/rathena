@@ -1,0 +1,18 @@
+// Quest DB misc information
+//
+// Structure:
+//    quest_id,flags,range
+//
+// quest_id:
+//    See available quest at db/[pre-]re/quest_db.txt
+//
+// flags:
+//    The value is bitmask of
+//    1 : Sets the quest state to Q_COMPLETE if all objectives are completed
+//    2 : Does not give quest drop if objectives are completed
+//    4 : Gives quest drop only for the killer
+//    8 : Makes the killer as center for distance checking
+// 
+// range:
+//    The max distance area for party members get objective counter from the center.
+//    If 0 or no value defined, default range is AREA_SIZE.
