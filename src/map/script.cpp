@@ -8882,12 +8882,12 @@ BUILDIN_FUNC(getequipweaponlv)
 BUILDIN_FUNC(getequippercentrefinery)
 {
 	int i = -1,num;
-	bool enriched = false;
+	enum refine_cost_type cost_type = REFINE_COST_NORMAL;
 	TBL_PC *sd;
 
 	num = script_getnum(st,2);
-	if (script_hasdata(st, 3))
-		enriched = script_getnum(st, 3) != 0;
+	cost_type = (enum refine_cost_type)script_getnum(st, 3);
+
 
 	if (!script_charid2sd(4, sd)) {
 		script_pushint(st,0);
@@ -8900,7 +8900,7 @@ BUILDIN_FUNC(getequippercentrefinery)
 		enum refine_type type = REFINE_TYPE_SHADOW;
 		if (sd->inventory_data[i]->type != IT_SHADOWGEAR)
 			type = (enum refine_type)sd->inventory_data[i]->wlv;
-		script_pushint(st, status_get_refine_chance(type, (int)sd->inventory.u.items_inventory[i].refine, enriched));
+		script_pushint(st, status_get_refine_chance(type, (int)sd->inventory.u.items_inventory[i].refine, cost_type));
 	}
 	else
 		script_pushint(st,0);
@@ -23780,7 +23780,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(getequipisenableref,"i?"),
 	BUILDIN_DEF(getequiprefinerycnt,"i?"),
 	BUILDIN_DEF(getequipweaponlv,"i?"),
-	BUILDIN_DEF(getequippercentrefinery,"i?"),
+	BUILDIN_DEF(getequippercentrefinery,"ii?"),
 	BUILDIN_DEF(successrefitem,"i??"),
 	BUILDIN_DEF(failedrefitem,"i?"),
 	BUILDIN_DEF(downrefitem,"i??"),

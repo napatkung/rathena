@@ -77,18 +77,26 @@
 		}
 
 		.@option = select(.@mate$[0],.@mate$[1],.@mate$[2],"Cancel");
-		if (.@option == 4) {
-			mes "[Shadow Blacksmith]";
-			mes "You've cancelled refining.";
-			close;
-		}
-		else if (.@option == 3) { // HD
-			if (getequiprefinerycnt(.@part) < 7) {
+		switch (.@option) {
+			case 4:
 				mes "[Shadow Blacksmith]";
-				mes "HD Ore can only used for +7 or higher refine level items.";
+				mes "You've cancelled refining.";
 				close;
-			}
-			.@hoihoi = 1;
+			case 3: // HD
+				if (getequiprefinerycnt(.@part) < 7) {
+					mes "[Shadow Blacksmith]";
+					mes "HD Ore can only used for +7 or higher refine level items.";
+					close;
+				}
+				.@refine_type = REFINE_COST_HD;
+				.@hoihoi = 1;
+				break;
+			case 2: // Enriched
+				.@refine_type = REFINE_COST_ENRICHED;
+				break;
+			case 1:
+				.@refine_type = REFINE_COST_NORMAL;
+				break;
 		}
 		.@choose = .@material[.@option-1];
 		if (!countitem(.@choose)) {
@@ -111,7 +119,7 @@
 			mes "This item cannot be refined.";
 			close;
 		}
-		if (getequippercentrefinery(.@part) < 100) {
+		if (getequippercentrefinery(.@part, .@refine_type) < 100) {
 			mes "[Shadow Blacksmith]";
 			mes "The safety refine level for Shadow Equipment is +4.";
 			if (!.@hoihoi)
@@ -131,7 +139,7 @@
 		next;
 		delitem .@choose,1;
 		Zeny -= .@zeny_cost;
-		if (getequippercentrefinery(.@part, .@option == 2) > rand(100)) {
+		if (getequippercentrefinery(.@part, .@refine_type) > rand(100)) {
 			successrefitem .@part;
 			mes "[Shadow Blacksmith]";
 			mes "It worked! It worked!";

@@ -3870,6 +3870,9 @@
 	export_constant(REFINE_COST_HD);
 	export_constant(REFINE_COST_ENRICHED);
 	export_constant(REFINE_COST_OVER10_HD);
+	export_constant(REFINE_COST_BLESSED);
+	export_constant(REFINE_COST_EVT_ENRICHED);
+	export_constant(REFINE_COST_EVT_OVER10_HD);
 	export_constant(REFINE_COST_MAX);
 
 	/* refine information types */

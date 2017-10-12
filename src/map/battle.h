@@ -633,7 +633,6 @@ extern struct Battle_Config
 	int guild_alliance_onlygm;
 	int feature_achievement;
 	int allow_bound_sell;
-	int event_refine_chance;
 	int feature_refineui;
 
 #include "../custom/battle_config_struct.inc"

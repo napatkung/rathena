@@ -6418,6 +6418,7 @@ void clif_map_property_mapall(int map_idx, enum map_property property)
 ///     0 = success
 ///     1 = failure
 ///     2 = downgrade
+///     3 = failure without breaking nor downgrade
 void clif_refine(int fd, int fail, int index, int val)
 {
 	WFIFOHEAD(fd,packet_len(0x188));
@@ -20108,6 +20109,9 @@ static inline bool clif_refineui_materials_sub( struct item *item, struct item_d
 		return false;
 	}
 
+	if (!status_get_refine_cost(id->wlv, type, REFINE_REFINEUI_ENABLED))
+		return false;
+
 	// Get the material that is required to refine this item
 	materials[index].cost.nameid = status_get_refine_cost( id->wlv, type, REFINE_MATERIAL_ID );
 	// Get the amount of zeny that is required to refine the item with this material
@@ -20115,7 +20119,7 @@ static inline bool clif_refineui_materials_sub( struct item *item, struct item_d
 	// Get the breaking chance of the item with this material
 	materials[index].cost.breakable = status_get_refine_cost( id->wlv, type, REFINE_BREAKABLE );
 	// Get the chance for refining the item with this material
-	materials[index].chance = status_get_refine_chance( (enum refine_type)id->wlv, item->refine, type == REFINE_COST_ENRICHED );
+	materials[index].chance = status_get_refine_chance( (enum refine_type)id->wlv, item->refine, type);
 
 	// Either of the values was not set
 	if( materials[index].cost.nameid == 0 || materials[index].cost.zeny == 0 || materials[index].chance == 0 ){
@@ -20140,33 +20144,18 @@ static inline uint8 clif_refineui_materials( struct item *item, struct item_data
 	// Zero the memory
 	memset( materials, 0, sizeof(struct refine_materials)*REFINEUI_MAT_CNT );
 
-	// Is the item +10 or above
-	if( item->refine >= 10 ){
-		// Normal refine requirements for +10 and above
-		if( clif_refineui_materials_sub( item, id, materials, count, REFINE_COST_OVER10 ) ){
-			count++;
-		}
+	/**
+	 * Default material indexing is follow as
+	 * 0: Normal refine for +1 ~ +10 or +11 ~ +20
+	 * 1: HD materials for +7 ~ +9 and +11 ~ +20
+	 * 2: Enriched
+	 * 3: Undecided yet, you can add yours later
+	 * 4: Is always for 'Blacksmith Blessing' item to prevent downrefine/break
+	 **/
 
-		// HD refine requirements for +10 and above
-		if( clif_refineui_materials_sub( item, id, materials, count, REFINE_COST_OVER10_HD ) ){
+	for (int i = 0; i < REFINE_COST_MAX; i++) {
+		if (clif_refineui_materials_sub(item, id, materials, count, (enum refine_cost_type)i))
 			count++;
-		}
-	}else{
-		// Normal refine requirements
-		if( clif_refineui_materials_sub( item, id, materials, count, REFINE_COST_NORMAL ) ){
-			count++;
-		}
-		
-		// HD refine requirements only if the refine is +7 ~ +9
-		// TODO: Remove this hardcoded check, add HD values separetd from 'normal' rates
-		if( item->refine >= 7 && item->refine <= 9 && clif_refineui_materials_sub( item, id, materials, count, REFINE_COST_HD ) ){
-			count++;
-		}
-	}
-
-	// Enriched refine requirements
-	if( clif_refineui_materials_sub( item, id, materials, count, REFINE_COST_ENRICHED ) ){
-		count++;
 	}
 
 	// Blacksmith Blessing requirements if any
@@ -20385,6 +20374,9 @@ void clif_parse_refineui_refine( int fd, struct map_session_data* sd ){
 			return;
 		}
 	}
+	else {
+		use_blacksmith_blessing = false;
+	}
 
 	// Try to refine the item
 	if( materials[i].chance >= rnd() % 100 ){
@@ -20398,7 +20390,7 @@ void clif_parse_refineui_refine( int fd, struct map_session_data* sd ){
 		// Failure
 
 		if (use_blacksmith_blessing) { // Blacksmith Blessing were used, no break & no down refine
-			clif_refine(fd, 1, index, item->refine);
+			clif_refine(fd, 3, index, item->refine);
 			clif_refineui_info(sd, index);
 		} else if (materials[i].cost.breakable) { // Delete the item if it is breakable
 			clif_refine( fd, 1, index, item->refine );

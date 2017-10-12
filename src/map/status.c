@@ -38,7 +38,7 @@ enum e_regen {
 
 // Bonus values and upgrade chances for refining equipment
 static struct {
-	int chance[REFINE_CHANCE_TYPE_MAX][MAX_REFINE]; /// Success chance
+	int chance[REFINE_COST_MAX][MAX_REFINE]; /// Success chance
 	int bonus[MAX_REFINE]; /// Cumulative fixed bonus damage
 	int randombonus_max[MAX_REFINE]; /// Cumulative maximum random bonus damage
 	struct refine_cost cost[REFINE_COST_MAX];
@@ -14106,28 +14106,16 @@ static int status_natural_heal_timer(int tid, unsigned int tick, int id, intptr_
  * Get the chance to upgrade a piece of equipment
  * @param wlv: The weapon type of the item to refine (see see enum refine_type)
  * @param refine: The target's refine level
+ * @param type: refine type for cost & rate
  * @return The chance to refine the item, in percent (0~100)
  */
-int status_get_refine_chance(enum refine_type wlv, int refine, bool enriched)
+int status_get_refine_chance(enum refine_type wlv, int refine, enum refine_cost_type type)
 {
-	enum e_refine_chance_type type;
-
-	if ( refine < 0 || refine >= MAX_REFINE)
+	if (refine < 0 || refine >= MAX_REFINE)
 		return 0;
-	
-	if( battle_config.event_refine_chance ){
-		if( enriched ){
-			type = REFINE_CHANCE_EVENT_ENRICHED;
-		}else{
-			type = REFINE_CHANCE_EVENT_NORMAL;
-		}
-	}else{
-		if( enriched ){
-			type = REFINE_CHANCE_ENRICHED;
-		}else{
-			type = REFINE_CHANCE_NORMAL;
-		}
-	}
+
+	if (type < REFINE_COST_NORMAL || type >= REFINE_COST_MAX)
+		return 0;
 
 	return refine_info[wlv].chance[type][refine];
 }
@@ -14266,7 +14254,12 @@ static bool status_yaml_readdb_refine_sub(yamlwrapper* wrapper, int refine_info_
 	int bonus_per_level = yaml_get_int(wrapper, "StatsPerLevel");
 	int random_bonus_start_level = yaml_get_int(wrapper, "RandomBonusStartLevel");
 	int random_bonus = yaml_get_int(wrapper, "RandomBonusValue");
-
+	struct s_refine_type {
+		char *str;
+		int id;
+	};
+	struct s_refine_type **refine_types = NULL;
+	uint8 refine_type_num = 0;
 	yamlwrapper* costs = yaml_get_subnode(wrapper, "Costs");
 	yamliterator* it = yaml_get_iterator(costs);
 	if (yaml_iterator_is_valid(it)) {
@@ -14283,19 +14276,42 @@ static bool status_yaml_readdb_refine_sub(yamlwrapper* wrapper, int refine_info_
 			}
 
 			char* refine_cost_const = yaml_get_c_string(type, "Type");
-			if (ISDIGIT(refine_cost_const[0]))
-				idx = atoi(refine_cost_const);
-			else
-				script_get_constant(refine_cost_const, &idx);
+			if (!script_get_constant(refine_cost_const, &idx)) {
+				ShowError("status_yaml_readdb_refine_sub: Cost type '%s' is not defined. The type must be defined as script constants.\n", refine_cost_const);
+				continue;
+			}
 			price = yaml_get_int(type, "Price");
 			material = yaml_get_uint16(type, "Material");
 
+			int len = strlen(refine_cost_const) + 1;
+			if (refine_types && refine_type_num) {
+				int i;
+				ARR_FIND(0, refine_type_num, i, strcmpi(refine_cost_const, refine_types[i]->str) == 0);
+				if (i < refine_type_num) {
+					ShowError("status_yaml_readdb_refine_sub: Redifinition of cost type '%s'\n", refine_cost_const);
+					continue;
+				}
+			}
+			RECREATE(refine_types, struct s_refine_type*, refine_type_num + 1);
+			CREATE(refine_types[refine_type_num], struct s_refine_type, 1);
+			CREATE(refine_types[refine_type_num]->str, char, len);
+			safestrncpy(refine_types[refine_type_num]->str, refine_cost_const, len);
+			refine_types[refine_type_num]->id = idx;
+			refine_type_num++;
+
 			refine_info[refine_info_index].cost[idx].nameid = material;
 			refine_info[refine_info_index].cost[idx].zeny = price;
-			if( yaml_node_is_defined(type, "Breakable" ) ){
+			if (yaml_node_is_defined(type, "Breakable")) {
 				refine_info[refine_info_index].cost[idx].breakable = yaml_get_boolean(type, "Breakable");
-			}else{
+			}
+			else {
 				refine_info[refine_info_index].cost[idx].breakable = true;
+			}
+			if (yaml_node_is_defined(type, "RefineUI")) {
+				refine_info[refine_info_index].cost[idx].refineui = yaml_get_boolean(type, "RefineUI");
+			}
+			else {
+				refine_info[refine_info_index].cost[idx].refineui = true;
 			}
 
 			aFree(refine_cost_const);
@@ -14304,6 +14320,11 @@ static bool status_yaml_readdb_refine_sub(yamlwrapper* wrapper, int refine_info_
 	}
 	yaml_destroy_wrapper(costs);
 	yaml_iterator_destroy(it);
+
+	if (!refine_type_num || !refine_types) {
+		ShowError("status_yaml_readdb_refine_sub: No refine type defined.\n");
+		return false;
+	}
 
 	yamlwrapper* rates = yaml_get_subnode(wrapper, "Rates");
 	it = yaml_get_iterator(rates);
@@ -14317,16 +14338,14 @@ static bool status_yaml_readdb_refine_sub(yamlwrapper* wrapper, int refine_info_
 				continue;
 			}
 
-			if (yaml_node_is_defined(level, "NormalChance"))
-				refine_info[refine_info_index].chance[REFINE_CHANCE_NORMAL][refine_level] = yaml_get_int(level, "NormalChance");
-			if (yaml_node_is_defined(level, "EnrichedChance"))
-				refine_info[refine_info_index].chance[REFINE_CHANCE_ENRICHED][refine_level] = yaml_get_int(level, "EnrichedChance");
-			if (yaml_node_is_defined(level, "EventNormalChance"))
-				refine_info[refine_info_index].chance[REFINE_CHANCE_EVENT_NORMAL][refine_level] = yaml_get_int(level, "EventNormalChance");
-			if (yaml_node_is_defined(level, "EventEnrichedChance"))
-				refine_info[refine_info_index].chance[REFINE_CHANCE_EVENT_ENRICHED][refine_level] = yaml_get_int(level, "EventEnrichedChance");
 			if (yaml_node_is_defined(level, "Bonus"))
 				refine_info[refine_info_index].bonus[refine_level] = yaml_get_int(level, "Bonus");
+
+			for (int i = 0; i < refine_type_num; i++) {
+				if (yaml_node_is_defined(level, refine_types[i]->str)) {
+					refine_info[refine_info_index].chance[refine_types[i]->id][refine_level] = yaml_get_int(level, refine_types[i]->str);
+				}
+			}
 
 			if (refine_level >= random_bonus_start_level - 1)
 				refine_info[refine_info_index].randombonus_max[refine_level] = random_bonus * (refine_level - random_bonus_start_level + 2);
@@ -14356,7 +14375,14 @@ static bool status_yaml_readdb_refine_sub(yamlwrapper* wrapper, int refine_info_
 	}
 	yaml_destroy_wrapper(rates);
 	yaml_iterator_destroy(it);
-
+	for (uint8 i = 0; i < refine_type_num; i++) {
+		if (refine_types[i] && refine_types[i]->str) {
+			aFree(refine_types[i]->str);
+		}
+		aFree(refine_types[i]);
+	}
+	if (refine_types)
+		aFree(refine_types);
 	return true;
 }
 
@@ -14408,6 +14434,8 @@ int status_get_refine_cost(int weapon_lv, int type, enum refine_info_type what) 
 			return refine_info[weapon_lv].cost[type].zeny;
 		case REFINE_BREAKABLE:
 			return refine_info[weapon_lv].cost[type].breakable;
+		case REFINE_REFINEUI_ENABLED:
+			return refine_info[weapon_lv].cost[type].refineui;
 	}
 
 	return 0;
@@ -14497,10 +14525,10 @@ int status_readdb(void)
 	{
 		memset(&refine_info[i].cost, 0, sizeof(struct refine_cost)*REFINE_COST_MAX);
 		memset(&refine_info[i].bs_blessing, 0, sizeof(struct refine_bs_blessing)*MAX_REFINE);
-		for(j = 0; j < REFINE_CHANCE_TYPE_MAX; j++)
+		for(j = 0; j < REFINE_COST_MAX; j++)
 			for(k=0;k<MAX_REFINE; k++)
 			{
-				refine_info[i].chance[j][k] = 100;
+				refine_info[i].chance[j][k] = 0;
 				refine_info[i].bonus[k] = 0;
 				refine_info[i].randombonus_max[k] = 0;
 			}
