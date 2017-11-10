@@ -14298,6 +14298,8 @@ static bool status_yaml_readdb_refine_sub(const YAML::Node &node, int refine_inf
 
 		refine_info[refine_info_index].cost[idx].nameid = material;
 		refine_info[refine_info_index].cost[idx].zeny = price;
+		refine_info[refine_info_index].cost[idx].breakable = (type["Breakable"].IsDefined()) ? type["Breakable"].as<bool>() : true;
+		refine_info[refine_info_index].cost[idx].refineui = (type["RefineUI"].IsDefined()) ? type["RefineUI"].as<bool>() : true;
 	}
 
 	const YAML::Node &rates = node["Rates"];
@@ -14309,14 +14311,53 @@ static bool status_yaml_readdb_refine_sub(const YAML::Node &node, int refine_inf
 		if (refine_level >= MAX_REFINE)
 			continue;
 
-		if (level["NormalChance"].IsDefined())
-			refine_info[refine_info_index].chance[REFINE_CHANCE_NORMAL][refine_level] = level["NormalChance"].as<int>();
-		if (level["EnrichedChance"].IsDefined())
-			refine_info[refine_info_index].chance[REFINE_CHANCE_ENRICHED][refine_level] = level["EnrichedChance"].as<int>();
-		if (level["EventNormalChance"].IsDefined())
-			refine_info[refine_info_index].chance[REFINE_CHANCE_EVENT_NORMAL][refine_level] = level["EventNormalChance"].as<int>();
-		if (level["EventEnrichedChance"].IsDefined())
-			refine_info[refine_info_index].chance[REFINE_CHANCE_EVENT_ENRICHED][refine_level] = level["EventEnrichedChance"].as<int>();
+		if (level["Chances"].IsDefined()) {
+			const YAML::Node &chances = level["Chances"];
+			for (const auto chanceit : chances) {
+				int i;
+				const YAML::Node &chance = chanceit;
+				const std::string keys[] = { "Type", "Rate" };
+
+				for (i = 0; i < ARRAYLENGTH(keys); i++) {
+					if (!chance[keys[i]].IsDefined()) {
+						ShowWarning("status_yaml_readdb_refine_sub: Invalid Chances with undefined " CL_WHITE "%s" CL_RESET "in file" CL_WHITE "%s" CL_RESET ".\n", keys[i].c_str(), file_name.c_str());
+						break;
+					}
+				}
+				if (i != ARRAYLENGTH(keys)) {
+					ShowError("status_yaml_readdb_refine_sub: Skipping incomplete node for Chances list.\n");
+					continue;
+				}
+
+				std::string chance_type = chance["Type"].as<std::string>();
+				int chance_idx = 0;
+				if (!script_get_constant(chance_type.c_str(), &chance_idx)) {
+					ShowWarning("status_yaml_readdb_refine_sub: Invalid Chance Type " CL_WHITE "%s" CL_RESET "in file" CL_WHITE "%s" CL_RESET ".\n", chance_type.c_str(), file_name.c_str());
+					continue;
+				}
+				refine_info[refine_info_index].chance[chance_idx][refine_level] = chance["Rate"].as<int>();
+			}
+		}
+
+		if (level["BlacksmithBlessing"].IsDefined()) {
+			int i = 0;
+			const YAML::Node &bb = level["BlacksmithBlessing"];
+			const std::string keys[] = { "ItemID", "Count" };
+
+			for (i = 0; i < ARRAYLENGTH(keys); i++) {
+				if (!bb[keys[i]].IsDefined()) {
+					ShowWarning("status_yaml_readdb_refine_sub: Invalid BlacksmithBlessing with undefined " CL_WHITE "%s" CL_RESET "in file" CL_WHITE "%s" CL_RESET ".\n", keys[i].c_str(), file_name.c_str());
+					break;
+				}
+			}
+			if (i != ARRAYLENGTH(keys)) {
+				ShowError("status_yaml_readdb_refine_sub: Skipping incomplete node for BlacksmithBlessing list.\n");
+				continue;
+			}
+			refine_info[refine_info_index].bs_blessing[refine_level].nameid = bb["ItemID"].as<uint16>();
+			refine_info[refine_info_index].bs_blessing[refine_level].count = bb["Count"].as<uint16>();
+		}
+
 		if (level["Bonus"].IsDefined())
 			refine_info[refine_info_index].bonus[refine_level] = level["Bonus"].as<int>();
 
