@@ -16748,7 +16748,7 @@ void skill_weaponrefine(struct map_session_data *sd, int idx)
 				clif_upgrademessage(sd->fd, 3, material[ditem->wlv]);
 				return;
 			}
-			per = status_get_refine_chance(static_cast<refine_type>(ditem->wlv), (int)item->refine, false);
+			per = status_get_refine_chance(static_cast<refine_type>(ditem->wlv), (int)item->refine, /*(item->refine > 9) ? REFINE_COST_OVER10 :*/ REFINE_COST_NORMAL);
 			if( sd->class_&JOBL_THIRD )
 				per += 10;
 			else

@@ -1969,7 +1969,7 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	826,{
 					mes "Oh, this is excellent! This piece here has been perfectly refined! But this isn't what I want. I can't do any work on this at all.";
 					close;
 				}
-				if (GetEquipPercentRefinery(.@part) == 100) {
+				if (getequippercentrefinery(.@part, REFINE_COST_NORMAL) == 0) {
 					mes "[Vestri]";
 					mes "This item isn't even a challenge to upgrade. You can get humans to do this kind of beginner's stuff. Get them to refine it first.";
 					next;
@@ -2037,7 +2037,7 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	826,{
 					mes "Hurry up and get one.";
 					close;
 				}
-				if (getequippercentrefinery(.@part) > rand(100)) {
+				if (getequippercentrefinery(.@part, REFINE_COST_NORMAL) > rand(100)) {
 					mes "^3355FF*Clang Clang!*^000000";
 					successrefitem .@part;
 					next;
@@ -2186,7 +2186,7 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	826,{
 					mes "Oh, this is excellent! This piece here has been perfectly refined! But this isn't what I want. I can't do any work on this at all.";
 					close;
 				}
-				if (GetEquipPercentRefinery(.@part) == 100) {
+				if (getequippercentrefinery(.@part, REFINE_COST_NORMAL) == 0) {
 					mes "[Vestri]";
 					mes "This item isn't even a challenge to upgrade. You can get humans to do this kind of beginner's stuff. Get them to refine it first.";
 					next;
@@ -2248,7 +2248,7 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	826,{
 					mes "Hurry up and get one.";
 					close;
 				}
-				if (getequippercentrefinery(.@part) > rand(100)) {
+				if (getequippercentrefinery(.@part, REFINE_COST_NORMAL) > rand(100)) {
 					mes "^3355FF*Clang Clang!*^000000";
 					successrefitem .@part;
 					next;

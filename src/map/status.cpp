@@ -46,10 +46,11 @@ enum e_regen {
 
 // Bonus values and upgrade chances for refining equipment
 static struct {
-	int chance[REFINE_CHANCE_TYPE_MAX][MAX_REFINE]; /// Success chance
+	int chance[REFINE_COST_MAX][MAX_REFINE]; /// Success chance
 	int bonus[MAX_REFINE]; /// Cumulative fixed bonus damage
 	int randombonus_max[MAX_REFINE]; /// Cumulative maximum random bonus damage
 	struct refine_cost cost[REFINE_COST_MAX];
+	struct refine_bs_blessing bs_blessing[MAX_REFINE];
 } refine_info[REFINE_TYPE_MAX];
 
 static int atkmods[3][MAX_WEAPON_TYPE];	/// ATK weapon modification for size (size_fix.txt)
@@ -14126,18 +14127,37 @@ static int status_natural_heal_timer(int tid, unsigned int tick, int id, intptr_
  * Get the chance to upgrade a piece of equipment
  * @param wlv: The weapon type of the item to refine (see see enum refine_type)
  * @param refine: The target's refine level
+ * @param type: refine type for cost & rate
  * @return The chance to refine the item, in percent (0~100)
  */
-int status_get_refine_chance(enum refine_type wlv, int refine, bool enriched)
+int status_get_refine_chance(enum refine_type wlv, int refine, enum refine_cost_type type)
 {
-	if ( refine < 0 || refine >= MAX_REFINE)
+	if (refine < 0 || refine >= MAX_REFINE)
 		return 0;
-	
-	int type = enriched ? 1 : 0;
-	if (battle_config.event_refine_chance)
-		type |= 2;
+
+	if (type < REFINE_COST_NORMAL || type >= REFINE_COST_MAX)
+		return 0;
 
 	return refine_info[wlv].chance[type][refine];
+}
+
+/**
+ * Get Blacksmith Blessing requirement for refining
+ * @param bs Pointer to store the value
+ * @param type Armor or weapon level (see enum refine_type)
+ * @param refine Current refine level
+ * @return True if has valid value, false otherwise.
+ **/
+bool status_get_refine_blacksmithBlessing(struct refine_bs_blessing* bs, enum refine_type type, int refine)
+{
+	if (refine < 0 || refine >= MAX_REFINE)
+		return false;
+
+	if (type < REFINE_TYPE_ARMOR || type > REFINE_TYPE_SHADOW)
+		return false;
+
+	memcpy(bs, &refine_info[type].bs_blessing[refine], sizeof(struct refine_bs_blessing));
+	return true;
 }
 
 /**
@@ -14344,8 +14364,19 @@ static void status_yaml_readdb_refine(const std::string &directory, const std::s
  * @param what true = returns zeny, false = returns item id
  * @return Refine cost for a weapon level
  */
-int status_get_refine_cost(int weapon_lv, int type, bool what) {
-	return what ? refine_info[weapon_lv].cost[type].zeny : refine_info[weapon_lv].cost[type].nameid;
+int status_get_refine_cost(int weapon_lv, int type, enum refine_info_type what) {
+	switch( what ){
+		case REFINE_MATERIAL_ID:
+			return refine_info[weapon_lv].cost[type].nameid;
+		case REFINE_ZENY_COST:
+			return refine_info[weapon_lv].cost[type].zeny;
+		case REFINE_BREAKABLE:
+			return refine_info[weapon_lv].cost[type].breakable;
+		case REFINE_REFINEUI_ENABLED:
+			return refine_info[weapon_lv].cost[type].refineui;
+	}
+
+	return 0;
 }
 
 /**
@@ -14430,11 +14461,12 @@ int status_readdb(void)
 	// refine_db.yml
 	for(i=0;i<ARRAYLENGTH(refine_info);i++)
 	{
-		memset(refine_info[i].cost, 0, sizeof(struct refine_cost));
-		for(j = 0; j < REFINE_CHANCE_TYPE_MAX; j++)
+		memset(&refine_info[i].cost, 0, sizeof(struct refine_cost)*REFINE_COST_MAX);
+		memset(&refine_info[i].bs_blessing, 0, sizeof(struct refine_bs_blessing)*MAX_REFINE);
+		for(j = 0; j < REFINE_COST_MAX; j++)
 			for(k=0;k<MAX_REFINE; k++)
 			{
-				refine_info[i].chance[j][k] = 100;
+				refine_info[i].chance[j][k] = 0;
 				refine_info[i].bonus[k] = 0;
 				refine_info[i].randombonus_max[k] = 0;
 			}

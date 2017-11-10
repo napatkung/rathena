@@ -8891,12 +8891,12 @@ BUILDIN_FUNC(getequipweaponlv)
 BUILDIN_FUNC(getequippercentrefinery)
 {
 	int i = -1,num;
-	bool enriched = false;
+	enum refine_cost_type cost_type = REFINE_COST_NORMAL;
 	TBL_PC *sd;
 
 	num = script_getnum(st,2);
-	if (script_hasdata(st, 3))
-		enriched = script_getnum(st, 3) != 0;
+	cost_type = (enum refine_cost_type)script_getnum(st, 3);
+
 
 	if (!script_charid2sd(4, sd)) {
 		script_pushint(st,0);
@@ -8909,7 +8909,7 @@ BUILDIN_FUNC(getequippercentrefinery)
 		enum refine_type type = REFINE_TYPE_SHADOW;
 		if (sd->inventory_data[i]->type != IT_SHADOWGEAR)
 			type = (enum refine_type)sd->inventory_data[i]->wlv;
-		script_pushint(st, status_get_refine_chance(type, (int)sd->inventory.u.items_inventory[i].refine, enriched));
+		script_pushint(st, status_get_refine_chance(type, (int)sd->inventory.u.items_inventory[i].refine, cost_type));
 	}
 	else
 		script_pushint(st,0);
@@ -23644,9 +23644,33 @@ BUILDIN_FUNC(getequiprefinecost) {
 			weapon_lv = REFINE_TYPE_SHADOW;
 	}
 
-	script_pushint(st, status_get_refine_cost(weapon_lv, type, info != 0));
+	script_pushint(st, status_get_refine_cost(weapon_lv, type, (enum refine_info_type)info));
 
 	return SCRIPT_CMD_SUCCESS;
+}
+
+BUILDIN_FUNC(refineui){
+#if PACKETVER < 20161012
+	ShowError( "buildin_refineui: This command requires packet version 2016-10-12 or newer.\n" );
+	return SCRIPT_CMD_FAILURE;
+#else
+	struct map_session_data* sd;
+
+	if( !script_charid2sd(2,sd) ){
+		return SCRIPT_CMD_FAILURE;
+	}
+
+	if( !battle_config.feature_refineui ){
+		ShowError( "buildin_refineui: This command is disabled via configuration.\n" );
+		return SCRIPT_CMD_FAILURE;
+	}
+
+	if( !sd->state.refineui_open ){
+		clif_refineui_open(sd);
+	}
+
+	return SCRIPT_CMD_SUCCESS;
+#endif
 }
 
 /**
@@ -23816,7 +23840,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(getequipisenableref,"i?"),
 	BUILDIN_DEF(getequiprefinerycnt,"i?"),
 	BUILDIN_DEF(getequipweaponlv,"i?"),
-	BUILDIN_DEF(getequippercentrefinery,"i?"),
+	BUILDIN_DEF(getequippercentrefinery,"ii?"),
 	BUILDIN_DEF(successrefitem,"i??"),
 	BUILDIN_DEF(failedrefitem,"i?"),
 	BUILDIN_DEF(downrefitem,"i??"),
@@ -24318,8 +24342,9 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(achievementexists,"i?"),
 	BUILDIN_DEF(achievementupdate,"iii?"),
 
-
+	// Refine UI
 	BUILDIN_DEF(getequiprefinecost,"iii?"),
+	BUILDIN_DEF(refineui,"?"),
 	BUILDIN_DEF2(round, "round", "i"),
 	BUILDIN_DEF2(round, "ceil", "i"),
 	BUILDIN_DEF2(round, "floor", "i"),

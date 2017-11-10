@@ -12932,7 +12932,7 @@ izlude_d,153,126,1	duplicate(Refinery Owner Han#iz)	Refinery Owner Han#iz_d	4_M_
 				enable_items;
 				end;
 			}
-			if (getequippercentrefinery(.@part) < 100) {
+			if (getequippercentrefinery(.@part, REFINE_COST_NORMAL) < 100) {
 				mes "[Refining Machine Wagjak]";
 				mes "-Ddarritt!-";
 				mes "The user's confirmation required.";
@@ -12946,7 +12946,7 @@ izlude_d,153,126,1	duplicate(Refinery Owner Han#iz)	Refinery Owner Han#iz_d	4_M_
 					end;
 				}
 			}
-			if (getequippercentrefinery(.@part) <= rand(100)) {
+			if (getequippercentrefinery(.@part, REFINE_COST_NORMAL) <= rand(100)) {
 				failedrefitem .@part;
 				mes "[Refining Machine Wagjak]";
 				mes "Result : Fail";
@@ -13008,7 +13008,7 @@ izlude_d,153,126,1	duplicate(Refinery Owner Han#iz)	Refinery Owner Han#iz_d	4_M_
 		enable_items;
 		end;
 	}
-	if (getequippercentrefinery(.@part) < 100) {
+	if (getequippercentrefinery(.@part, REFINE_COST_NORMAL) < 100) {
 		mes "[Refining Machine Wagjak]";
 		mes "-Ddarritt!-";
 		mes "The user's confirmation required.";
@@ -13033,7 +13033,7 @@ izlude_d,153,126,1	duplicate(Refinery Owner Han#iz)	Refinery Owner Han#iz_d	4_M_
 		enable_items;
 		end;
 	}
-	if (getequippercentrefinery(.@part) <= rand(100)) {
+	if (getequippercentrefinery(.@part, REFINE_COST_NORMAL) <= rand(100)) {
 		failedrefitem .@part;
 		mes "[Refining Machine Wagjak]";
 		mes "Result : Fail";

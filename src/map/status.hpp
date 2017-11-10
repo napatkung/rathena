@@ -37,24 +37,41 @@ enum refine_type {
 	REFINE_TYPE_MAX		= 6
 };
 
-/// Refine cost type
+/// Refine cost & chance type
 enum refine_cost_type {
 	REFINE_COST_NORMAL = 0,
 	REFINE_COST_OVER10,
 	REFINE_COST_HD,
 	REFINE_COST_ENRICHED,
 	REFINE_COST_OVER10_HD,
+	REFINE_COST_BLESSED,
+	REFINE_COST_EVT_ENRICHED,
+	REFINE_COST_EVT_OVER10_HD,
 	REFINE_COST_MAX
+};
+
+// Refine information type
+enum refine_info_type {
+	REFINE_MATERIAL_ID = 0,
+	REFINE_ZENY_COST,
+	REFINE_BREAKABLE,
+	REFINE_REFINEUI_ENABLED,
 };
 
 struct refine_cost {
 	unsigned short nameid;
 	int zeny;
+	bool breakable, refineui;
+};
+
+struct refine_bs_blessing {
+	unsigned short nameid, count;
 };
 
 /// Get refine chance
-int status_get_refine_chance(enum refine_type wlv, int refine, bool enriched);
-int status_get_refine_cost(int weapon_lv, int type, bool what);
+int status_get_refine_chance(enum refine_type wlv, int refine, enum refine_cost_type type);
+int status_get_refine_cost(int weapon_lv, int type, enum refine_info_type what);
+bool status_get_refine_blacksmithBlessing(struct refine_bs_blessing* bs, enum refine_type type, int refine);
 
 /// Status changes listing. These code are for use by the server.
 enum sc_type : int16 {
@@ -2046,15 +2063,6 @@ enum e_status_calc_weight_opt {
 	CALCWT_ITEM = 0x1,		///< Recalculate item weight
 	CALCWT_MAXBONUS = 0x2,	///< Recalculate max weight based on skill/status/configuration bonuses
 	CALCWT_CARTSTATE = 0x4,	///< Whether to check for cart state
-};
-
-// Enum for refine chance types
-enum e_refine_chance_type {
-	REFINE_CHANCE_NORMAL = 0,
-	REFINE_CHANCE_ENRICHED,
-	REFINE_CHANCE_EVENT_NORMAL,
-	REFINE_CHANCE_EVENT_ENRICHED,
-	REFINE_CHANCE_TYPE_MAX
 };
 
 ///Define to determine who gets HP/SP consumed on doing skills/etc. [Skotlex]
