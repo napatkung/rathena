@@ -3882,7 +3882,6 @@
 	/* refine information types */
 	export_constant(REFINE_MATERIAL_ID);
 	export_constant(REFINE_ZENY_COST);
-	export_constant(REFINE_BREAKABLE);
 
 	/* NPC view ids */
 	// Special macro to strip the prefix 'JT_'

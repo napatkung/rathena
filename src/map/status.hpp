@@ -54,14 +54,16 @@ enum refine_cost_type {
 enum refine_info_type {
 	REFINE_MATERIAL_ID = 0,
 	REFINE_ZENY_COST,
-	REFINE_BREAKABLE,
 	REFINE_REFINEUI_ENABLED,
 };
 
 struct refine_cost {
 	unsigned short nameid;
 	int zeny;
-	bool breakable, refineui;
+	bool refineui;
+	uint16 breaking;
+	uint16 downrefine;
+	uint16 downrefine_num;
 };
 
 struct refine_bs_blessing {
@@ -72,6 +74,7 @@ struct refine_bs_blessing {
 int status_get_refine_chance(enum refine_type wlv, int refine, enum refine_cost_type type);
 int status_get_refine_cost(int weapon_lv, int type, enum refine_info_type what);
 bool status_get_refine_blacksmithBlessing(struct refine_bs_blessing* bs, enum refine_type type, int refine);
+struct refine_cost *status_get_refine_cost_(int weapon_lv, int type);
 
 /// Status changes listing. These code are for use by the server.
 enum sc_type : int16 {

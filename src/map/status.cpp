@@ -14298,8 +14298,18 @@ static bool status_yaml_readdb_refine_sub(const YAML::Node &node, int refine_inf
 
 		refine_info[refine_info_index].cost[idx].nameid = material;
 		refine_info[refine_info_index].cost[idx].zeny = price;
-		refine_info[refine_info_index].cost[idx].breakable = (type["Breakable"].IsDefined()) ? type["Breakable"].as<bool>() : true;
 		refine_info[refine_info_index].cost[idx].refineui = (type["RefineUI"].IsDefined()) ? type["RefineUI"].as<bool>() : true;
+
+		if (type["OnFail"].IsDefined()) {
+			const YAML::Node &onfail = type["OnFail"];
+			if (onfail["Break"].IsDefined()) {
+				refine_info[refine_info_index].cost[idx].breaking = onfail["Break"].as<uint16>();
+			}
+			if (onfail["DownRefine"].IsDefined()) {
+				refine_info[refine_info_index].cost[idx].downrefine = onfail["DownRefine"].as<uint16>();
+				refine_info[refine_info_index].cost[idx].downrefine_num = onfail["DownRefineNum"].IsDefined() ? onfail["DownRefineNum"].as<uint16>() : 1;
+			}
+		}
 	}
 
 	const YAML::Node &rates = node["Rates"];
@@ -14411,13 +14421,19 @@ int status_get_refine_cost(int weapon_lv, int type, enum refine_info_type what) 
 			return refine_info[weapon_lv].cost[type].nameid;
 		case REFINE_ZENY_COST:
 			return refine_info[weapon_lv].cost[type].zeny;
-		case REFINE_BREAKABLE:
-			return refine_info[weapon_lv].cost[type].breakable;
 		case REFINE_REFINEUI_ENABLED:
 			return refine_info[weapon_lv].cost[type].refineui;
 	}
 
 	return 0;
+}
+
+struct refine_cost *status_get_refine_cost_(int weapon_lv, int type) {
+	if (weapon_lv < REFINE_TYPE_ARMOR || weapon_lv >= REFINE_TYPE_MAX)
+		return NULL;
+	if (type < REFINE_COST_NORMAL || type >= REFINE_COST_MAX)
+		return NULL;
+	return &refine_info[weapon_lv].cost[type];
 }
 
 /**
@@ -14504,13 +14520,15 @@ int status_readdb(void)
 	{
 		memset(&refine_info[i].cost, 0, sizeof(struct refine_cost)*REFINE_COST_MAX);
 		memset(&refine_info[i].bs_blessing, 0, sizeof(struct refine_bs_blessing)*MAX_REFINE);
-		for(j = 0; j < REFINE_COST_MAX; j++)
-			for(k=0;k<MAX_REFINE; k++)
+		for (j = 0; j < REFINE_COST_MAX; j++) {
+			for (k = 0; k < MAX_REFINE; k++)
 			{
 				refine_info[i].chance[j][k] = 0;
 				refine_info[i].bonus[k] = 0;
 				refine_info[i].randombonus_max[k] = 0;
 			}
+			refine_info[i].cost[j].breaking = 100;
+		}
 	}
 	// attr_fix.txt
 	for(i=0;i<4;i++)

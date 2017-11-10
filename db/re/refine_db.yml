@@ -29,28 +29,43 @@ Armor:
     - Type: REFINE_COST_OVER10
       Price: 100000
       Material: 6223
+      OnFail:
+        Break: 80
+        DownRefine: 20
+        DownRefineNum: 3
     - Type: REFINE_COST_HD
       Price: 20000
       Material: 6241
-      Breakable: false
+      OnFail:
+        Break: 0
+        DownRefine: 100
+        DownRefineNum: 1
     - Type: REFINE_COST_ENRICHED
       Price: 2000
       Material: 7619
     - Type: REFINE_COST_OVER10_HD
       Price: 100000
       Material: 6225
-      Breakable: false
+      OnFail:
+        Break: 0
+        DownRefine: 100
+        DownRefineNum: 1
     - Type: REFINE_COST_BLESSED
       Price: 20000
       Material: 6439
-      Breakable: false
       RefineUI: false
+      OnFail:
+        Break: 0
+        DownRefine: 0
     # 'Event' rates
     - Type: REFINE_COST_EVT_OVER10_HD
       Price: 100000
       Material: 6225
-      Breakable: false
       RefineUI: false
+      OnFail:
+        Break: 0
+        DownRefine: 100
+        DownRefineNum: 1
     - Type: REFINE_COST_EVT_ENRICHED
       Price: 2000
       Material: 7619
@@ -274,28 +289,43 @@ WeaponLv1:
     - Type: REFINE_COST_OVER10
       Price: 100000
       Material: 6224
+      OnFail:
+        Break: 80
+        DownRefine: 20
+        DownRefineNum: 3
     - Type: REFINE_COST_HD
       Price: 20000
       Material: 6240
-      Breakable: false
+      OnFail:
+        Break: 0
+        DownRefine: 100
+        DownRefineNum: 1
     - Type: REFINE_COST_ENRICHED
       Price: 2000
       Material: 7620
     - Type: REFINE_COST_OVER10_HD
       Price: 100000
       Material: 6226
-      Breakable: false
+      OnFail:
+        Break: 0
+        DownRefine: 100
+        DownRefineNum: 1
     - Type: REFINE_COST_BLESSED
       Price: 1000
       Material: 6438
-      Breakable: false
       RefineUI: false
+      OnFail:
+        Break: 0
+        DownRefine: 0
     # 'Event' rates
     - Type: REFINE_COST_EVT_OVER10_HD
       Price: 100000
       Material: 6226
-      Breakable: false
       RefineUI: false
+      OnFail:
+        Break: 0
+        DownRefine: 100
+        DownRefineNum: 1
     - Type: REFINE_COST_EVT_ENRICHED
       Price: 2000
       Material: 7620
@@ -512,28 +542,43 @@ WeaponLv2:
     - Type: REFINE_COST_OVER10
       Price: 100000
       Material: 6224
+      OnFail:
+        Break: 80
+        DownRefine: 20
+        DownRefineNum: 3
     - Type: REFINE_COST_HD
       Price: 20000
       Material: 6240
-      Breakable: false
+      OnFail:
+        Break: 0
+        DownRefine: 100
+        DownRefineNum: 1
     - Type: REFINE_COST_ENRICHED
       Price: 2000
       Material: 7620
     - Type: REFINE_COST_OVER10_HD
       Price: 100000
       Material: 6226
-      Breakable: false
+      OnFail:
+        Break: 0
+        DownRefine: 100
+        DownRefineNum: 1
     - Type: REFINE_COST_BLESSED
       Price: 2000
       Material: 6438
-      Breakable: false
       RefineUI: false
+      OnFail:
+        Break: 0
+        DownRefine: 0
     # 'Event' rates
     - Type: REFINE_COST_EVT_OVER10_HD
       Price: 100000
       Material: 6226
-      Breakable: false
       RefineUI: false
+      OnFail:
+        Break: 0
+        DownRefine: 100
+        DownRefineNum: 1
     - Type: REFINE_COST_EVT_ENRICHED
       Price: 2000
       Material: 7620
@@ -750,31 +795,46 @@ WeaponLv3:
     - Type: REFINE_COST_OVER10
       Price: 100000
       Material: 6224
+      OnFail:
+        Break: 80
+        DownRefine: 20
+        DownRefineNum: 3
     - Type: REFINE_COST_HD
       Price: 20000
       Material: 6240
-      Breakable: false
+      OnFail:
+        Break: 0
+        DownRefine: 100
+        DownRefineNum: 1
     - Type: REFINE_COST_ENRICHED
       Price: 2000
       Material: 7620
     - Type: REFINE_COST_OVER10_HD
       Price: 100000
       Material: 6226
-      Breakable: false
+      OnFail:
+        Break: 0
+        DownRefine: 100
+        DownRefineNum: 1
     - Type: REFINE_COST_BLESSED
       Price: 20000
       Material: 6438
-      Breakable: false
       RefineUI: false
+      OnFail:
+        Break: 0
+        DownRefine: 0
     # 'Event' rates
-    - Type: REFINE_COST_EVT_ENRICHED
-      Price: 2000
-      Material: 7620
-      RefineUI: false
     - Type: REFINE_COST_EVT_OVER10_HD
       Price: 100000
       Material: 6226
-      Breakable: false
+      RefineUI: false
+      OnFail:
+        Break: 0
+        DownRefine: 100
+        DownRefineNum: 1
+    - Type: REFINE_COST_EVT_ENRICHED
+      Price: 2000
+      Material: 7620
       RefineUI: false
   Rates:
     - Level: 1
@@ -988,31 +1048,46 @@ WeaponLv4:
     - Type: REFINE_COST_OVER10
       Price: 100000
       Material: 6224
+      OnFail:
+        Break: 80
+        DownRefine: 20
+        DownRefineNum: 3
     - Type: REFINE_COST_HD
       Price: 20000
       Material: 6240
-      Breakable: false
+      OnFail:
+        Break: 0
+        DownRefine: 100
+        DownRefineNum: 1
     - Type: REFINE_COST_ENRICHED
       Price: 2000
       Material: 7620
     - Type: REFINE_COST_OVER10_HD
       Price: 100000
       Material: 6226
-      Breakable: false
+      OnFail:
+        Break: 0
+        DownRefine: 100
+        DownRefineNum: 1
     - Type: REFINE_COST_BLESSED
       Price: 40000
       Material: 6438
-      Breakable: false
       RefineUI: false
+      OnFail:
+        Break: 0
+        DownRefine: 0
     # 'Event' rates
-    - Type: REFINE_COST_EVT_ENRICHED
-      Price: 2000
-      Material: 7620
-      RefineUI: false
     - Type: REFINE_COST_EVT_OVER10_HD
       Price: 100000
       Material: 6226
-      Breakable: false
+      RefineUI: false
+      OnFail:
+        Break: 0
+        DownRefine: 100
+        DownRefineNum: 1
+    - Type: REFINE_COST_EVT_ENRICHED
+      Price: 2000
+      Material: 7620
       RefineUI: false
   Rates:
     - Level: 1
@@ -1226,7 +1301,10 @@ Shadow:
     - Type: REFINE_COST_HD
       Price: 20000
       Material: 6241
-      Breakable: false
+      OnFail:
+        Break: 0
+        DownRefine: 100
+        DownRefineNum: 1
     - Type: REFINE_COST_ENRICHED
       Price: 20000
       Material: 7619
