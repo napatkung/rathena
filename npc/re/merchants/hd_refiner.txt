@@ -143,7 +143,7 @@
 	if (getequippercentrefinery(.@part, REFINE_COST_HD) > rand(100)) {
 		successrefitem .@part;
 		next;
-		emotion e_no1;
+		emotion ET_BEST;
 		mes "[Blacksmith Mighty Hammer]";
 		mes "The sound refreshes my mind everytime I hear it.";
 		mes "Here, have it. Refine succeeded flawlessly!";
@@ -162,7 +162,7 @@
 	}
 	downrefitem .@part;
 	next;
-	emotion e_omg;
+	emotion ET_HUK;
 	mes "[Blacksmith Mighty Hammer]";
 	mes "Oops!!";
 	next;
@@ -330,7 +330,7 @@ OnInit:
 	if (getequippercentrefinery(.@part, REFINE_COST_OVER10_HD) > rand(100)) {
 		successrefitem .@part;
 		next;
-		emotion e_no1;
+		emotion ET_BEST;
 		mes "[Basta]";
 		mes "Great! Nicely done!!";
 		mes "I really am the best blacksmith in the whole wide world!";
@@ -339,7 +339,7 @@ OnInit:
 	if (.@bless_who == 1) {
 		specialeffect EF_HOLYHIT;
 		next;
-		emotion (rand(5) ? e_omg : e_cash );
+		emotion (rand(5) ? ET_HUK : ET_MONEY );
 		mes "[Basta]";
 		mes "Aaaaaaaaaaak!!!";
 		next;
@@ -351,7 +351,7 @@ OnInit:
 	else {
 		downrefitem .@part;
 		next;
-		emotion (rand(5) ? e_omg : e_cash );
+		emotion (rand(5) ? ET_HUK : ET_MONEY );
 		mes "[Basta]";
 		mes "Aaaaaaaaaaak!!!";
 		next;

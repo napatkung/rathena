@@ -1371,11 +1371,11 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if( (sce=sc->data[SC_MAGMA_FLOW]) && (rnd()%100 <= sce->val2) )
 			skill_castend_damage_id(bl,src,MH_MAGMA_FLOW,sce->val1,gettick(),0);
 
-		if( damage > 0 && ((flag&(BF_WEAPON|BF_SHORT)) == (BF_WEAPON|BF_SHORT)) && (sce = sc->data[SC_STONEHARDSKIN]) ) {
+		if( damage > 0 && (sce = sc->data[SC_STONEHARDSKIN]) ) {
 			sce->val2 -= (int)cap_value(damage,INT_MIN,INT_MAX);
 			if( src->type == BL_MOB ) //using explicit call instead break_equip for duration
 				sc_start(src,src, SC_STRIPWEAPON, 30, 0, skill_get_time2(RK_STONEHARDSKIN, sce->val1));
-			else
+			else if (flag&(BF_WEAPON|BF_SHORT))
 				skill_break_equip(src,src, EQP_WEAPON, 3000, BCT_SELF);
 			if( sce->val2 <= 0 )
 				status_change_end(bl, SC_STONEHARDSKIN, INVALID_TIMER);
@@ -3793,7 +3793,7 @@ static int battle_calc_attack_skill_ratio(struct Damage wd, struct block_list *s
 				skillratio += 100 * skill_lv;
 			break;
 		case RK_STORMBLAST:
-			skillratio += -100 + (((sd) ? pc_checkskill(sd,RK_RUNEMASTERY) : 0) + (status_get_str(src) / 8)) * 100; // ATK = [{Rune Mastery Skill Level + (Caster's STR / 8)} x 100] %
+			skillratio += -100 + (((sd) ? pc_checkskill(sd,RK_RUNEMASTERY) : 0) + status_get_str(src) / 8) * 100; // ATK = [{Rune Mastery Skill Level + (Caster's STR / 8)} x 100] %
 			break;
 		case RK_PHANTOMTHRUST: // ATK = [{(Skill Level x 50) + (Spear Master Level x 10)} x Caster's Base Level / 150] %
 			skillratio += -100 + 50 * skill_lv + 10 * (sd ? pc_checkskill(sd,KN_SPEARMASTERY) : 5);
@@ -5672,7 +5672,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 				s_ele = ELE_HOLY;
 			break;
 		case WL_HELLINFERNO:
-			if (ad.miscflag&ELE_DARK)
+			if (mflag&ELE_DARK)
 				s_ele = ELE_DARK;
 			break;
 		case SO_PSYCHIC_WAVE:
@@ -6318,20 +6318,19 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 	//Apply DAMAGE_DIV_FIX and check for min damage
 	ad = battle_apply_div_fix(ad, skill_id);
 
-	switch(skill_id) { // These skills will do a GVG fix later
 #ifdef RENEWAL
+	switch(skill_id) {
 		case ASC_BREAKER:
 		case CR_ACIDDEMONSTRATION:
 			return ad; //These skills will do a GVG fix later
-#endif
-		default:
-			ad.damage = battle_calc_damage(src,target,&ad,ad.damage,skill_id,skill_lv);
-			if (map_flag_gvg2(target->m))
-				ad.damage = battle_calc_gvg_damage(src,target,ad.damage,skill_id,ad.flag);
-			else if (map[target->m].flag.battleground)
-				ad.damage = battle_calc_bg_damage(src,target,ad.damage,skill_id,ad.flag);
-			break;
 	}
+#endif
+
+	ad.damage = battle_calc_damage(src,target,&ad,ad.damage,skill_id,skill_lv);
+	if (map_flag_gvg2(target->m))
+		ad.damage = battle_calc_gvg_damage(src,target,ad.damage,skill_id,ad.flag);
+	else if (map[target->m].flag.battleground)
+		ad.damage = battle_calc_bg_damage(src,target,ad.damage,skill_id,ad.flag);
 
 	// Skill damage adjustment
 #ifdef ADJUST_SKILL_DAMAGE
@@ -7264,7 +7263,8 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 		}
 		if (sc->data[SC_GIANTGROWTH] && (wd.flag&BF_SHORT) && rnd()%100 < sc->data[SC_GIANTGROWTH]->val2 && !is_infinite_defense(target, wd.flag) && !vanish_damage) {
 			wd.damage <<= 1; // Double Damage
-			if (!sc->data[SC_CRUSHSTRIKE]) { // Increase damage again if Crush Strike is not active
+			skill_break_equip(src, src, EQP_WEAPON, 10, BCT_SELF); // Break chance happens on successful damage increase
+			if (!sc->data[SC_CRUSHSTRIKE] && (sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT) { // Increase damage again if Crush Strike is not active
 				if (map_flag_vs(src->m)) // Only half of the 2.5x increase on versus-type maps
 					wd.damage += wd.damage * 125 / 100;
 				else
@@ -8276,6 +8276,7 @@ static const struct _battle_data {
 	{ "homunculus_show_growth",             &battle_config.homunculus_show_growth,          0,      0,      1,              },
 	{ "homunculus_friendly_rate",           &battle_config.homunculus_friendly_rate,        100,    0,      INT_MAX,        },
 	{ "vending_tax",                        &battle_config.vending_tax,                     0,      0,      10000,          },
+	{ "vending_tax_min",                    &battle_config.vending_tax_min,                 0,      0,      MAX_ZENY,       },
 	{ "day_duration",                       &battle_config.day_duration,                    0,      0,      INT_MAX,        },
 	{ "night_duration",                     &battle_config.night_duration,                  0,      0,      INT_MAX,        },
 	{ "mob_remove_delay",                   &battle_config.mob_remove_delay,                60000,  1000,   INT_MAX,        },

@@ -10952,7 +10952,7 @@ void clif_parse_Emotion(int fd, struct map_session_data *sd)
 	int emoticon = RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[0]);
 
 	if (battle_config.basic_skill_check == 0 || pc_checkskill(sd, NV_BASIC) >= 2 || pc_checkskill(sd, SU_BASIC_SKILL) >= 1) {
-		if (emoticon == E_MUTE) {// prevent use of the mute emote [Valaris]
+		if (emoticon == ET_CHAT_PROHIBIT) {// prevent use of the mute emote [Valaris]
 			clif_skill_fail(sd, 1, USESKILL_FAIL_LEVEL, 1);
 			return;
 		}
@@ -10967,8 +10967,8 @@ void clif_parse_Emotion(int fd, struct map_session_data *sd)
 		if (battle_config.idletime_option&IDLE_EMOTION)
 			sd->idletime = last_tick;
 
-		if(battle_config.client_reshuffle_dice && emoticon>=E_DICE1 && emoticon<=E_DICE6) {// re-roll dice
-			emoticon = rnd()%6+E_DICE1;
+		if(battle_config.client_reshuffle_dice && emoticon>=ET_DICE1 && emoticon<=ET_DICE6) {// re-roll dice
+			emoticon = rnd()%6+ET_DICE1;
 		}
 
 		clif_emotion(&sd->bl, emoticon);
@@ -11974,7 +11974,7 @@ static void clif_parse_UseSkillToId_homun(struct homun_data *hd, struct map_sess
 	if( !hd )
 		return;
 	if( skill_isNotOk_hom(hd, skill_id, skill_lv) ) {
-		clif_emotion(&hd->bl, E_DOTS);
+		clif_emotion(&hd->bl, ET_THINK);
 		return;
 	}
 	if( hd->bl.id != target_id && skill_get_inf(skill_id)&INF_SELF_SKILL )
@@ -11982,7 +11982,7 @@ static void clif_parse_UseSkillToId_homun(struct homun_data *hd, struct map_sess
 	if( hd->ud.skilltimer != INVALID_TIMER ) {
 		if( skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST ) return;
 	} else if( DIFF_TICK(tick, hd->ud.canact_tick) < 0 ) {
-		clif_emotion(&hd->bl, E_DOTS);
+		clif_emotion(&hd->bl, ET_THINK);
 		if (hd->master)
 			clif_skill_fail(hd->master, skill_id, USESKILL_FAIL_SKILLINTERVAL, 0);
 		return;
@@ -12001,13 +12001,13 @@ static void clif_parse_UseSkillToPos_homun(struct homun_data *hd, struct map_ses
 	if( !hd )
 		return;
 	if( skill_isNotOk_hom(hd, skill_id, skill_lv) ) {
-		clif_emotion(&hd->bl, E_DOTS);
+		clif_emotion(&hd->bl, ET_THINK);
 		return;
 	}
 	if( hd->ud.skilltimer != INVALID_TIMER ) {
 		if( skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST ) return;
 	} else if( DIFF_TICK(tick, hd->ud.canact_tick) < 0 ) {
-		clif_emotion(&hd->bl, E_DOTS);
+		clif_emotion(&hd->bl, ET_THINK);
 		if (hd->master)
 			clif_skill_fail(hd->master, skill_id, USESKILL_FAIL_SKILLINTERVAL, 0);
 		return;
@@ -19021,7 +19021,7 @@ void clif_change_title_ack(struct map_session_data *sd, unsigned char result, un
  */
 void clif_parse_change_title(int fd, struct map_session_data *sd)
 {
-	int title_id, i;
+	int title_id;
 
 	nullpo_retv(sd);
 
@@ -19033,8 +19033,7 @@ void clif_parse_change_title(int fd, struct map_session_data *sd)
 	}else if( title_id <= 0 ){
 		sd->status.title_id = 0;
 	}else{
-		ARR_FIND(0, sd->titleCount, i, sd->titles[i] == title_id);
-		if( i == sd->titleCount ){
+		if (std::find(sd->titles.begin(), sd->titles.end(), title_id) != sd->titles.end()) {
 			clif_change_title_ack(sd, 1, title_id);
 			return;
 		}
