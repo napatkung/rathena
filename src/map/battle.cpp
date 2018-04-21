@@ -4472,10 +4472,12 @@ struct Damage battle_attack_sc_bonus(struct Damage wd, struct block_list *src, s
 		if (sc->data[SC_MADNESSCANCEL])
 			ATK_ADD(wd.equipAtk, wd.equipAtk2, 100);
 		if (sc->data[SC_MAGICALBULLET]) {
-			if (sstatus->matk_max > sstatus->matk_min) {
-				ATK_ADD(wd.weaponAtk, wd.weaponAtk2, i64max((sstatus->matk_min + rnd() % (sstatus->matk_max - sstatus->matk_min)) - (tstatus->mdef + tstatus->mdef2), 0));
+			short tmdef = tstatus->mdef + tstatus->mdef2;
+
+			if (sstatus->matk_min > tmdef && sstatus->matk_max > sstatus->matk_min) {
+				ATK_ADD(wd.weaponAtk, wd.weaponAtk2, i64max((sstatus->matk_min + rnd() % (sstatus->matk_max - sstatus->matk_min)) - tmdef, 0));
 			} else {
-				ATK_ADD(wd.weaponAtk, wd.weaponAtk2, i64max(sstatus->matk_min - (tstatus->mdef + tstatus->mdef2), 0));
+				ATK_ADD(wd.weaponAtk, wd.weaponAtk2, i64max(sstatus->matk_min - tmdef, 0));
 			}
 		}
 		if (sc->data[SC_GATLINGFEVER]) {
@@ -6226,6 +6228,11 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 					case NPC_VENOMFOG:
 						skillratio += 600 + 100 * skill_lv;
 						break;
+					case NPC_COMET:
+						i = (sc ? distance_xy(target->x, target->y, sc->comet_x, sc->comet_y) : 8) / 2;
+						i = cap_value(i, 1, 4);
+						skillratio = 2500 + ((skill_lv - i) * 500);
+						break;
 				}
 
 				if (sc) {// Insignia's increases the damage of offensive magic by a fixed percentage depending on the element.
@@ -7443,14 +7450,14 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 				if (DIFF_TICK(ud->canact_tick, tick + autospell_tick) < 0) {
 					ud->canact_tick = max(tick + autospell_tick, ud->canact_tick);
 					if (battle_config.display_status_timers && sd)
-						clif_status_change(src, SI_ACTIONDELAY, 1, autospell_tick, 0, 0, 0);
+						clif_status_change(src, EFST_POSTDELAY, 1, autospell_tick, 0, 0, 0);
 				}
 			}
 		}
 	}
 	if (sd) {
 		uint16 r_skill = 0, sk_idx = 0;
-		if( wd.flag&BF_SHORT && sc && sc->data[SC__AUTOSHADOWSPELL] && rnd()%100 < sc->data[SC__AUTOSHADOWSPELL]->val3 &&
+		if( wd.flag&BF_WEAPON && sc && sc->data[SC__AUTOSHADOWSPELL] && rnd()%100 < sc->data[SC__AUTOSHADOWSPELL]->val3 &&
 			(r_skill = (uint16)sc->data[SC__AUTOSHADOWSPELL]->val1) && (sk_idx = skill_get_index(r_skill)) &&
 			sd->status.skill[sk_idx].id != 0 && sd->status.skill[sk_idx].flag == SKILL_FLAG_PLAGIARIZED )
 		{
@@ -7506,7 +7513,7 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 				sd->state.autocast = 0;
 
 				sd->ud.canact_tick = max(tick + skill_delayfix(src, r_skill, r_lv), sd->ud.canact_tick);
-				clif_status_change(src, SI_ACTIONDELAY, 1, skill_delayfix(src, r_skill, r_lv), 0, 0, 1);
+				clif_status_change(src, EFST_POSTDELAY, 1, skill_delayfix(src, r_skill, r_lv), 0, 0, 1);
 			}
 		}
 
@@ -8131,7 +8138,9 @@ static const struct _battle_data {
 	{ "max_walk_speed",                     &battle_config.max_walk_speed,                  300,    100,    100*DEFAULT_WALK_SPEED, },
 	{ "max_lv",                             &battle_config.max_lv,                          99,     0,      MAX_LEVEL,      },
 	{ "aura_lv",                            &battle_config.aura_lv,                         99,     0,      INT_MAX,        },
-	{ "max_hp",                             &battle_config.max_hp,                          32500,  100,    1000000000,     },
+	{ "max_hp_lv99",                        &battle_config.max_hp_lv99,                    330000,  100,    1000000000,     },
+	{ "max_hp_lv150",                       &battle_config.max_hp_lv150,                   660000,  100,    1000000000,     },
+	{ "max_hp",                             &battle_config.max_hp,                        1100000,  100,    1000000000,     },
 	{ "max_sp",                             &battle_config.max_sp,                          32500,  100,    1000000000,     },
 	{ "max_cart_weight",                    &battle_config.max_cart_weight,                 8000,   100,    1000000,        },
 	{ "max_parameter",                      &battle_config.max_parameter,                   99,     10,     SHRT_MAX,       },
@@ -8503,6 +8512,8 @@ static const struct _battle_data {
 	{ "feature.refineui",                   &battle_config.feature_refineui,                0,      0,      3,              },
 	{ "broadcast_hide_name",                &battle_config.broadcast_hide_name,             2,      0,      NAME_LENGTH,    },
 	{ "skill_drop_items_full",              &battle_config.skill_drop_items_full,           0,      0,      1,              },
+	{ "feature.homunculus_autofeed",        &battle_config.feature_homunculus_autofeed,     1,      0,      1,              },
+	{ "summoner_trait",                     &battle_config.summoner_trait,                  3,      0,      3,              },
 
 #include "../custom/battle_config_init.inc"
 };
@@ -8643,6 +8654,13 @@ void battle_adjust_conf()
 	if( battle_config.feature_refineui == 2 ){
 		ShowWarning("conf/battle/feature.conf refine UI is enabled in scripts but disabled in general, enabling...\n");
 		battle_config.feature_refineui = 3;
+	}
+#endif
+
+#if PACKETVER < 20170920
+	if( battle_config.feature_homunculus_autofeed ){
+		ShowWarning("conf/battle/feature.conf homunculus autofeeding is enabled but it requires PACKETVER 2017-09-20 or newer, disabling...\n");
+		battle_config.feature_homunculus_autofeed = 0;
 	}
 #endif
 

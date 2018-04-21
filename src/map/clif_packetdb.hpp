@@ -1123,7 +1123,7 @@
 	packet(0x02d5,2);
 	parseable_packet(0x02d6,6,clif_parse_ViewPlayerEquip,2);
 	packet(0x02d7,-1);
-	parseable_packet(0x02d8,10,clif_parse_EquipTick,2,6);
+	parseable_packet(0x02d8,10,clif_parse_configuration,2,6);
 	packet(0x02d9,10);
 	packet(0x02da,3);
 	parseable_packet(0x02db,-1,clif_parse_BattleChat,2,4);
@@ -2345,6 +2345,11 @@
 // 2016-10-26bRagexeRE
 #if PACKETVER >= 20161026
 	packet(0x0AA5,-1);
+#endif
+
+// 2017-03-15cRagexeRE
+#if PACKETVER >= 20170315
+	packet(0xac7,156);
 #endif
 
 // 2017-04-19bRagexeRE
