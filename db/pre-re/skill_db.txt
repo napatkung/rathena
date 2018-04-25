@@ -16,6 +16,27 @@
 //    0x20 - Skill ignores target's defense (misc type always ignores)
 //    0x40 - Skill ignores target's flee (magic type always ignores)
 //    0x80 - Skill ignores target's def cards
+//
+//  - Expanded NK Flags [Cydh]
+//  - These flags are split value of 0x08 - Skill ignores caster's % damage cards
+//  - If you want to this flag works better, remove the 0x08 and 0x10 first
+//    0x0001000 - Skill ignores caster's % range damage cards (bLongAtkRate)
+//    0x0002000 - Skill ignores caster's % race damage cards (bAddRace, bMagicAddRace, bAddRace2)
+//    0x0004000 - Skill ignores caster's % class damage cards (bAddClass, bMagicAddClass)
+//    0x0008000 - Skill ignores caster's % elemental damage cards (bAddEle, bMagicAddEle, bMagicAtkEle) (split of 0x10 - Skill ignores elemental adjustments)
+//    0x0010000 - Skill ignores caster's % size damage cards (bAddSize, bMagicAddSize)
+//    0x0020000 - Skill ignores caster's % specific monster damage cards (bAddDamageClass, bAddMagicDamageClass)
+//    0x0040000 - Skill ignores caster's % skill-type & mastery mastery bonus? (Adv. Katar Mastery)
+//  - These flags are split value of 0x80 - Skill ignores target's def cards
+//  - If you want to this flag works better, remove the 0x80 and 0x10 first
+//    0x0080000 - Skill ignores target's range reduction cards (bNearAtkDef, bLongAtkDef)
+//    0x0100000 - Skill ignores target's race reduction cards (bSubRace, bSubRace2)
+//    0x0200000 - Skill ignores target's class reduction cards (bSubClass)
+//    0x0400000 - Skill ignores target's elemental reduction cards (bSubEle) (split of 0x10 - Skill ignores elemental adjustments)
+//    0x0800000 - Skill ignores target's size reduction cards (bSubSize, bSubDefEle)
+//    0x1000000 - Skill ignores target's specific monster reduction cards (bAddDefMonster, bAddMDefMonster)
+//    0x2000000 - Skill ignores target's skill-type reduction cards (bMagicAtkDef, bMiscAtkDef)
+//    0x4000000 - Skill ignores target's status reduction bonus (SC_MDEF_RATE, SC_DEF_RATE)
 // 07 splash/effect range
 //      -1 - for screen-wide
 //       0 - no splash
