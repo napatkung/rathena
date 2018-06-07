@@ -3267,7 +3267,7 @@ bool status_calc_weight(struct map_session_data *sd, enum e_status_calc_weight_o
  */
 bool status_calc_cart_weight(struct map_session_data *sd, enum e_status_calc_weight_opt flag)
 {
-	int b_cart_weight_max, i;
+	int b_cart_weight_max, b_cart_num_max, i;
 
 	nullpo_retr(false, sd);
 
@@ -3275,7 +3275,9 @@ bool status_calc_cart_weight(struct map_session_data *sd, enum e_status_calc_wei
 		return false;
 
 	b_cart_weight_max = sd->cart_weight_max; // Store cart max weight for later comparison
-	sd->cart_weight_max = battle_config.max_cart_weight; // Recalculate max weight
+	sd->cart_weight_max = map_cart_max_weight(sd); // Recalculate max weight
+	b_cart_num_max = sd->cart_num_max;
+	sd->cart_num_max = map_cart_max_items(sd);
 
 	if (flag&CALCWT_ITEM) {
 		sd->cart_weight = 0; // Reset current cart weight
@@ -3294,7 +3296,7 @@ bool status_calc_cart_weight(struct map_session_data *sd, enum e_status_calc_wei
 		sd->cart_weight_max += (pc_checkskill(sd, GN_REMODELING_CART) * 5000);
 
 	// Update the client if the new weight calculations don't match
-	if (b_cart_weight_max != sd->cart_weight_max)
+	if (b_cart_weight_max != sd->cart_weight_max || b_cart_num_max != sd->cart_num_max)
 		clif_updatestatus(sd, SP_CARTINFO);
 
 	return true;

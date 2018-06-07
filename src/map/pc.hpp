@@ -298,7 +298,9 @@ struct map_session_data {
 	struct item_data* inventory_data[MAX_INVENTORY]; // direct pointers to itemdb entries (faster than doing item_id lookups)
 	short equip_index[EQI_MAX];
 	unsigned int weight,max_weight,add_max_weight;
-	int cart_weight,cart_num,cart_weight_max;
+	int cart_weight,cart_weight_max;
+	int cart_num, // current item count in cart
+		cart_num_max; // max item count in cart. If cart_num > cart_num_max = no add more item
 	int fd;
 	unsigned short mapindex;
 	unsigned char head_dir; //0: Look forward. 1: Look right, 2: Look left.
@@ -331,6 +333,7 @@ struct map_session_data {
 	bool skillitem_keep_requirement;
 	uint16 skill_id_old,skill_lv_old;
 	uint16 skill_id_dance,skill_lv_dance;
+	uint16 changecart_skill; ///< Remember last used change cart skill [Cydh]
 	short cook_mastery; // range: [0,1999] [Inkfish]
 	struct skill_cooldown_entry * scd[MAX_SKILLCOOLDOWN]; // Skill Cooldown
 	short cloneskill_idx, ///Stores index of copied skill by Intimidate/Plagiarism

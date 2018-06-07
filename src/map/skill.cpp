@@ -6794,13 +6794,14 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		break;
 
 	case MC_CHANGECART:
-		clif_skill_nodamage(src,bl,skill_id,skill_lv,1);
-		break;
-
+		if (!map_cart_type_is_enabled()) {
+			clif_skill_nodamage(src, bl, skill_id, skill_lv, 1);
+			break;
+		}
 	case MC_CARTDECORATE:
-		clif_skill_nodamage(src,bl,skill_id,skill_lv,1);
+		clif_skill_nodamage(src, bl, MC_CARTDECORATE, skill_lv, 1);
 		if( sd ) {
-			clif_SelectCart(sd);
+			clif_SelectCart(sd, skill_id);
 		}
 		break;
 

@@ -5143,10 +5143,10 @@ unsigned char pc_cart_additem(struct map_session_data *sd,struct item *item,int 
 	if( (w = data->weight*amount) + sd->cart_weight > sd->cart_weight_max )
 		return 1;
 
-	i = MAX_CART;
+	i = sd->cart_num_max;
 	if( itemdb_isstackable2(data) && !item->expire_time )
 	{
-		for (i = 0; i < MAX_CART; i++) {
+		for (i = 0; i < sd->cart_num_max; i++) {
 			if (sd->cart.u.items_cart[i].nameid == item->nameid
 				&& sd->cart.u.items_cart[i].bound == item->bound
 				&& sd->cart.u.items_cart[i].unique_id == item->unique_id
@@ -5156,7 +5156,7 @@ unsigned char pc_cart_additem(struct map_session_data *sd,struct item *item,int 
 		}
 	}
 
-	if( i < MAX_CART )
+	if( i < sd->cart_num_max)
 	{// item already in cart, stack it
 		if( amount > MAX_AMOUNT - sd->cart.u.items_cart[i].amount || ( data->stack.cart && amount > data->stack.amount - sd->cart.u.items_cart[i].amount ) )
 			return 2; // no slot
@@ -5166,8 +5166,8 @@ unsigned char pc_cart_additem(struct map_session_data *sd,struct item *item,int 
 	}
 	else
 	{// item not stackable or not present, add it
-		ARR_FIND( 0, MAX_CART, i, sd->cart.u.items_cart[i].nameid == 0 );
-		if( i == MAX_CART )
+		ARR_FIND( 0, sd->cart_num_max, i, sd->cart.u.items_cart[i].nameid == 0 );
+		if( i == sd->cart_num_max)
 			return 2; // no slot
 
 		memcpy(&sd->cart.u.items_cart[i],item,sizeof(sd->cart.u.items_cart[0]));
@@ -8955,6 +8955,11 @@ bool pc_setcart(struct map_session_data *sd,int type) {
 	if( pc_checkskill(sd,MC_PUSHCART) <= 0 && type != 0 )
 		return false;// Push cart is required
 
+	if (type && (sd->cart_weight > map_cart_max_weight2(type) || sd->cart_num > map_cart_max_items2(type))) {
+		clif_messagecolor(&sd->bl, color_table[COLOR_RED], "Cannot change cart. Selected cart has fewer capacity", false, SELF);
+		return false;
+	}
+
 #ifdef NEW_CARTS
 
 	switch( type ) {
@@ -11702,6 +11707,7 @@ void pc_scdata_received(struct map_session_data *sd) {
 
 	if (pc_iscarton(sd)) {
 		sd->cart_weight_max = 0; // Force a client refesh
+		sd->cart_num_max = 0; // Force a client refesh
 		status_calc_cart_weight(sd, (e_status_calc_weight_opt)(CALCWT_ITEM|CALCWT_MAXBONUS|CALCWT_CARTSTATE));
 	}
 }

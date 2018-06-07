@@ -3376,7 +3376,7 @@ void clif_updatestatus(struct map_session_data *sd,int type)
 	case SP_CARTINFO:
 		WFIFOW(fd,0)=0x121;
 		WFIFOW(fd,2)=sd->cart_num;
-		WFIFOW(fd,4)=MAX_CART;
+		WFIFOW(fd,4)=sd->cart_num_max;
 		WFIFOL(fd,6)=sd->cart_weight;
 		WFIFOL(fd,10)=sd->cart_weight_max;
 		len=14;
@@ -11908,20 +11908,20 @@ void clif_parse_RemoveOption(int fd,struct map_session_data *sd)
 
 /// Request to select cart's visual look for new cart design (ZC_SELECTCART).
 /// 097f <Length>.W <identity>.L <type>.B
-void clif_SelectCart(struct map_session_data *sd) {
+void clif_SelectCart(struct map_session_data *sd, uint16 skill_id) {
 #if PACKETVER >= 20150826
-	int i = 0, carts = 3;
+	int i = 0, carts = MAX_CARTS;
+	unsigned char *buf;
 
 	int fd = sd->fd;
-	WFIFOHEAD(fd,8 + carts);
-	WFIFOW(fd,0) = 0x97f;
-	WFIFOW(fd,2) = 8 + carts;
-	WFIFOL(fd,4) = sd->status.account_id;
-	// Right now we have 10-12, tested it you can also enable selection for all cart styles here(1-12)
-	for( i = 0; i < carts; i++ ) {
-	WFIFOB(fd,8 + i) = 10 + i;
-	}
-	WFIFOSET(fd,8 + carts);
+	sd->changecart_skill = skill_id;
+	CREATE(buf, unsigned char, 8 + MAX_CARTS);
+	WBUFW(buf, 0) = 0x97f;
+	WBUFL(buf, 4) = sd->status.account_id;
+	i = map_cart_avail(sd, sd->changecart_skill, buf, 8);
+	WBUFW(buf, 2) = 8 + i;
+	clif_send(buf, WBUFW(buf, 2), &sd->bl, SELF);
+	aFree(buf);
 #endif
 }
 
@@ -11930,19 +11930,22 @@ void clif_SelectCart(struct map_session_data *sd) {
 /// 0980 <identity>.L <type>.B
 void clif_parse_SelectCart(int fd,struct map_session_data *sd) {
 #if PACKETVER >= 20150826
-	int type;
+	int type, error;
 
 	// Check identity
-	if( !sd || pc_checkskill(sd,MC_CARTDECORATE) < 1 || RFIFOL(fd,2) != sd->status.account_id )
-	return;
+	if( !sd || !sd->changecart_skill || pc_checkskill(sd, sd->changecart_skill) < 1 || RFIFOL(fd,2) != sd->status.account_id )
+		return;
 
 	type = (int)RFIFOB(fd,6);
 
 	// Check type
-	if( type < 10 || type > MAX_CARTS ) 
+	if ((error = map_cart_check_type(sd, sd->changecart_skill, type)) != 0) {
+		ShowError("clif_parse_SelectCart: Error %d. AID: %d. Type %d ", error, RFIFOL(fd, 2), type);
 		return;
+	}
 
 	pc_setcart(sd, type);
+	sd->changecart_skill = 0;
 #endif
 }
 
@@ -11951,7 +11954,7 @@ void clif_parse_SelectCart(int fd,struct map_session_data *sd) {
 /// 01af <num>.W
 void clif_parse_ChangeCart(int fd,struct map_session_data *sd)
 {// TODO: State tracking?
-	int type;
+	int type, error;
 
 	if( !sd || pc_checkskill(sd, MC_CHANGECART) < 1 )
 		return;
@@ -11965,19 +11968,12 @@ void clif_parse_ChangeCart(int fd,struct map_session_data *sd)
 
 	type = (int)RFIFOW(fd,packet_db[RFIFOW(fd,0)].pos[0]);
 
-	if( 
-#ifdef NEW_CARTS
-		(type == 9 && sd->status.base_level > 130) ||
-		(type == 8 && sd->status.base_level > 120) ||
-		(type == 7 && sd->status.base_level > 110) ||
-		(type == 6 && sd->status.base_level > 100) ||
-#endif
-		(type == 5 && sd->status.base_level > 90) ||
-	    (type == 4 && sd->status.base_level > 80) ||
-	    (type == 3 && sd->status.base_level > 65) ||
-	    (type == 2 && sd->status.base_level > 40) ||
-	    (type == 1))
-		pc_setcart(sd, type);
+	if ((error = map_cart_check_type(sd, MC_CHANGECART, type)) != 0) {
+		ShowError("clif_parse_ChangeCart: Error %d. AID: %d. Type %d ", error, RFIFOL(fd, 2), type);
+		return;
+	}
+
+	pc_setcart(sd, type);
 }
 
 

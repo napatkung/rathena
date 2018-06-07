@@ -1,0 +1,103 @@
+# New cart configs by MC_CHANGECART also include MC_CARTDECORATE
+# WARNING: ONLY PACKETVER >= 20150826
+# @author [Cydh]
+
+Capacity:
+- Type: 1
+  MaxItems: 100
+  MaxWeight: 8000
+- Type: 2
+  MaxItems: 100
+  MaxWeight: 8000
+- Type: 3
+  MaxItems: 100
+  MaxWeight: 8000
+- Type: 4
+  MaxItems: 100
+  MaxWeight: 8000
+- Type: 5
+  MaxItems: 100
+  MaxWeight: 8000
+- Type: 6
+  MaxItems: 100
+  MaxWeight: 8000
+- Type: 7
+  MaxItems: 100
+  MaxWeight: 8000
+- Type: 8
+  MaxItems: 100
+  MaxWeight: 8000
+- Type: 9
+  MaxItems: 100
+  MaxWeight: 8000
+- Type: 10
+  MaxItems: 150
+  MaxWeight: 8000
+- Type: 11
+  MaxItems: 150
+  MaxWeight: 10000
+- Type: 12
+  MaxItems: 150
+  MaxWeight: 12000
+
+ChangeCart:
+- Skill: MC_CHANGECART
+  Carts:
+  - Type: 1
+    MinLevel: 1
+  - Type: 2
+    MinLevel: 40
+  - Type: 3
+    MinLevel: 65
+  - Type: 4
+    MinLevel: 80
+  - Type: 5
+    MinLevel: 90
+  - Type: 6
+    MinLevel: 100
+  - Type: 7
+    MinLevel: 110
+  - Type: 8
+    MinLevel: 120
+  - Type: 9
+    MinLevel: 130
+  #- Type: 10
+  #  MinLevel: 1
+  #- Type: 11
+  #  MinLevel: 1
+  #- Type: 12
+  #  MinLevel: 1
+- Skill: MC_CARTDECORATE
+  Carts:
+  - Type: 1
+    MinLevel: 1
+  - Type: 2
+    MinLevel: 1
+  - Type: 3
+    MinLevel: 1
+  - Type: 4
+    MinLevel: 1
+  - Type: 5
+    MinLevel: 1
+  - Type: 6
+    MinLevel: 1
+  - Type: 7
+    MinLevel: 1
+  - Type: 8
+    MinLevel: 1
+  - Type: 9
+    MinLevel: 1
+  - Type: 10
+    MinLevel: 1
+  - Type: 11
+    MinLevel: 1
+  - Type: 12
+    MinLevel: 1
+    # To exclude job to use this cart type
+    #JobExcept:
+    #- JOB_MERCHANT
+    #- JOB_BLACKSMITH
+    #- JOB_ALCHEMIST
+    #- JOB_BABY_MERCHANT
+    #- JOB_BABY_BLACKSMITH
+    #- JOB_BABY_ALCHEMIST

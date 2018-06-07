@@ -5,6 +5,8 @@
 #define _MAP_HPP_
 
 #include <stdarg.h>
+#include <vector>
+#include <unordered_map>
 
 #include "../common/cbasetypes.h"
 #include "../common/core.h" // CORE_ST_LAST
@@ -781,6 +783,24 @@ struct s_map_default {
 };
 extern struct s_map_default map_default;
 
+/// Cart capacity data [Cydh]
+struct s_cart_config_capacity {
+	unsigned short max_items;
+	unsigned int max_weight;
+};
+
+/// Cart availability single entry [Cydh]
+struct s_cart_config_value {
+	uint8 type;
+	unsigned short min_level;
+	std::vector <int> job_except;
+};
+
+/// Cart availability data by Skill [Cydh]
+struct s_cart_config_available {
+	std::vector <s_cart_config_value> carts;
+};
+
 /// Type of 'save_settings'
 enum save_settings_type {
 	CHARSAVE_NONE = 0,
@@ -926,6 +946,14 @@ void map_spawnmobs(int16 m); // [Wizputer]
 void map_removemobs(int16 m); // [Wizputer]
 void map_addmap2db(struct map_data *m);
 void map_removemapdb(struct map_data *m);
+
+bool map_cart_type_is_enabled(void);
+int map_cart_avail(struct map_session_data *sd, uint16 skill_id, unsigned char *buf, int n);
+int map_cart_check_type(struct map_session_data *sd, uint16 skill_id, uint8 type);
+unsigned int map_cart_max_weight2(int type);
+unsigned int map_cart_max_weight(struct map_session_data *sd);
+unsigned short map_cart_max_items2(int type);
+unsigned short map_cart_max_items(struct map_session_data *sd);
 
 #ifdef ADJUST_SKILL_DAMAGE
 void map_skill_damage_free(struct map_data *m);

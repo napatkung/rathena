@@ -1068,7 +1068,7 @@ void clif_broadcast_obtain_special_item(const char *char_name, unsigned short na
 
 void clif_dressing_room(struct map_session_data *sd, int flag);
 void clif_navigateTo(struct map_session_data *sd, const char* mapname, uint16 x, uint16 y, uint8 flag, bool hideWindow, uint16 mob_id );
-void clif_SelectCart(struct map_session_data *sd);
+void clif_SelectCart(struct map_session_data *sd, uint16 skill_id);
 
 /// Achievement System
 void clif_achievement_list_all(struct map_session_data *sd);
