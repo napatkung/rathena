@@ -640,7 +640,7 @@ int battle_calc_cardfix(int attack_type, struct block_list *src, struct block_li
 		case BF_MAGIC:
 			// Affected by attacker ATK bonuses
 			if( sd && !(nk&NK_NO_CARDFIX_ATK) ) {
-				if (!(nk&NK_NO_CARDFIX_ATK_RACE))if (!(nk&NK_NO_CARDFIX_ATK_RACE))
+				if (!(nk&NK_NO_CARDFIX_ATK_RACE))
 					cardfix = cardfix * (100 + sd->magic_addrace[tstatus->race] + sd->magic_addrace[RC_ALL] + sd->magic_addrace2[t_race2]) / 100;
 				if( !(nk&NK_NO_ELEFIX) && !(nk&NK_NO_CARDFIX_ATK_ELE) ) { // Affected by Element modifier bonuses
 					cardfix = cardfix * (100 + sd->magic_addele[tstatus->def_ele] + sd->magic_addele[ELE_ALL] + 
