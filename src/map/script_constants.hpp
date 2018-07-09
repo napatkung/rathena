@@ -7244,6 +7244,18 @@
 	export_constant(GSTORAGE_NO_STORAGE);
 	export_constant(GSTORAGE_NO_PERMISSION);
 
+	//export_constant(BL_NUL);
+	export_constant(BL_PC);
+	export_constant(BL_MOB);
+	export_constant(BL_PET);
+	export_constant(BL_HOM);
+	export_constant(BL_MER);
+	//export_constant(BL_ITEM);
+	//export_constant(BL_SKILL);
+	export_constant(BL_NPC);
+	//export_constant(BL_CHAT);
+	export_constant(BL_ELEM);
+
 	#undef export_constant
 	#undef export_constant2
 	#undef export_parameter
