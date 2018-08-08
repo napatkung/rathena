@@ -3224,7 +3224,7 @@ variables.
 Default 'map name' for look up is invoker location or NPC if no invoker found.
 
 Object GID found will be saved in these arrays, while 'type' is value of
-UNITTYPE_*. Use getd for good practice.
+BL_*. Use getd for good practice.
 
 	.@obj_type_id[]
 	.@obj_type_name$[]
