@@ -113,7 +113,7 @@ static unsigned int status_calc_maxhpsp_pc(struct map_session_data* sd, unsigned
 static int status_get_sc_interval(enum sc_type type);
 
 static bool status_change_isDisabledOnMap_(sc_type type, bool mapIsVS, bool mapIsPVP, bool mapIsGVG, bool mapIsBG, unsigned int mapZone, bool mapIsTE);
-#define status_change_isDisabledOnMap(type, m) ( status_change_isDisabledOnMap_((type), map_flag_vs2((m)), map[(m)].flag.pvp != 0, map_flag_gvg2_no_te((m)), map[(m)].flag.battleground != 0, (map[(m)].zone << 3) != 0, map_flag_gvg2_te((m))) )
+#define status_change_isDisabledOnMap(type, m) ( status_change_isDisabledOnMap_((type), mapdata_flag_vs2((m)), m->flag[MF_PVP] != 0, mapdata_flag_gvg2_no_te((m)), m->flag[MF_BATTLEGROUND] != 0, (m->zone << 3) != 0, mapdata_flag_gvg2_te((m))) )
 
 /**
  * Returns the status change associated with a skill.
@@ -668,13 +668,14 @@ void initChangeTables(void)
 	set_sc( AB_EPICLESIS		, SC_EPICLESIS		, EFST_EPICLESIS		, SCB_MAXHP );
 	add_sc( AB_PRAEFATIO		, SC_KYRIE		);
 	set_sc_with_vfx( AB_ORATIO	, SC_ORATIO		, EFST_ORATIO		, SCB_NONE );
-	set_sc( AB_LAUDAAGNUS		, SC_LAUDAAGNUS		, EFST_LAUDAAGNUS		, SCB_VIT );
-	set_sc( AB_LAUDARAMUS		, SC_LAUDARAMUS		, EFST_LAUDARAMUS		, SCB_LUK );
+	set_sc( AB_LAUDAAGNUS		, SC_LAUDAAGNUS		, EFST_LAUDAAGNUS		, SCB_MAXHP );
+	set_sc( AB_LAUDARAMUS		, SC_LAUDARAMUS		, EFST_LAUDARAMUS		, SCB_ALL );
 	set_sc( AB_RENOVATIO		, SC_RENOVATIO		, EFST_RENOVATIO		, SCB_REGEN );
 	set_sc( AB_EXPIATIO		, SC_EXPIATIO		, EFST_EXPIATIO		, SCB_NONE );
 	set_sc( AB_DUPLELIGHT		, SC_DUPLELIGHT		, EFST_DUPLELIGHT		, SCB_NONE );
 	set_sc( AB_SECRAMENT		, SC_SECRAMENT		, EFST_AB_SECRAMENT, SCB_NONE );
 	set_sc( AB_OFFERTORIUM		, SC_OFFERTORIUM	, EFST_OFFERTORIUM	, SCB_NONE );
+	add_sc( AB_VITUPERATUM		, SC_AETERNA );
 
 	/* Warlock */
 	add_sc( WL_WHITEIMPRISON	, SC_WHITEIMPRISON	);
@@ -784,9 +785,9 @@ void initChangeTables(void)
 	set_sc( SO_VACUUM_EXTREME	, SC_VACUUM_EXTREME	, EFST_VACUUM_EXTREME	, SCB_NONE );
 	set_sc( SO_ARRULLO		, SC_DEEPSLEEP		, EFST_HANDICAPSTATE_DEEP_SLEEP, SCB_NONE );
 	set_sc( SO_FIRE_INSIGNIA	, SC_FIRE_INSIGNIA	, EFST_FIRE_INSIGNIA	, SCB_MATK|SCB_WATK|SCB_ATK_ELE|SCB_REGEN );
-	set_sc( SO_WATER_INSIGNIA	, SC_WATER_INSIGNIA	, EFST_WATER_INSIGNIA	, SCB_WATK|SCB_ATK_ELE|SCB_REGEN );
-	set_sc( SO_WIND_INSIGNIA	, SC_WIND_INSIGNIA	, EFST_WIND_INSIGNIA	, SCB_WATK|SCB_ASPD|SCB_ATK_ELE|SCB_REGEN );
-	set_sc( SO_EARTH_INSIGNIA	, SC_EARTH_INSIGNIA	, EFST_EARTH_INSIGNIA	, SCB_MDEF|SCB_DEF|SCB_MAXHP|SCB_MAXSP|SCB_WATK|SCB_ATK_ELE|SCB_REGEN );
+	set_sc( SO_WATER_INSIGNIA	, SC_WATER_INSIGNIA	, EFST_WATER_INSIGNIA	, SCB_MATK|SCB_WATK|SCB_ATK_ELE|SCB_REGEN );
+	set_sc( SO_WIND_INSIGNIA	, SC_WIND_INSIGNIA	, EFST_WIND_INSIGNIA	, SCB_MATK|SCB_WATK|SCB_ASPD|SCB_ATK_ELE|SCB_REGEN );
+	set_sc( SO_EARTH_INSIGNIA	, SC_EARTH_INSIGNIA	, EFST_EARTH_INSIGNIA	, SCB_MDEF|SCB_DEF|SCB_MAXHP|SCB_MAXSP|SCB_MATK|SCB_WATK|SCB_ATK_ELE|SCB_REGEN );
 
 	/* Genetic */
 	set_sc( GN_CARTBOOST			, SC_GN_CARTBOOST	, EFST_GN_CARTBOOST			, SCB_SPEED );
@@ -1165,6 +1166,8 @@ void initChangeTables(void)
 	StatusIconChangeTable[SC_GLASTHEIM_STATE] = EFST_GLASTHEIM_STATE;
 	StatusIconChangeTable[SC_GLASTHEIM_ITEMDEF] = EFST_GLASTHEIM_ITEMDEF;
 	StatusIconChangeTable[SC_GLASTHEIM_HPSP] = EFST_GLASTHEIM_HPSP;
+
+	StatusIconChangeTable[SC_ANCILLA] = EFST_ANCILLA;
 
 	/* Other SC which are not necessarily associated to skills */
 	StatusChangeFlagTable[SC_ASPDPOTION0] |= SCB_ASPD;
@@ -1716,7 +1719,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 dhp, in
 				* Endure count is only reduced by non-players on non-gvg maps.
 				* val4 signals infinite endure.
 				**/
-				if (src && src->type != BL_PC && !map_flag_gvg2(target->m) && !map[target->m].flag.battleground && --(sce->val2) <= 0)
+				if (src && src->type != BL_PC && !map_flag_gvg2(target->m) && !map_getmapflag(target->m, MF_BATTLEGROUND) && --(sce->val2) <= 0)
 					status_change_end(target, SC_ENDURE, INVALID_TIMER);
 			}
 			if ((sce=sc->data[SC_GRAVITATION]) && sce->val3 == BCT_SELF) {
@@ -2140,9 +2143,6 @@ bool status_check_skilluse(struct block_list *src, struct block_list *target, ui
 				clif_skill_fail((TBL_PC*)src,skill_id,USESKILL_FAIL_LEVEL,0);
 			return false;
 		}
-
-		if (flag == 1 && sc->data[SC_CURSEDCIRCLE_TARGET] && skill_id == MO_ABSORBSPIRITS) // Absorb Spirits fails to go through
-			return false;
 
 		if (skill_id != RK_REFRESH && skill_id != SU_GROOMING && sc->opt1 && sc->opt1 != OPT1_BURNING && skill_id != SR_GENTLETOUCH_CURE) { // Stuned/Frozen/etc
 			if (flag != 1) // Can't cast, casted stuff can't damage.
@@ -2801,10 +2801,11 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt)
 
 	if(flag&4) { // Strengthen Guardians - custom value +10% / lv
 		struct guild_castle *gc;
+		struct map_data *mapdata = map_getmapdata(md->bl.m);
 
-		gc=guild_mapname2gc(map[md->bl.m].name);
+		gc=guild_mapname2gc(mapdata->name);
 		if (!gc)
-			ShowError("status_calc_mob: No castle set at map %s\n", map[md->bl.m].name);
+			ShowError("status_calc_mob: No castle set at map %s\n", mapdata->name);
 		else if(gc->castle_id < 24 || md->mob_id == MOBID_EMPERIUM) {
 #ifdef RENEWAL
 			status->max_hp += 50 * (gc->defense / 5);
@@ -3069,6 +3070,8 @@ static int status_get_hpbonus(struct block_list *bl, enum e_status_bonus type) {
 				bonus += sc->data[SC_CURSED_SOIL_OPTION]->val2;
 			if(sc->data[SC_UPHEAVAL_OPTION])
 				bonus += sc->data[SC_UPHEAVAL_OPTION]->val2;
+			if(sc->data[SC_LAUDAAGNUS])
+				bonus += 2 + (sc->data[SC_LAUDAAGNUS]->val1 * 2);
 
 			//Decreasing
 			if(sc->data[SC_VENOMBLEED])
@@ -3330,7 +3333,7 @@ bool status_calc_cart_weight(struct map_session_data *sd, enum e_status_calc_wei
  * @param opt: Whether it is first calc (login) or not
  * @return (-1) for too many recursive calls, (1) recursive call, (0) success
  */
-int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
+int status_calc_pc_sub(struct map_session_data* sd, enum e_status_calc_opt opt)
 {
 	static int calculating = 0; ///< Check for recursive call preemption. [Skotlex]
 	struct status_data *base_status; ///< Pointer to the player's base status
@@ -4108,16 +4111,6 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 		sd->magic_addrace[RC_DRAGON]+=skill;
 		sd->subrace[RC_DRAGON]+=skill;
 	}
-	if((skill = pc_checkskill(sd, AB_EUCHARISTICA)) > 0) {
-		sd->right_weapon.addrace[RC_DEMON] += skill;
-		sd->right_weapon.addele[ELE_DARK] += skill;
-		sd->left_weapon.addrace[RC_DEMON] += skill;
-		sd->left_weapon.addele[ELE_DARK] += skill;
-		sd->magic_addrace[RC_DEMON] += skill;
-		sd->magic_addele[ELE_DARK] += skill;
-		sd->subrace[RC_DEMON] += skill;
-		sd->subele[ELE_DARK] += skill;
-	}
 
 	if(sc->count) {
 		if(sc->data[SC_CONCENTRATE]) { // Update the card-bonus data
@@ -4212,6 +4205,8 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 			sd->ignore_mdef_by_race[RC_UNDEAD] += sc->data[SC_GLASTHEIM_ATK]->val1;
 			sd->ignore_mdef_by_race[RC_DEMON] += sc->data[SC_GLASTHEIM_ATK]->val1;
 		}
+		if (sc->data[SC_LAUDARAMUS])
+			sd->bonus.crit_atk_rate += 5 * sc->data[SC_LAUDARAMUS]->val1;
 	}
 	status_cpy(&sd->battle_status, base_status);
 
@@ -4231,6 +4226,24 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 	calculating = 0;
 
 	return 0;
+}
+
+/// Intermediate function since C++ does not have a try-finally syntax
+int status_calc_pc_( struct map_session_data* sd, enum e_status_calc_opt opt ){
+	// Save the old script the player was attached to
+	struct script_state* previous_st = sd->st;
+
+	// Store the return value of the original function
+	int ret = status_calc_pc_sub( sd, opt );
+
+	// If an old script is present
+	if( previous_st ){
+		// Reattach the player to it, so that the limitations of that script kick back in
+		script_attach_state( previous_st );
+	}
+
+	// Return the original return value
+	return ret;
 }
 
 /**
@@ -4508,8 +4521,12 @@ void status_calc_regen(struct block_list *bl, struct status_data *status, struct
 		if( (skill=pc_checkskill(sd,WM_LESSON)) > 0 )
 			val += 3 + 3 * skill;
 
-		if (sc && sc->count && sc->data[SC_SHRIMPBLESSING])
-			val += 150 / 100;
+		if (sc && sc->count) {
+			if (sc->data[SC_SHRIMPBLESSING])
+				val += 150 / 100;
+			if (sc->data[SC_ANCILLA])
+				val += sc->data[SC_ANCILLA]->val2 / 100;
+		}
 
 		sregen->sp = cap_value(val, 0, SHRT_MAX);
 
@@ -4965,6 +4982,8 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag)
 		if( bl->type&BL_PC && !(sd && sd->state.permanent_speed) && status->speed < battle_config.max_walk_speed )
 			status->speed = battle_config.max_walk_speed;
 
+		if( bl->type&BL_PET && ((TBL_PET*)bl)->master)
+			status->speed = status_get_speed(&((TBL_PET*)bl)->master->bl);
 		if( bl->type&BL_HOM && battle_config.hom_setting&HOMSET_COPY_SPEED && ((TBL_HOM*)bl)->master)
 			status->speed = status_get_speed(&((TBL_HOM*)bl)->master->bl);
 		if( bl->type&BL_MER && ((TBL_MER*)bl)->master)
@@ -5611,8 +5630,6 @@ static unsigned short status_calc_vit(struct block_list *bl, struct status_chang
 		vit += sc->data[SC_MARIONETTE2]->val3&0xFF;
 	if(sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_HIGH)
 		vit += sc->data[SC_SPIRIT]->val3&0xFF;
-	if(sc->data[SC_LAUDAAGNUS])
-		vit += 4 + sc->data[SC_LAUDAAGNUS]->val1;
 	if(sc->data[SC_MINOR_BBQ])
 		vit += sc->data[SC_MINOR_BBQ]->val1;
 	if(sc->data[SC_INSPIRATION])
@@ -5846,8 +5863,6 @@ static unsigned short status_calc_luk(struct block_list *bl, struct status_chang
 		luk -= sc->data[SC_STOMACHACHE]->val1;
 	if(sc->data[SC_KYOUGAKU])
 		luk -= sc->data[SC_KYOUGAKU]->val2;
-	if(sc->data[SC_LAUDARAMUS])
-		luk += 4 + sc->data[SC_LAUDARAMUS]->val1;
 	if(sc->data[SC_2011RWC_SCROLL])
 		luk += sc->data[SC_2011RWC_SCROLL]->val1;
 	if(sc->data[SC__STRIPACCESSORY] && bl->type != BL_PC)
@@ -6261,9 +6276,11 @@ static signed short status_calc_hit(struct block_list *bl, struct status_change 
 static signed short status_calc_flee(struct block_list *bl, struct status_change *sc, int flee)
 {
 	if( bl->type == BL_PC ) {
-		if( map_flag_gvg(bl->m) )
+		struct map_data *mapdata = map_getmapdata(bl->m);
+
+		if( mapdata_flag_gvg(mapdata) )
 			flee -= flee * battle_config.gvg_flee_penalty/100;
-		else if( map[bl->m].flag.battleground )
+		else if( mapdata->flag[MF_BATTLEGROUND] )
 			flee -= flee * battle_config.bg_flee_penalty/100;
 	}
 
@@ -7151,7 +7168,7 @@ static short status_calc_aspd_rate(struct block_list *bl, struct status_change *
  */
 static unsigned short status_calc_dmotion(struct block_list *bl, struct status_change *sc, int dmotion)
 {
-	if( !sc || !sc->count || map_flag_gvg2(bl->m) || map[bl->m].flag.battleground )
+	if( !sc || !sc->count || map_flag_gvg2(bl->m) || map_getmapflag(bl->m, MF_BATTLEGROUND) )
 		return cap_value(dmotion,0,USHRT_MAX);
 
 	/// It has been confirmed on official servers that MvP mobs have no dmotion even without endure
@@ -7772,17 +7789,14 @@ void status_set_viewdata(struct block_list *bl, int class_)
 						sd->vd.cloth_color = 0;
 					if(sd->sc.option&OPTION_XMAS && battle_config.xmas_ignorepalette)
 						sd->vd.cloth_color = 0;
-					if(sd->sc.option&OPTION_SUMMER && battle_config.summer_ignorepalette)
+					if(sd->sc.option&(OPTION_SUMMER|OPTION_SUMMER2) && battle_config.summer_ignorepalette)
 						sd->vd.cloth_color = 0;
 					if(sd->sc.option&OPTION_HANBOK && battle_config.hanbok_ignorepalette)
 						sd->vd.cloth_color = 0;
 					if(sd->sc.option&OPTION_OKTOBERFEST && battle_config.oktoberfest_ignorepalette)
 						sd->vd.cloth_color = 0;
 				}
-				if ( sd->vd.body_style && (
- 					sd->sc.option&OPTION_WEDDING || sd->sc.option&OPTION_XMAS ||
- 					sd->sc.option&OPTION_SUMMER || sd->sc.option&OPTION_HANBOK ||
- 					sd->sc.option&OPTION_OKTOBERFEST))
+				if ( sd->vd.body_style && sd->sc.option&OPTION_COSTUME)
  					sd->vd.body_style = 0;
 			} else if (vd)
 				memcpy(&sd->vd, vd, sizeof(struct view_data));
@@ -8427,7 +8441,7 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 	if( bl->type != BL_NPC && status_isdead(bl) && ( type != SC_NOCHAT && type != SC_JAILED ) ) // SC_NOCHAT and SC_JAILED should work even on dead characters
 		return 0;
 
-	if (status_change_isDisabledOnMap(type, bl->m))
+	if (status_change_isDisabledOnMap(type, map_getmapdata(bl->m)))
 		return 0;
 
 	// Uncomment to prevent status adding hp to gvg mob (like bloodylust=hp*3 etc...
@@ -8547,7 +8561,7 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 		break;
 	case SC_FREEZING:
 	case SC_CRYSTALIZE:
-		if ((type == SC_FREEZING && sc->data[SC_BURNING]) || sc->data[SC_WARMER])
+		if (sc->data[SC_WARMER])
 			return 0; // Immune to Frozen and Freezing status if under Warmer status. [Jobbie]
 		break;
 	case SC_SLEEP:
@@ -8590,9 +8604,6 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 		if(sc->data[SC_SATURDAYNIGHTFEVER])
 			return 0;
 		break;
-	case SC_BURNING:
-		if (sc->data[SC_FREEZING])
-			return 0;
 	// Fall through
 	case SC_WHITEIMPRISON:
 		if (sc->opt1)
@@ -9449,7 +9460,7 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			break;
 		case SC_ENDURE:
 			val2 = 7; // Hit-count [Celest]
-			if( !(flag&SCSTART_NOAVOID) && (bl->type&(BL_PC|BL_MER)) && !map_flag_gvg2(bl->m) && !map[bl->m].flag.battleground && !val4 ) {
+			if( !(flag&SCSTART_NOAVOID) && (bl->type&(BL_PC|BL_MER)) && !map_flag_gvg2(bl->m) && !map_getmapflag(bl->m, MF_BATTLEGROUND) && !val4 ) {
 				struct map_session_data *tsd;
 				if( sd ) {
 					int i;
@@ -9761,7 +9772,7 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			if (sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_ROGUE)
 				val3 -= 40;
 			val4 = 10+val1*2; // SP cost.
-			if (map_flag_gvg2(bl->m) || map[bl->m].flag.battleground) val4 *= 5;
+			if (map_flag_gvg2(bl->m) || map_getmapflag(bl->m, MF_BATTLEGROUND)) val4 *= 5;
 			break;
 		case SC_CLOAKING:
 			if (!sd) // Monsters should be able to walk with no penalties. [Skotlex]
@@ -9956,7 +9967,7 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 
 			if( (d_bl = map_id2bl(val1)) && (d_sc = status_get_sc(d_bl)) && d_sc->count ) { // Inherits Status From Source
 				const enum sc_type types[] = { SC_AUTOGUARD, SC_DEFENDER, SC_REFLECTSHIELD, SC_ENDURE };
-				int i = (map_flag_gvg2(bl->m) || map[bl->m].flag.battleground)?2:3;
+				int i = (map_flag_gvg2(bl->m) || map_getmapflag(bl->m, MF_BATTLEGROUND))?2:3;
 				while( i >= 0 ) {
 					enum sc_type type2 = types[i];
 					if( d_sc->data[type2] )
@@ -11159,6 +11170,10 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			val1 = 10000; // HP bonus
 			val2 = 1000; // SP bonus
 			break;
+		case SC_ANCILLA:
+			val1 = 15; // Heal Power rate bonus
+			val2 = 30; // SP Recovery rate bonus
+			break;
 
 		default:
 			if( calc_flag == SCB_NONE && StatusSkillChangeTable[type] == -1 && StatusIconChangeTable[type] == EFST_BLANK ) {
@@ -11543,7 +11558,6 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			opt_flag |= 0x4;
 			break;
 		case SC_SUMMER:
-		case SC_DRESSUP:
 			sc->option |= OPTION_SUMMER;
 			opt_flag |= 0x4;
 			break;
@@ -11553,6 +11567,10 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			break;
 		case SC_OKTOBERFEST:
 			sc->option |= OPTION_OKTOBERFEST;
+			opt_flag |= 0x4;
+			break;
+		case SC_DRESSUP:
+			sc->option |= OPTION_SUMMER2;
 			opt_flag |= 0x4;
 			break;
 		case SC_ORCISH:
@@ -12539,7 +12557,6 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		opt_flag |= 0x4;
 		break;
 	case SC_SUMMER:
-	case SC_DRESSUP:
 		sc->option &= ~OPTION_SUMMER;
 		opt_flag |= 0x4;
 		break;
@@ -12549,6 +12566,10 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		break;
 	case SC_OKTOBERFEST:
 		sc->option &= ~OPTION_OKTOBERFEST;
+		opt_flag |= 0x4;
+		break;
+	case SC_DRESSUP:
+		sc->option &= ~OPTION_SUMMER2;
 		opt_flag |= 0x4;
 		break;
 	case SC_ORCISH:
@@ -12718,8 +12739,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
  * @param data: Information passed through the timer call
  * @return 1: Success 0: Fail
  */
-int status_change_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
+TIMER_FUNC(status_change_timer){
 	enum sc_type type = (sc_type)data;
 	struct block_list *bl;
 	struct map_session_data *sd;
@@ -13145,7 +13165,7 @@ int status_change_timer(int tid, unsigned int tick, int id, intptr_t data)
 
 	case SC_RENOVATIO:
 		if( --(sce->val4) >= 0 ) {
-			int heal = status->max_hp * 3 / 100;
+			int heal = status->max_hp * 5 / 100;
 			if( sc && sc->data[SC_AKAITSUKI] && heal )
 				heal = ~heal + 1;
 			status_heal(bl, heal, 0, 3);
@@ -14284,8 +14304,7 @@ static int status_natural_heal(struct block_list* bl, va_list args)
  * @param data: data pushed through timer function
  * @return 0
  */
-static int status_natural_heal_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
+static TIMER_FUNC(status_natural_heal_timer){
 	natural_heal_diff_tick = DIFF_TICK(tick,natural_heal_prev_tick);
 	map_foreachregen(status_natural_heal);
 	natural_heal_prev_tick = tick;
@@ -14349,13 +14368,14 @@ void status_change_clear_onChangeMap(struct block_list *bl, struct status_change
 	nullpo_retv(bl);
 
 	if (sc && sc->count) {
+		struct map_data *mapdata = map_getmapdata(bl->m);
 		unsigned short i;
-		bool mapIsVS = map_flag_vs2(bl->m);
-		bool mapIsPVP = map[bl->m].flag.pvp != 0;
-		bool mapIsGVG = map_flag_gvg2_no_te(bl->m);
-		bool mapIsBG = map[bl->m].flag.battleground != 0;
-		bool mapIsTE = map_flag_gvg2_te(bl->m);
-		unsigned int mapZone = map[bl->m].zone << 3;
+		bool mapIsVS = mapdata_flag_vs2(mapdata);
+		bool mapIsPVP = mapdata->flag[MF_PVP] != 0;
+		bool mapIsGVG = mapdata_flag_gvg2_no_te(mapdata);
+		bool mapIsBG = mapdata->flag[MF_BATTLEGROUND] != 0;
+		bool mapIsTE = mapdata_flag_gvg2_te(mapdata);
+		unsigned int mapZone = mapdata->zone << 3;
 
 		for (i = 0; i < SC_MAX; i++) {
 			if (!sc->data[i] || !SCDisabled[i])

@@ -527,7 +527,9 @@ int skill_calc_heal(struct block_list *src, struct block_list *target, uint16 sk
 			if (tsc->data[SC_EXTRACT_WHITE_POTION_Z])
 				hp_bonus += tsc->data[SC_EXTRACT_WHITE_POTION_Z]->val1;
 			if (tsc->data[SC_GLASTHEIM_HEAL])
-				hp_bonus += sc->data[SC_GLASTHEIM_HEAL]->val2;
+				hp_bonus += tsc->data[SC_GLASTHEIM_HEAL]->val2;
+			if (tsc->data[SC_ANCILLA])
+				hp_bonus += tsc->data[SC_ANCILLA]->val1;
 		}
 	}
 
@@ -668,7 +670,7 @@ bool skill_isNotOk(uint16 skill_id, struct map_session_data *sd)
 	if (skill_id == AL_TELEPORT && sd->skillitem == skill_id && sd->skillitemlv > 2)
 		return false; // Teleport lv 3 bypasses this check.[Inkfish]
 
-	if (map[m].flag.noskill)
+	if (map_getmapflag(m, MF_NOSKILL))
 		return true;
 
 	// Epoque:
@@ -693,14 +695,16 @@ bool skill_isNotOk(uint16 skill_id, struct map_session_data *sd)
 	if( sd->skillitem == skill_id && !sd->skillitem_keep_requirement )
 		return false;
 
+	struct map_data *mapdata = map_getmapdata(m);
+
 	skill_nocast = skill_get_nocast(skill_id);
 	// Check skill restrictions [Celest]
-	if( (!map_flag_vs2(m) && skill_nocast&1) ||
-		(map[m].flag.pvp && skill_nocast&2) ||
-		(map_flag_gvg2_no_te(m) && skill_nocast&4) ||
-		(map[m].flag.battleground && skill_nocast&8) ||
-		(map_flag_gvg2_te(m) && skill_nocast&16) || // WOE:TE
-		(map[m].flag.restricted && map[m].zone && skill_nocast&(8*map[m].zone)) ){
+	if( (skill_nocast&1 && !mapdata_flag_vs2(mapdata)) ||
+		(skill_nocast&2 && mapdata->flag[MF_PVP]) ||
+		(skill_nocast&4 && mapdata_flag_gvg2_no_te(mapdata)) ||
+		(skill_nocast&8 && mapdata->flag[MF_BATTLEGROUND]) ||
+		(skill_nocast&16 && mapdata_flag_gvg2_te(mapdata)) || // WOE:TE
+		(mapdata->zone && skill_nocast&(8*mapdata->zone) && mapdata->flag[MF_RESTRICTED]) ){
 			clif_msg(sd, SKILL_CANT_USE_AREA); // This skill cannot be used within this area
 			return true;
 	}
@@ -713,7 +717,7 @@ bool skill_isNotOk(uint16 skill_id, struct map_session_data *sd)
 		case RETURN_TO_ELDICASTES:
 		case ALL_GUARDIAN_RECALL:
 		case ECLAGE_RECALL:
-			if(map[m].flag.nowarp) {
+			if(mapdata->flag[MF_NOWARP]) {
 				clif_skill_teleportmessage(sd,0);
 				return true;
 			}
@@ -723,7 +727,7 @@ bool skill_isNotOk(uint16 skill_id, struct map_session_data *sd)
 		case SC_DIMENSIONDOOR:
 		case ALL_ODINS_RECALL:
 		case WE_CALLALLFAMILY:
-			if(map[m].flag.noteleport) {
+			if(mapdata->flag[MF_NOTELEPORT]) {
 				clif_skill_teleportmessage(sd,0);
 				return true;
 			}
@@ -731,14 +735,14 @@ bool skill_isNotOk(uint16 skill_id, struct map_session_data *sd)
 		case WE_CALLPARTNER:
 		case WE_CALLPARENT:
 		case WE_CALLBABY:
-			if (map[m].flag.nomemo) {
+			if (mapdata->flag[MF_NOMEMO]) {
 				clif_skill_teleportmessage(sd,1);
 				return true;
 			}
 			break;
 		case MC_VENDING:
 		case ALL_BUYING_STORE:
-			if( map[sd->bl.m].flag.novending ) {
+			if( map_getmapflag(sd->bl.m, MF_NOVENDING) ) {
 				clif_displaymessage (sd->fd, msg_txt(sd,276)); // "You can't open a shop on this map"
 				clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return true;
@@ -760,13 +764,13 @@ bool skill_isNotOk(uint16 skill_id, struct map_session_data *sd)
 			return false; // always allowed
 		case WZ_ICEWALL:
 			// noicewall flag [Valaris]
-			if (map[m].flag.noicewall) {
+			if (mapdata->flag[MF_NOICEWALL]) {
 				clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return true;
 			}
 			break;
 		case GC_DARKILLUSION:
-			if( map_flag_gvg2(m) ) {
+			if( mapdata_flag_gvg2(mapdata) ) {
 				clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return true;
 			}
@@ -775,8 +779,8 @@ bool skill_isNotOk(uint16 skill_id, struct map_session_data *sd)
 		case GD_ITEMEMERGENCYCALL:
 			if (
 				!(battle_config.emergency_call&((is_agit_start())?2:1)) ||
-				!(battle_config.emergency_call&(map_flag_gvg2(m)?8:4)) ||
-				(battle_config.emergency_call&16 && map[m].flag.nowarpto && !(map[m].flag.gvg_castle || map[m].flag.gvg_te_castle))
+				!(battle_config.emergency_call&(mapdata_flag_gvg2(mapdata)?8:4)) ||
+				(battle_config.emergency_call&16 && mapdata->flag[MF_NOWARPTO] && !(mapdata->flag[MF_GVG_CASTLE] || mapdata->flag[MF_GVG_TE_CASTLE]))
 			)	{
 				clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return true;
@@ -786,7 +790,7 @@ bool skill_isNotOk(uint16 skill_id, struct map_session_data *sd)
 		case WM_SOUND_OF_DESTRUCTION:
 		case WM_LULLABY_DEEPSLEEP:
 		case WM_SATURDAY_NIGHT_FEVER:
-			if( !map_flag_vs(m) ) {
+			if( !mapdata_flag_vs(mapdata) ) {
 				clif_skill_teleportmessage(sd,2); // This skill uses this msg instead of skill fails.
 				return true;
 			}
@@ -2371,7 +2375,7 @@ int skill_counter_additional_effect (struct block_list* src, struct block_list *
 	}
 
 	if(sd && (sd->class_&MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR &&
-		map[sd->bl.m].flag.nosumstarmiracle == 0)	//SG_MIRACLE [Komurka]
+		map_getmapflag(sd->bl.m, MF_NOSUNMOONSTARMIRACLE) == 0)	//SG_MIRACLE [Komurka]
 		status_change_start(src,src,SC_MIRACLE,battle_config.sg_miracle_skill_ratio,1,0,0,0,battle_config.sg_miracle_skill_duration,SCSTART_NONE);
 
 	if(sd && skill_id && attack_type&BF_MAGIC && status_isdead(bl) &&
@@ -3980,8 +3984,7 @@ int skill_area_sub_count (struct block_list *src, struct block_list *target, uin
 /*==========================================
  *
  *------------------------------------------*/
-static int skill_timerskill(int tid, unsigned int tick, int id, intptr_t data)
-{
+static TIMER_FUNC(skill_timerskill){
 	struct block_list *src = map_id2bl(id),*target;
 	struct unit_data *ud = unit_bl2ud(src);
 	struct skill_timerskill *skl;
@@ -4858,7 +4861,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 			else
 				y = 0;
 			// Ashura Strike still has slide effect in GVG
-			if ((mbl == src || (!map_flag_gvg2(src->m) && !map[src->m].flag.battleground)) &&
+			if ((mbl == src || (!map_flag_gvg2(src->m) && !map_getmapflag(src->m, MF_BATTLEGROUND))) &&
 				unit_movepos(src, mbl->x + x, mbl->y + y, 1, 1)) {
 				clif_blown(src);
 				clif_spiritball(src);
@@ -4909,6 +4912,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 	case NPC_JACKFROST:
 	case RK_IGNITIONBREAK:
 	case AB_JUDEX:
+	case AB_ADORAMUS:
 	case WL_SOULEXPANSION:
 	case WL_CRIMSONROCK:
 	case WL_JACKFROST:
@@ -5198,8 +5202,6 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 	case NJ_KOUENKA:
 	case NJ_HYOUSENSOU:
 	case NJ_HUUJIN:
-	case AB_ADORAMUS:
-	case AB_RENOVATIO:
 	case AB_HIGHNESSHEAL:
 	case AB_DUPLELIGHT_MAGIC:
 	case WM_METALICSOUND:
@@ -5355,7 +5357,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 			sc_start(src,src,SC_HIDING,100,skill_lv,skill_get_time(skill_id,skill_lv));
 		break;
 	case NJ_KIRIKAGE:
-		if( !map_flag_gvg2(src->m) && !map[src->m].flag.battleground )
+		if( !map_flag_gvg2(src->m) && !map_getmapflag(src->m, MF_BATTLEGROUND) )
 		{	//You don't move on GVG grounds.
 			short x, y;
 			map_search_freecell(bl, 0, &x, &y, 1, 1, 0);
@@ -6109,7 +6111,6 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
  		case AL_HEAL:
 		case ALL_RESURRECTION:
 		case PR_ASPERSIO:
-		case AB_RENOVATIO:
 		case AB_HIGHNESSHEAL:
 			//Apparently only player casted skills can be offensive like this.
 			if (sd && battle_check_undead(tstatus->race,tstatus->def_ele)) {
@@ -6210,7 +6211,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				break;
 			}
 			skill_area_temp[0] = battle_config.exp_cost_redemptio_limit - skill_area_temp[0]; // The actual penalty...
-			if (skill_area_temp[0] > 0 && !map[src->m].flag.noexppenalty && battle_config.exp_cost_redemptio) { //Apply penalty
+			if (skill_area_temp[0] > 0 && !map_getmapflag(src->m, MF_NOEXPPENALTY) && battle_config.exp_cost_redemptio) { //Apply penalty
 				//If total penalty is 1% => reduced 0.2% penalty per each revived player
 				pc_lostexp(sd, u32min(sd->status.base_exp, (pc_nextbaseexp(sd) * skill_area_temp[0] * battle_config.exp_cost_redemptio / battle_config.exp_cost_redemptio_limit) / 100), 0);
 			}
@@ -6224,7 +6225,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			break;
 
 	case ALL_RESURRECTION:
-		if(sd && (map_flag_gvg2(bl->m) || map[bl->m].flag.battleground))
+		if(sd && (map_flag_gvg2(bl->m) || map_getmapflag(bl->m, MF_BATTLEGROUND)))
 		{	//No reviving in WoE grounds!
 			clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 			break;
@@ -6238,7 +6239,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				break;
 			}
 
-			if (map[bl->m].flag.pvp && dstsd && dstsd->pvp_point < 0)
+			if (map_getmapflag(bl->m, MF_PVP) && dstsd && dstsd->pvp_point < 0)
 				break;
 
 			switch(skill_lv){
@@ -6647,7 +6648,6 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 	case NPC_INVINCIBLE:
 	case NPC_INVINCIBLEOFF:
 	case RK_DEATHBOUND:
-	case AB_RENOVATIO:
 	case AB_EXPIATIO:
 	case AB_DUPLELIGHT:
 	case AB_SECRAMENT:
@@ -6732,9 +6732,8 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		break;
 	case HLIF_AVOID:
 	case HAMI_DEFENCE:
-		i = skill_get_time(skill_id,skill_lv);
-		clif_skill_nodamage(bl,bl,skill_id,skill_lv,sc_start(src,bl,type,100,skill_lv,i)); // Master
-		clif_skill_nodamage(src,src,skill_id,skill_lv,sc_start(src,src,type,100,skill_lv,i)); // Homunc
+		sc_start(src,bl,type,100,skill_lv,skill_get_time(skill_id,skill_lv)); // Master
+		clif_skill_nodamage(src,src,skill_id,skill_lv,sc_start(src,src,type,100,skill_lv,skill_get_time(skill_id,skill_lv))); // Homunc
 		break;
 	case NJ_BUNSINJYUTSU:
 		status_change_end(bl, SC_BUNSINJYUTSU, INVALID_TIMER); // on official recasting cancels existing mirror image [helvetica]
@@ -6962,7 +6961,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 
 	case MO_ABSORBSPIRITS:
 		i = 0;
-		if (dstsd && (sd == dstsd || map_flag_vs(src->m) || (sd && sd->duel_group && sd->duel_group == dstsd->duel_group)) &&
+		if (dstsd && battle_check_target(src, bl, BCT_SELF|BCT_ENEMY) > 0 && (map_flag_vs(src->m) || (sd && sd->duel_group && sd->duel_group == dstsd->duel_group)) && // Only works on self and enemies
 			((dstsd->class_&MAPID_BASEMASK) != MAPID_GUNSLINGER || (dstsd->class_&MAPID_UPPERMASK) != MAPID_REBELLION)) { // split the if for readability, and included gunslingers in the check so that their coins cannot be removed [Reddozen]
 			if (dstsd->spiritball > 0) {
 				i = dstsd->spiritball * 7;
@@ -6975,6 +6974,10 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		} else if (dstmd && !status_has_mode(tstatus,MD_STATUS_IMMUNE) && rnd() % 100 < 20) { // check if target is a monster and not status immune, for the 20% chance to absorb 2 SP per monster's level [Reddozen]
 			i = 2 * dstmd->level;
 			mob_target(dstmd,src,0);
+		} else {
+			if (sd)
+				clif_skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0);
+			break;
 		}
 		if (i) status_heal(src, 0, i, 3);
 		clif_skill_nodamage(src,bl,skill_id,skill_lv,i?1:0);
@@ -7507,7 +7510,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 	case ALL_ODINS_RECALL:
 		if(sd)
 		{
-			if (map[bl->m].flag.noteleport && skill_lv <= 2) {
+			if (map_getmapflag(bl->m, MF_NOTELEPORT) && skill_lv <= 2) {
 				clif_skill_teleportmessage(sd,0);
 				break;
 			}
@@ -7976,8 +7979,8 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			int x,y, dir = unit_getdir(src);
 
 			//Fails on noteleport maps, except for GvG and BG maps [Skotlex]
-			if( map[src->m].flag.noteleport &&
-				!(map[src->m].flag.battleground || map_flag_gvg2(src->m) )
+			if( map_getmapflag(src->m, MF_NOTELEPORT) &&
+				!(map_getmapflag(src->m, MF_BATTLEGROUND) || map_flag_gvg2(src->m) )
 			) {
 				x = src->x;
 				y = src->y;
@@ -8361,7 +8364,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				map_freeblock_unlock();
 				return 1;
 			}
-			if ((map_flag_gvg2(bl->m) || map[bl->m].flag.battleground)) { // No reviving in WoE grounds!
+			if (map_flag_gvg2(bl->m) || map_getmapflag(bl->m, MF_BATTLEGROUND)) { // No reviving in WoE grounds!
 				clif_skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0);
 				break;
 			}
@@ -8372,7 +8375,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					break;
 				if (tsc && tsc->data[SC_HELLPOWER])
 					break;
-				if (map[bl->m].flag.pvp && dstsd->pvp_point < 0)
+				if (map_getmapflag(bl->m, MF_PVP) && dstsd->pvp_point < 0)
 					break;
 				if (dstsd->special_state.restart_full_recover)
 					per = sper = 100;
@@ -8814,7 +8817,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				if (j > 8)
 					j = 0;
 				if ((dstsd = g->member[i].sd) != NULL && sd != dstsd && !dstsd->state.autotrade && !pc_isdead(dstsd)) {
-					if (map[dstsd->bl.m].flag.nowarp && !map_flag_gvg2(dstsd->bl.m))
+					if (map_getmapflag(dstsd->bl.m, MF_NOWARP) && !map_flag_gvg2(dstsd->bl.m))
 						continue;
 					if (!pc_job_can_entermap((enum e_job)dstsd->status.class_, src->m, dstsd->group_level))
 						continue;
@@ -9235,9 +9238,13 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		break;
 
 	case AB_PRAEFATIO:
-		if( !sd || sd->status.party_id == 0 || flag&1 )
-			clif_skill_nodamage(bl, bl, skill_id, skill_lv, sc_start4(src, bl, type, 100, skill_lv, 0, 0, (sd && sd->status.party_id ? party_foreachsamemap(party_sub_count, sd, 0) : 1 ), skill_get_time(skill_id, skill_lv)));
-		else if( sd )
+	case AB_RENOVATIO:
+		if( !sd || sd->status.party_id == 0 || flag&1 ) {
+			if (skill_id == AB_PRAEFATIO)
+				clif_skill_nodamage(bl, bl, skill_id, skill_lv, sc_start4(src, bl, type, 100, skill_lv, 0, 0, (sd && sd->status.party_id ? party_foreachsamemap(party_sub_count, sd, 0) : 1 ), skill_get_time(skill_id, skill_lv)));
+			else
+				clif_skill_nodamage(bl, bl, skill_id, skill_lv, sc_start(src, bl, type, 100, skill_lv, skill_get_time(skill_id, skill_lv)));
+		} else if( sd )
 			party_foreachsamemap(skill_area_sub, sd, skill_get_splash(skill_id, skill_lv), src, skill_id, skill_lv, tick, flag|BCT_PARTY|1, skill_castend_nodamage_id);
 		break;
 
@@ -9276,8 +9283,8 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		if( flag&1 || !sd || !sd->status.party_id ) {
 			if( tsc && (tsc->data[SC_FREEZE] || tsc->data[SC_STONE] || tsc->data[SC_BLIND] ||
 				tsc->data[SC_BURNING] || tsc->data[SC_FREEZING] || tsc->data[SC_CRYSTALIZE])) {
-				// Success Chance: (40 + 10 * Skill Level) %
-				if( rnd()%100 > 40+10*skill_lv ) break;
+				// Success Chance: (60 + 10 * Skill Level) %
+				if( rnd()%100 > 60+10*skill_lv ) break;
 				status_change_end(bl, SC_FREEZE, INVALID_TIMER);
 				status_change_end(bl, SC_STONE, INVALID_TIMER);
 				status_change_end(bl, SC_BLIND, INVALID_TIMER);
@@ -9295,8 +9302,8 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 	case AB_LAUDARAMUS:
 		if( flag&1 || !sd || !sd->status.party_id ) {
 			if( tsc && (tsc->data[SC_SLEEP] || tsc->data[SC_STUN] || tsc->data[SC_MANDRAGORA] || tsc->data[SC_SILENCE] || tsc->data[SC_DEEPSLEEP]) ){
-				// Success Chance: (40 + 10 * Skill Level) %
-				if( rnd()%100 > 40+10*skill_lv )  break;
+				// Success Chance: (60 + 10 * Skill Level) %
+				if( rnd()%100 > 60+10*skill_lv )  break;
 				status_change_end(bl, SC_SLEEP, INVALID_TIMER);
 				status_change_end(bl, SC_STUN, INVALID_TIMER);
 				status_change_end(bl, SC_MANDRAGORA, INVALID_TIMER);
@@ -9433,7 +9440,9 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		if (flag&1)
 			sc_start(src,bl,type,100,skill_lv,skill_get_time(skill_id,skill_lv));
 		else {
-			map_foreachinallrange(skill_area_sub,src,skill_get_splash(skill_id, skill_lv),BL_CHAR,src,skill_id,skill_lv,tick,(map_flag_vs(src->m)?BCT_ALL:BCT_ENEMY|BCT_SELF)|flag|1,skill_castend_nodamage_id);
+			struct map_data *mapdata = map_getmapdata(src->m);
+
+			map_foreachinallrange(skill_area_sub,src,skill_get_splash(skill_id, skill_lv),BL_CHAR,src,skill_id,skill_lv,tick,(mapdata_flag_vs(mapdata)?BCT_ALL:BCT_ENEMY|BCT_SELF)|flag|1,skill_castend_nodamage_id);
 			clif_skill_nodamage(src, bl, skill_id, skill_lv, 1);
 		}
 		break;
@@ -9918,7 +9927,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		break;
 
 	case LG_INSPIRATION:
-		if( sd && !map[sd->bl.m].flag.noexppenalty && battle_config.exp_cost_inspiration )
+		if( sd && !map_getmapflag(sd->bl.m, MF_NOEXPPENALTY) && battle_config.exp_cost_inspiration )
 			pc_lostexp(sd, u32min(sd->status.base_exp, pc_nextbaseexp(sd) * battle_config.exp_cost_inspiration / 100), 0); // 1% penalty.
 		clif_skill_nodamage(bl,src,skill_id,skill_lv, sc_start(src,bl, type, 100, skill_lv, skill_get_time(skill_id, skill_lv)));
 		break;
@@ -10932,6 +10941,49 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		}
 		break;
 
+	case AB_VITUPERATUM:
+		if (flag&1)
+			clif_skill_nodamage(src, bl, skill_id, skill_lv, sc_start(src, bl, type, 100, skill_lv, skill_get_time(skill_id, skill_lv)));
+		else {
+			map_foreachinrange(skill_area_sub, bl, skill_get_splash(skill_id, skill_lv), BL_CHAR, src, skill_id, skill_lv, tick, flag|BCT_ENEMY|1, skill_castend_nodamage_id);
+			clif_skill_nodamage(src, bl, skill_id, skill_lv, 1);
+		}
+		break;
+
+	case AB_CONVENIO:
+		if (sd) {
+			party_data *p = party_search(sd->status.party_id);
+			int i = 0, count = 0;
+
+			// Only usable in party
+			if (p == nullptr) {
+				clif_skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0);
+				break;
+			}
+
+			// Only usable as party leader.
+			ARR_FIND(0, MAX_PARTY, i, p->data[i].sd == sd);
+			if (i == MAX_PARTY || !p->party.member[i].leader) {
+				clif_skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0);
+				break;
+			}
+
+			// Do the teleport part
+			for (i = 0; i < MAX_PARTY; ++i) {
+				map_session_data *pl_sd = pl_sd = p->data[i].sd;
+
+				if (pl_sd == nullptr || pl_sd == sd || pl_sd->status.party_id != p->party.party_id || pc_isdead(pl_sd) ||
+					sd->bl.m != pl_sd->bl.m)
+					continue;
+				if (!(map_getmapflag(sd->bl.m, MF_NOTELEPORT) || map_getmapflag(sd->bl.m, MF_PVP) || map_getmapflag(sd->bl.m, MF_BATTLEGROUND) || map_flag_gvg2(sd->bl.m))) {
+					pc_setpos(pl_sd, map_id2index(sd->bl.m), sd->bl.x, sd->bl.y, CLR_TELEPORT);
+					count++;
+				}
+			}
+			if (!count)
+				clif_skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0);
+		}
+		break;
 	default:
 		ShowWarning("skill_castend_nodamage_id: Unknown skill used:%d\n",skill_id);
 		clif_skill_nodamage(src,bl,skill_id,skill_lv,1);
@@ -11107,8 +11159,7 @@ static int8 skill_castend_id_check(struct block_list *src, struct block_list *ta
  * @param tick
  * @param data
  **/
-int skill_castend_id(int tid, unsigned int tick, int id, intptr_t data)
-{
+TIMER_FUNC(skill_castend_id){
 	struct block_list *target, *src;
 	struct map_session_data *sd;
 	struct mob_data *md;
@@ -11401,8 +11452,7 @@ int skill_castend_id(int tid, unsigned int tick, int id, intptr_t data)
 /*==========================================
  *
  *------------------------------------------*/
-int skill_castend_pos(int tid, unsigned int tick, int id, intptr_t data)
-{
+TIMER_FUNC(skill_castend_pos){
 	struct block_list* src = map_id2bl(id);
 	struct map_session_data *sd;
 	struct unit_data *ud = unit_bl2ud(src);
@@ -12372,7 +12422,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 			uint8 dir = map_calc_dir(src, x, y);
 
 			// Fails on noteleport maps, except for GvG and BG maps
-			if (map[src->m].flag.noteleport && !(map[src->m].flag.battleground || map_flag_gvg2(src->m))) {
+			if (map_getmapflag(src->m, MF_NOTELEPORT) && !(map_getmapflag(src->m, MF_BATTLEGROUND) || map_flag_gvg2(src->m))) {
 				x = src->x;
 				y = src->y;
 			} else if (dir%2) { // Diagonal
@@ -12738,8 +12788,7 @@ struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16 skill_
 	case GN_HELLS_PLANT:
 		if( skill_id == GN_HELLS_PLANT && map_getcell(src->m, x, y, CELL_CHKLANDPROTECTOR) )
 			return NULL;
-		if (map_flag_vs(src->m) && battle_config.vs_traps_bctall
-			&& (src->type&battle_config.vs_traps_bctall))
+		if (battle_config.vs_traps_bctall && (src->type&battle_config.vs_traps_bctall) && map_flag_vs(src->m))
 			target = BCT_ALL;
 		break;
 	case HT_SKIDTRAP:
@@ -12774,7 +12823,7 @@ struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16 skill_
 				req_item = req.itemid[i];
 			if (skill_id == RL_B_TRAP) // Target type should not change on GvG maps.
 				break;
-			if( battle_config.vs_traps_bctall && map_flag_vs(src->m) && (src->type&battle_config.vs_traps_bctall) )
+			if( battle_config.vs_traps_bctall && (src->type&battle_config.vs_traps_bctall) && map_flag_vs(src->m) )
 				target = BCT_ALL;
 		}
 		break;
@@ -13080,9 +13129,10 @@ struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16 skill_
 		int unit_val1 = skill_lv;
 		int unit_val2 = 0;
 		int alive = 1;
+		struct map_data *mapdata = map_getmapdata(src->m);
 
 		// are the coordinates out of range?
-		if( ux <= 0 || uy <= 0 || ux >= map[src->m].xs || uy >= map[src->m].ys ){
+		if( ux <= 0 || uy <= 0 || ux >= mapdata->xs || uy >= mapdata->ys ){
 			continue;
 		}
 
@@ -13265,7 +13315,9 @@ static int skill_unit_onplace(struct skill_unit *unit, struct block_list *bl, un
 				//Duration in PVP is: 1st - 4s, 2nd - 8s, 3rd - 12s
 				int sec = skill_get_time2(sg->skill_id, sg->skill_lv);
 				const struct TimerData* td;
-				if (map_flag_vs(bl->m))
+				struct map_data *mapdata = map_getmapdata(bl->m);
+
+				if (mapdata_flag_vs(mapdata))
 					sec /= 2;
 				if (sc->data[type]) {
 					if (sc->data[type]->val2 && sc->data[type]->val3 && sc->data[type]->val4) {
@@ -13274,9 +13326,9 @@ static int skill_unit_onplace(struct skill_unit *unit, struct block_list *bl, un
 						break;
 					}
 					//Don't increase val1 here, we need a higher val in status_change_start so it overwrites the old one
-					if (map_flag_vs(bl->m) && sc->data[type]->val1 < 3)
+					if (mapdata_flag_vs(mapdata) && sc->data[type]->val1 < 3)
 						sec *= (sc->data[type]->val1 + 1);
-					else if(!map_flag_vs(bl->m) && sc->data[type]->val1 < 2)
+					else if(!mapdata_flag_vs(mapdata) && sc->data[type]->val1 < 2)
 						sec *= (sc->data[type]->val1 + 1);
 					//Add group id to status change
 					if (sc->data[type]->val2 == 0)
@@ -14082,7 +14134,7 @@ int skill_unit_onplace_timer(struct skill_unit *unit, struct block_list *bl, uns
 			break;
 
 		case UNT_DIMENSIONDOOR:
-			if( tsd && !map[bl->m].flag.noteleport )
+			if( tsd && !map_getmapflag(bl->m, MF_NOTELEPORT) )
 				pc_randomwarp(tsd,CLR_TELEPORT);
 			else if( bl->type == BL_MOB && battle_config.mob_warp&8 )
 				unit_warp(bl,-1,-1,-1,CLR_TELEPORT);
@@ -15299,19 +15351,6 @@ bool skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_i
 				}
 			}
 			break;
-		/**
-		 * Keeping as a note:
-		 * Bug Report #17 provides a link to a sep-2011 changelog that shows this requirement was removed
-		 */
-		//case AB_LAUDAAGNUS:
-		//case AB_LAUDARAMUS:
-		//	if( !sd->status.party_id ) {
-		//		clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-		//		return false;
-		//	}
-		//	break;
-
-
 		case AB_ADORAMUS: // bugreport:7647 mistress card DOES remove requirements for gemstones from Adoramus and Comet -helvetica
 		case WL_COMET:
 			if( skill_check_pc_partner(sd,skill_id,&skill_lv,1,0) <= 0 && require.itemid[0]
@@ -15579,7 +15618,11 @@ bool skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_i
 			}
 			break;
 		case ST_RECOV_WEIGHT_RATE:
-			if(battle_config.natural_heal_weight_rate <= 100 && sd->weight*100/sd->max_weight >= (unsigned int)battle_config.natural_heal_weight_rate) {
+#ifdef RENEWAL
+			if(pc_is70overweight(sd)) {
+#else
+			if(pc_is50overweight(sd)) {
+#endif
 				clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return false;
 			}
@@ -16681,7 +16724,7 @@ int skill_delayfix(struct block_list *bl, uint16 skill_id, uint16 skill_lv)
 					time /= 2;
 				break;
 			case AS_SONICBLOW:
-				if (!map_flag_gvg2(bl->m) && !map[bl->m].flag.battleground && sc->data[SC_SPIRIT]->val2 == SL_ASSASIN)
+				if (!map_flag_gvg2(bl->m) && !map_getmapflag(bl->m, MF_BATTLEGROUND) && sc->data[SC_SPIRIT]->val2 == SL_ASSASIN)
 					time /= 2;
 				break;
 		}
@@ -17557,8 +17600,13 @@ static int skill_trap_splash(struct block_list *bl, va_list ap)
 						break;
 				}
 			}
-		default:
-			skill_attack(skill_get_type(sg->skill_id),ss,src,bl,sg->skill_id,sg->skill_lv,tick,0);
+		default: {
+				int split_count = 0;
+
+				if (skill_get_nk(sg->skill_id)&NK_SPLASHSPLIT)
+					split_count = map_foreachinallrange(skill_area_sub, src, skill_get_splash(sg->skill_id, sg->skill_lv), BL_CHAR, src, sg->skill_id, sg->skill_lv, tick, BCT_ENEMY, skill_area_sub_count);
+				skill_attack(skill_get_type(sg->skill_id), ss, src, bl, sg->skill_id, sg->skill_lv, tick, split_count);
+			}
 			break;
 	}
 	return 1;
@@ -18407,13 +18455,13 @@ static int skill_unit_timer_sub(DBKey key, DBData *data, va_list ap)
 				if(group->val1) {
 					sd = map_charid2sd(group->val1);
 					group->val1 = 0;
-					if (sd && !map[sd->bl.m].flag.nowarp && pc_job_can_entermap((enum e_job)sd->status.class_, unit->bl.m, sd->group_level))
+					if (sd && !map_getmapflag(sd->bl.m, MF_NOWARP) && pc_job_can_entermap((enum e_job)sd->status.class_, unit->bl.m, sd->group_level))
 						pc_setpos(sd,map_id2index(unit->bl.m),unit->bl.x,unit->bl.y,CLR_TELEPORT);
 				}
 				if(group->val2) {
 					sd = map_charid2sd(group->val2);
 					group->val2 = 0;
-					if (sd && !map[sd->bl.m].flag.nowarp && pc_job_can_entermap((enum e_job)sd->status.class_, unit->bl.m, sd->group_level))
+					if (sd && !map_getmapflag(sd->bl.m, MF_NOWARP) && pc_job_can_entermap((enum e_job)sd->status.class_, unit->bl.m, sd->group_level))
 						pc_setpos(sd,map_id2index(unit->bl.m),unit->bl.x,unit->bl.y,CLR_TELEPORT);
 				}
 				skill_delunit(unit);
@@ -18584,8 +18632,7 @@ static int skill_unit_timer_sub(DBKey key, DBData *data, va_list ap)
 /*==========================================
  * Executes on all skill units every SKILLUNITTIMER_INTERVAL miliseconds.
  *------------------------------------------*/
-int skill_unit_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
+TIMER_FUNC(skill_unit_timer){
 	map_freeblock_lock();
 
 	skillunit_db->foreach(skillunit_db, skill_unit_timer_sub, tick);
@@ -19983,7 +20030,7 @@ int skill_blockpc_get(struct map_session_data *sd, int skillid) {
 	return (i >= MAX_SKILLCOOLDOWN) ? -1 : i;
 }
 
-int skill_blockpc_end(int tid, unsigned int tick, int id, intptr_t data) {
+TIMER_FUNC(skill_blockpc_end){
 	struct map_session_data *sd = map_id2sd(id);
 	int i = (int)data;
 
@@ -20054,8 +20101,7 @@ int skill_blockpc_clear(struct map_session_data *sd) {
 	return 1;
 }
 
-int skill_blockhomun_end(int tid, unsigned int tick, int id, intptr_t data)	//[orn]
-{
+TIMER_FUNC(skill_blockhomun_end){
 	struct homun_data *hd = (TBL_HOM*) map_id2bl(id);
 
 	if (data <= 0 || data >= SKILL_MAX_DB())
@@ -20086,8 +20132,7 @@ int skill_blockhomun_start(struct homun_data *hd, uint16 skill_id, int tick)	//[
 	return add_timer(gettick() + tick, skill_blockhomun_end, hd->bl.id, idx);
 }
 
-int skill_blockmerc_end(int tid, unsigned int tick, int id, intptr_t data)	//[orn]
-{
+TIMER_FUNC(skill_blockmerc_end){
 	struct mercenary_data *md = (TBL_MER*)map_id2bl(id);
 
 	if( data <= 0 || data >= SKILL_MAX_DB() )
@@ -20794,11 +20839,13 @@ static bool skill_check_unit_movepos(uint8 check_flag, struct block_list *bl, sh
 
 	nullpo_retr(false, bl);
 
-	if (check_flag&1 && map[bl->m].flag.battleground)
+	struct map_data *mapdata = map_getmapdata(bl->m);
+
+	if (check_flag&1 && mapdata->flag[MF_BATTLEGROUND])
 		return false;
-	if (check_flag&2 && map_flag_gvg(bl->m))
+	if (check_flag&2 && mapdata_flag_gvg(mapdata))
 		return false;
-	if (check_flag&4 && map_flag_gvg2(bl->m))
+	if (check_flag&4 && mapdata_flag_gvg2(mapdata))
 		return false;
 
 	sc = status_get_sc(bl);
@@ -21458,7 +21505,6 @@ static bool skill_parse_row_changematerialdb(char* split[], int columns, int cur
 	return true;
 }
 
-#ifdef ADJUST_SKILL_DAMAGE
 /**
  * Reads skill damage adjustment
  * @author [Lilith]
@@ -21475,19 +21521,16 @@ static bool skill_parse_row_skilldamage(char* split[], int columns, int current)
 
 	id = skill_db_isset(id, __FUNCTION__);
 
-	memset(&skill_db[id]->damage,0,sizeof(struct s_skill_damage));
+	skill_db[id]->damage = {};
 	skill_db[id]->damage.caster |= atoi(split[1]);
 	skill_db[id]->damage.map |= atoi(split[2]);
-	skill_db[id]->damage.pc = cap_value(atoi(split[3]),-100,INT_MAX);
-	if (split[3])
-		skill_db[id]->damage.mob = cap_value(atoi(split[4]),-100,INT_MAX);
-	if (split[4])
-		skill_db[id]->damage.boss = cap_value(atoi(split[5]),-100,INT_MAX);
-	if (split[5])
-		skill_db[id]->damage.other = cap_value(atoi(split[6]),-100,INT_MAX);
+
+	for(int offset = 3, i = 0; i < SKILLDMG_MAX && offset < columns; i++, offset++ ){
+		skill_db[id]->damage.rate[i] = cap_value(atoi(split[offset]), -100, INT_MAX);
+	}
+
 	return true;
 }
-#endif
 
 /**
  * Init dummy skill db also init Skill DB allocation
@@ -21595,9 +21638,8 @@ static void skill_readdb(void)
 		sv_readdb(dbsubpath1, "skill_improvise_db.txt"      , ',',   2,  2, MAX_SKILL_IMPROVISE_DB, skill_parse_row_improvisedb, i > 0);
 		sv_readdb(dbsubpath1, "skill_changematerial_db.txt" , ',',   5,  5+2*MAX_SKILL_CHANGEMATERIAL_SET, MAX_SKILL_CHANGEMATERIAL_DB, skill_parse_row_changematerialdb, i > 0);
 		sv_readdb(dbsubpath1, "skill_nonearnpc_db.txt"      , ',',   2,  3, -1, skill_parse_row_nonearnpcrangedb, i > 0);
-#ifdef ADJUST_SKILL_DAMAGE
-		sv_readdb(dbsubpath1, "skill_damage_db.txt"         , ',',   4,  7, -1, skill_parse_row_skilldamage, i > 0);
-#endif
+		sv_readdb(dbsubpath1, "skill_damage_db.txt"         , ',',   4,  3+SKILLDMG_MAX, -1, skill_parse_row_skilldamage, i > 0);
+
 		aFree(dbsubpath1);
 		aFree(dbsubpath2);
 	}
