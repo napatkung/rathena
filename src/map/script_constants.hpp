@@ -455,6 +455,7 @@
 	export_constant(MF_NOEXP);
 	export_constant(MF_PRIVATEAIRSHIP_SOURCE);
 	export_constant(MF_PRIVATEAIRSHIP_DESTINATION);
+	export_constant(MF_GVG_NOALLY);
 
 	/* setcell types */
 	export_constant(CELL_WALKABLE);
