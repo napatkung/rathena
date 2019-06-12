@@ -29,6 +29,7 @@ Thumbs.db
 *.a
 *.vcxproj.user
 /char-server
+/csv2yaml
 /config.log
 /config.status
 /core
@@ -46,10 +47,6 @@ Thumbs.db
 /3rdparty/libconfig/*.o
 /3rdparty/libconfig/obj
 
-# /3rdparty/mt19937ar/
-/3rdparty/mt19937ar/Makefile
-/3rdparty/mt19937ar/*.o
-
 # /3rdparty/yaml-cpp/
 /3rdparty/yaml-cpp/Makefile
 
@@ -59,6 +56,9 @@ Thumbs.db
 # /conf/
 /conf/import
 /conf/msg_conf/import
+
+# /lib
+/lib
 
 # /log/
 /log/*.log
@@ -72,7 +72,7 @@ Thumbs.db
 /src/common/Makefile
 /src/common/obj_all
 /src/common/obj_sql
-/src/common/svnversion.h
+/src/common/version.hpp
 
 # /src/custom/
 /src/custom
@@ -84,11 +84,7 @@ Thumbs.db
 # /src/map/
 /src/map/Makefile
 /src/map/obj_sql
-/src/map/pcre.h
-
-# /src/test/
-/src/test/Makefile
-/src/test/obj
+/src/map/pcre.hpp
 
 # /src/tool/
 /src/tool/Makefile
@@ -117,6 +113,7 @@ Thumbs.db
 
 # bat tools
 /charserv.bat
+/csv2yaml.bat
 /logserv.bat
 /mapcache.bat
 /mapserv.bat
