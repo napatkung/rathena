@@ -3973,6 +3973,20 @@ ACMD_FUNC(partysharelvl) {
 	return 0;
 }
 
+std::string atcommand_mapinfo_globaldamage_sub(int type) {
+	std::string atker = "";
+	size_t len = 0;
+
+	if (type&BL_PC)   atker.append("PC ");
+	if (type&BL_MOB)  atker.append("Monster ");
+	if (type&BL_PET)  atker.append("Pet ");
+	if (type&BL_HOM)  atker.append("Hom ");
+	if (type&BL_MER)  atker.append("Merc ");
+	if (type&BL_ELEM) atker.append("Elem ");
+
+	return atker;
+}
+
 /*==========================================
  * @mapinfo [0-3] <map name> by MC_Cameri
  * => Shows information about the map [map name]
@@ -4084,6 +4098,19 @@ ACMD_FUNC(mapinfo) {
 			sprintf(atcmd_output, " > %s : %d%%", skill_get_name(it.first), it.second);
 			clif_displaymessage(fd, atcmd_output);
 		}
+	}
+
+	//Global Damage adjustment. [Cydh]
+	if (map_getmapflag_sub(m_id, MF_ATK_RATE, NULL)) {
+		sprintf(atcmd_output,"Damage Adjustment for: %s", atcommand_mapinfo_globaldamage_sub(mapdata->atk_rate.rate[DMGRATE_BL]).c_str());
+		clif_displaymessage(fd,atcmd_output);
+		sprintf(atcmd_output," > Short: %d%% | Long: %d%% | Weapon: %d%% | Magic: %d%% | Misc: %d%%",
+			mapdata->atk_rate.rate[DMGRATE_SHORT],
+			mapdata->atk_rate.rate[DMGRATE_LONG],
+			mapdata->atk_rate.rate[DMGRATE_WEAPON],
+			mapdata->atk_rate.rate[DMGRATE_MAGIC],
+			mapdata->atk_rate.rate[DMGRATE_MISC]);
+		clif_displaymessage(fd,atcmd_output);
 	}
 
 	strcpy(atcmd_output,msg_txt(sd,1046)); // PvP Flags:
@@ -8189,7 +8216,9 @@ ACMD_FUNC(mapflag) {
 												MF_JEXP,
 												MF_BATTLEGROUND,
 												MF_SKILL_DAMAGE,
-												MF_SKILL_DURATION };
+												MF_SKILL_DURATION,
+												MF_ATK_RATE,
+												};
 
 			if (flag && std::find(disabled_mf.begin(), disabled_mf.end(), mapflag) != disabled_mf.end()) {
 				sprintf(atcmd_output,"[ @mapflag ] %s flag cannot be enabled as it requires unique values.", flag_name);

@@ -7268,6 +7268,15 @@
 	export_constant(PCBLOCK_EMOTION);
 	export_constant(PCBLOCK_ALL);
 
+	// Global Damage [Cydh]
+	export_constant(MF_ATK_RATE);
+	export_constant(DMGRATE_BL);
+	export_constant(DMGRATE_SHORT);
+	export_constant(DMGRATE_LONG);
+	export_constant(DMGRATE_WEAPON);
+	export_constant(DMGRATE_MAGIC);
+	export_constant(DMGRATE_MISC);
+
 	#undef export_constant
 	#undef export_constant2
 	#undef export_parameter
