@@ -69,9 +69,7 @@ static inline bool pc_attendance_rewarded_today( struct map_session_data* sd );
 #define MAX_LEVEL_JOB_EXP 999999999 ///< Max Job EXP for player on Max Job Level
 
 static unsigned int statp[MAX_LEVEL+1];
-#if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 static unsigned int level_penalty[3][CLASS_MAX][MAX_LEVEL*2+1];
-#endif
 
 // h-files are for declarations, not for implementations... [Shinomori]
 struct skill_tree_entry skill_tree[CLASS_COUNT][MAX_SKILL_TREE];
@@ -11381,7 +11379,6 @@ void pc_delspiritcharm(struct map_session_data *sd, int count, int type)
 	clif_spiritcharm(sd);
 }
 
-#if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 /**
  * Renewal EXP/Item Drop rate modifier based on level penalty
  * @param level_diff: Monster and Player level difference
@@ -11405,7 +11402,6 @@ int pc_level_penalty_mod(int level_diff, uint32 mob_class, enum e_mode mode, int
 
 	return 100; // Penalty not found, return default
 }
-#endif
 
 int pc_split_str(char *str,char **val,int num)
 {
@@ -11560,7 +11556,7 @@ static bool pc_readdb_skilltree(char* fields[], int columns, int current)
 	}
 	return true;
 }
-#if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
+
 static bool pc_readdb_levelpenalty(char* fields[], int columns, int current)
 {
 	int type, class_, diff;
@@ -11588,7 +11584,6 @@ static bool pc_readdb_levelpenalty(char* fields[], int columns, int current)
 
 	return true;
 }
-#endif
 
 /** [Cydh]
 * Calculates base hp of player. Reference: http://irowiki.org/wiki/Max_HP
@@ -11950,25 +11945,6 @@ void pc_readdb(void) {
 	//reset
 	memset(job_info,0,sizeof(job_info)); // job_info table
 
-#if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
-	sv_readdb(db_path, DBPATH "level_penalty.txt", ',', 4, 4, -1, &pc_readdb_levelpenalty, 0);
-	sv_readdb(db_path, DBIMPORT"/level_penalty.txt", ',', 4, 4, -1, &pc_readdb_levelpenalty, 1);
-	for( k=1; k < 3; k++ ){ // fill in the blanks
-		int j;
-		for( j = 0; j < CLASS_ALL; j++ ){
-			int tmp = 0;
-			for( i = 0; i < MAX_LEVEL*2; i++ ){
-				if( i == MAX_LEVEL+1 )
-					tmp = level_penalty[k][j][0];// reset
-				if( level_penalty[k][j][i] > 0 )
-					tmp = level_penalty[k][j][i];
-				else
-					level_penalty[k][j][i] = tmp;
-			}
-		}
-	}
-#endif
-
 	 // reset then read statspoint
 	memset(statp,0,sizeof(statp));
 	for(i=0; i<ARRAYLENGTH(dbsubpath); i++){
@@ -12002,8 +11978,25 @@ void pc_readdb(void) {
 #endif
 		sv_readdb(dbsubpath2, "job_param_db.txt", ',', 2, PARAM_MAX+1, CLASS_COUNT, &pc_readdb_job_param, i > 0);
 		sv_readdb(dbsubpath2, "job_noenter_map.txt", ',', 3, 3, CLASS_COUNT, &pc_readdb_job_noenter_map, i > 0);
+		sv_readdb(dbsubpath2, "level_penalty.txt", ',', 4, 4, -1, &pc_readdb_levelpenalty, i > 0);
+		sv_readdb(dbsubpath2, "level_penalty.txt", ',', 4, 4, -1, &pc_readdb_levelpenalty, i > 0);
 		aFree(dbsubpath1);
 		aFree(dbsubpath2);
+	}
+
+	for (k = 1; k < 3; k++) { // fill in the blanks
+		int j;
+		for (j = 0; j < CLASS_ALL; j++) {
+			int tmp = 0;
+			for (i = 0; i < MAX_LEVEL * 2; i++) {
+				if (i == MAX_LEVEL + 1)
+					tmp = level_penalty[k][j][0];// reset
+				if (level_penalty[k][j][i] > 0)
+					tmp = level_penalty[k][j][i];
+				else
+					level_penalty[k][j][i] = tmp;
+			}
+		}
 	}
 
 	// Reset and read skilltree - needs to be read after pc_readdb_job_exp to get max base and job levels

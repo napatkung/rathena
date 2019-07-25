@@ -1,0 +1,27 @@
+// Experience & Drop Rate Modifier Database
+//
+// Structure of Database:
+// Type,Class,Level difference,Rate
+//
+// TYPE:
+//   1=experience, 2=item drop
+// CLASS:
+//   0=Normal monsters, 1=Boss monsters, 2=Guardians
+
+// EXP modifiers due to level difference
+1,CLASS_NORMAL,0,100
+
+// Boss Type
+1,CLASS_BOSS,0,100
+
+// Guardian Type
+1,CLASS_GUARDIAN,0,100
+
+// Drop rate modifiers due to level difference
+2,CLASS_NORMAL,0,100
+
+// Boss Type
+2,CLASS_BOSS,0,100
+
+// Guardian Type
+2,CLASS_GUARDIAN,0,100

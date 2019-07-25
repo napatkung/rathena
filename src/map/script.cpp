@@ -21233,18 +21233,10 @@ BUILDIN_FUNC(checkre)
 			#endif
 			break;
 		case 2:
-			#ifdef RENEWAL_DROP
-				script_pushint(st, 1);
-			#else
-				script_pushint(st, 0);
-			#endif
+			script_pushint(st, 0);
 			break;
 		case 3:
-			#ifdef RENEWAL_EXP
-				script_pushint(st, 1);
-			#else
-				script_pushint(st, 0);
-			#endif
+			script_pushint(st, 0);
 			break;
 		case 4:
 			#ifdef RENEWAL_LVDMG

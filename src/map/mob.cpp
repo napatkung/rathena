@@ -2642,7 +2642,6 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			if(flag) {
 				if(base_exp || job_exp) {
 					if( md->dmglog[i].flag != MDLF_PET || battle_config.pet_attack_exp_to_master ) {
-#ifdef RENEWAL_EXP
 						int rate = pc_level_penalty_mod(md->level - tmpsd[i]->status.base_level, md->status.class_, md->status.mode, 1);
 						if (rate != 100) {
 							if (base_exp)
@@ -2650,7 +2649,6 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 							if (job_exp)
 								job_exp = (unsigned int)cap_value(apply_rate(job_exp, rate), 1, UINT_MAX);
 						}
-#endif
 						pc_gainexp(tmpsd[i], &md->bl, base_exp, job_exp, 0);
 					}
 				}
@@ -2677,12 +2675,10 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		struct item_drop *ditem;
 		struct item_data* it = NULL;
 		int drop_rate;
-#ifdef RENEWAL_DROP
 		int drop_modifier = mvp_sd    ? pc_level_penalty_mod(md->level - mvp_sd->status.base_level, md->status.class_, md->status.mode, 2)   :
 							second_sd ? pc_level_penalty_mod(md->level - second_sd->status.base_level, md->status.class_, md->status.mode, 2):
 							third_sd  ? pc_level_penalty_mod(md->level - third_sd->status.base_level, md->status.class_, md->status.mode, 2) :
 							100; // No player was attached, we don't use any modifier (100 = rates are not touched)
-#endif
 		dlist->m = md->bl.m;
 		dlist->x = md->bl.x;
 		dlist->y = md->bl.y;
@@ -2746,13 +2742,11 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				}
 			}
 
-#ifdef RENEWAL_DROP
 			if( drop_modifier != 100 ) {
 				drop_rate = apply_rate(drop_rate, drop_modifier);
 				if( drop_rate < 1 )
 					drop_rate = 1;
 			}
-#endif
 			// attempt to drop the item
 			if (rnd() % 10000 >= drop_rate)
 				continue;
