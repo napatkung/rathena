@@ -5313,6 +5313,13 @@ storage or cart.
 
 ---------------------------------------
 
+*clearcart {<char_id>};
+
+This command will destroy all items the invoking character has in their
+cart (even player's cart is off, player still have cart items).
+
+---------------------------------------
+
 *equip <item id>{,<char_id>};
 *autoequip <item id>,<option>;
 
