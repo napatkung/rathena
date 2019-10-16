@@ -49,6 +49,7 @@ enum sc_type : int16;
 #define TKMISSIONCOUNT_VAR "TK_MISSION_COUNT"
 #define ATTENDANCE_DATE_VAR "#AttendanceDate"
 #define ATTENDANCE_COUNT_VAR "#AttendanceCounter"
+#define ACHIEVEMENTLEVEL "AchievementLevel"
 
 //Update this max as necessary. 55 is the value needed for Super Baby currently
 //Raised to 85 since Expanded Super Baby needs it.
@@ -502,7 +503,7 @@ struct map_session_data {
 		short splash_range, splash_add_range;
 		short add_steal_rate;
 		int add_heal_rate, add_heal2_rate;
-		int sp_gain_value, hp_gain_value, magic_sp_gain_value, magic_hp_gain_value;
+		int sp_gain_value, hp_gain_value, magic_sp_gain_value, magic_hp_gain_value, long_sp_gain_value, long_hp_gain_value;
 		unsigned short unbreakable;	// chance to prevent ANY equipment breaking [celest]
 		unsigned short unbreakable_equip; //100% break resistance on certain equipment
 		unsigned short unstripable_equip;
@@ -643,7 +644,7 @@ struct map_session_data {
 
 	/* ShowEvent Data Cache flags from map */
 	bool *qi_display;
-	unsigned short qi_count;
+	int qi_count;
 
 	// temporary debug [flaviojs]
 	const char* debug_file;
@@ -727,7 +728,7 @@ struct map_session_data {
 
 	short last_addeditem_index; /// Index of latest item added
 	int autotrade_tid;
-
+	int respawn_tid;
 	int bank_vault; ///< Bank Vault
 
 #ifdef PACKET_OBFUSCATION
@@ -1166,6 +1167,7 @@ int pc_skillheal2_bonus(struct map_session_data *sd, uint16 skill_id);
 void pc_damage(struct map_session_data *sd,struct block_list *src,unsigned int hp, unsigned int sp);
 int pc_dead(struct map_session_data *sd,struct block_list *src);
 void pc_revive(struct map_session_data *sd,unsigned int hp, unsigned int sp);
+bool pc_revive_item(struct map_session_data *sd);
 void pc_heal(struct map_session_data *sd,unsigned int hp,unsigned int sp, int type);
 int pc_itemheal(struct map_session_data *sd,int itemid, int hp,int sp);
 int pc_percentheal(struct map_session_data *sd,int,int);
