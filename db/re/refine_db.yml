@@ -32,14 +32,12 @@ Armor:
     - Type: REFINE_COST_HD
       Price: 20000
       Material: 6241
-      Breakable: false
     - Type: REFINE_COST_ENRICHED
       Price: 2000
       Material: 7619
     - Type: REFINE_COST_OVER10_HD
       Price: 100000
       Material: 6225
-      Breakable: false
     - Type: REFINE_COST_HOLINK
       Price: 15000
       Material: 7619
@@ -165,14 +163,12 @@ WeaponLv1:
     - Type: REFINE_COST_HD
       Price: 20000
       Material: 6240
-      Breakable: false
     - Type: REFINE_COST_ENRICHED
       Price: 2000
       Material: 7620
     - Type: REFINE_COST_OVER10_HD
       Price: 100000
       Material: 6226
-      Breakable: false
     - Type: REFINE_COST_HOLINK
       Price: 500
       Material: 7620
@@ -264,14 +260,12 @@ WeaponLv2:
     - Type: REFINE_COST_HD
       Price: 20000
       Material: 6240
-      Breakable: false
     - Type: REFINE_COST_ENRICHED
       Price: 2000
       Material: 7620
     - Type: REFINE_COST_OVER10_HD
       Price: 100000
       Material: 6226
-      Breakable: false
     - Type: REFINE_COST_HOLINK
       Price: 2000
       Material: 7620
@@ -368,14 +362,12 @@ WeaponLv3:
     - Type: REFINE_COST_HD
       Price: 20000
       Material: 6240
-      Breakable: false
     - Type: REFINE_COST_ENRICHED
       Price: 2000
       Material: 7620
     - Type: REFINE_COST_OVER10_HD
       Price: 100000
       Material: 6226
-      Breakable: false
     - Type: REFINE_COST_HOLINK
       Price: 20000
       Material: 7620
@@ -477,14 +469,12 @@ WeaponLv4:
     - Type: REFINE_COST_HD
       Price: 20000
       Material: 6240
-      Breakable: false
     - Type: REFINE_COST_ENRICHED
       Price: 2000
       Material: 7620
     - Type: REFINE_COST_OVER10_HD
       Price: 100000
       Material: 6226
-      Breakable: false
     - Type: REFINE_COST_HOLINK
       Price: 50000
       Material: 7620
@@ -588,7 +578,6 @@ Shadow:
     - Type: REFINE_COST_HD
       Price: 20000
       Material: 6241
-      Breakable: false
     - Type: REFINE_COST_ENRICHED
       Price: 20000
       Material: 7619
