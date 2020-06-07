@@ -38,15 +38,18 @@
 	specialeffect2 EF_HEAL2;
 	if (.@Buffs) {
 		specialeffect2 EF_INCAGILITY;
-		sc_start SC_INCREASEAGI,240000,10;
+		sc_start SC_INCREASEAGI,720000,10;
 		specialeffect2 EF_BLESSING;
-		sc_start SC_BLESSING,240000,10;
+		sc_start SC_BLESSING,720000,10;
 		sc_start SC_STRFood,720000,10;
         sc_start SC_AGIFood,720000,10;
         sc_start SC_VITFood,720000,10;
         sc_start SC_INTFood,720000,10;
         sc_start SC_DEXFood,720000,10;
         sc_start SC_LUKFood,720000,10;
+		skilleffect 34,0;
+        skilleffect 29,0;
+		emotion e_kis;
 	}
 	if(.@Repair)
 	repairall;
