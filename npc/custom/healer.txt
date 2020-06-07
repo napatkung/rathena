@@ -41,6 +41,12 @@
 		sc_start SC_INCREASEAGI,240000,10;
 		specialeffect2 EF_BLESSING;
 		sc_start SC_BLESSING,240000,10;
+		sc_start SC_STRFood,720000,10;
+        sc_start SC_AGIFood,720000,10;
+        sc_start SC_VITFood,720000,10;
+        sc_start SC_INTFood,720000,10;
+        sc_start SC_DEXFood,720000,10;
+        sc_start SC_LUKFood,720000,10;
 	}
 	if(.@Repair)
 	repairall;
