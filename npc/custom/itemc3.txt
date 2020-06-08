@@ -1,0 +1,65 @@
+prontera,148,192,5	script	พนักงานต้อนรับ C3	10084,{
+
+if( Class < 4060 ){
+
+mes "^0000FF[พนักงานต้อนรับ C3]^000000";
+mes "สวัสดี";
+mes "ข้าคือผู้ส่งมอบไอเทมเควส คลาส 3";
+mes "^FF0000สำหรับตัวละคร คลาส 3^000000";
+mes "^FF0000ที่ผ่านการเล่น (Hi-Class) มาแล้วเท่านั้น^000000";
+
+}else if( ThirdJobItem ){
+
+mes "คุณได้รับ ^FF0000"+getitemname(ThirdJobItem)+"^000000 ไปแล้ว";
+
+}else{
+
+switch( BaseJob ){
+
+  Case Job_Knight: set .@Item,5746; break;
+
+  Case Job_Wizard: set .@Item,5753; break;
+
+  Case Job_Hunter: set .@Item,5748; break;
+
+  Case Job_Priest: set .@Item,5747; break;
+
+  Case Job_Blacksmith: set .@Item,5749; break;
+
+  Case Job_Assassin: set .@Item,5755; break;
+
+  Case Job_Crusader: set .@Item,5757; break;
+
+  Case Job_Sage: set .@Item,5756; break;
+
+  Case Job_Bard: set .@Item,5751; break;
+
+  Case Job_Dancer: set .@Item,5758; break;
+
+  Case Job_Monk: set .@Item,5754; break;
+
+  Case Job_Alchemist: set .@Item,5752; break;
+
+  Case Job_Rogue: set .@Item,5750; break;
+
+  default:
+
+   mes "ขอโทษด้วย ผมไม่มีอะไรจะให้";
+
+   close;
+
+}
+
+getitem .@Item,1;
+
+set ThirdJobItem,.@Item;
+
+mes "คุณได้รับ 1 x ^FF0000"+getitemname(.@Item)+"^000000";
+
+}
+
+close;
+
+}
+
+morocc,169,106,4	duplicate(พนักงานต้อนรับ C3)	พนักงานต้อนรับ C3#01	10084
