@@ -318,10 +318,6 @@ struct map_session_data {
 		bool cashshop_open;
 		bool sale_open;
 		unsigned int block_action : 10;
-<<<<<<< HEAD
-=======
-		bool refineui_open;
->>>>>>> 5c726644b087d554f9cda984d03657331f2da3dd
 	} state;
 	struct {
 		unsigned char no_weapon_damage, no_magic_damage, no_misc_damage;
