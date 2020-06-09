@@ -38,17 +38,49 @@
 	specialeffect2 EF_HEAL2;
 	if (.@Buffs) {
 		specialeffect2 EF_INCAGILITY;
-		sc_start SC_INCREASEAGI,720000,10;
+		sc_start SC_INCREASEAGI,1800000,10;
 		specialeffect2 EF_BLESSING;
-		sc_start SC_BLESSING,720000,10;
-		sc_start SC_STRFood,720000,10;
-        sc_start SC_AGIFood,720000,10;
-        sc_start SC_VITFood,720000,10;
-        sc_start SC_INTFood,720000,10;
-        sc_start SC_DEXFood,720000,10;
-        sc_start SC_LUKFood,720000,10;
+		sc_start SC_BLESSING,1800000,10;
+		sc_start SC_STRFood,1800000,10;
+        sc_start SC_AGIFood,1800000,10;
+        sc_start SC_VITFood,1800000,10;
+        sc_start SC_INTFood,1800000,10;
+        sc_start SC_DEXFood,1800000,10;
+        sc_start SC_LUKFood,1800000,10;
+		sc_start SC_INCREASEAGI,1800000,10;
+		sc_start SC_MAGNIFICAT,1800000,5;
+		sc_start SC_GLORIA,1800000,5;
 		skilleffect 34,0;
         skilleffect 29,0;
+		
+		
+		sc_end SC_STONE;
+		sc_end SC_FREEZE;
+		sc_end SC_STUN;
+		sc_end SC_SLEEP;
+		sc_end SC_POISON;
+		sc_end SC_CURSE;
+		sc_end SC_SILENCE;
+		sc_end SC_CONFUSION;
+		sc_end SC_BLIND;
+		sc_end SC_BLEEDING;
+		sc_end SC_DPOISON;
+		
+		sc_end SC_QUAGMIRE;
+		sc_end SC_AETERNA;
+		sc_end SC_HALLUCINATION;
+		sc_end SC_SLOWDOWN;
+		sc_end SC_BERSERK;
+		sc_end SC_CHANGEUNDEAD;
+		sc_end SC_DECREASEAGI;
+		sc_end SC_ORCISH;
+		sc_end SC_SKE;
+		sc_end SC_SWOO;
+		sc_end SC_SKA;
+		sc_end SC_STRIPWEAPON;
+		sc_end SC_STRIPSHIELD;
+		sc_end SC_STRIPARMOR;
+		sc_end SC_STRIPHELM;
 		emotion e_kis;
 	}
 	if(.@Repair)
@@ -85,7 +117,7 @@ louyang,226,103,4	duplicate(Healer)	¿×é¹¿Ù¾ÅÑ§ªÕÇÔµ#lou	10301
 manuk,272,144,6	duplicate(Healer)	¿×é¹¿Ù¾ÅÑ§ªÕÇÔµ#man	10301
 mid_camp,203,289,6	duplicate(Healer)	¿×é¹¿Ù¾ÅÑ§ªÕÇÔµ#mid	10301
 moc_ruins,72,164,4	duplicate(Healer)	¿×é¹¿Ù¾ÅÑ§ªÕÇÔµ#moc	10301
-morocc,153,97,6	duplicate(Healer)	¿×é¹¿Ù¾ÅÑ§ªÕÇÔµ#mor	10301
+morocc,163,97,6	duplicate(Healer)	¿×é¹¿Ù¾ÅÑ§ªÕÇÔµ#mor	10301
 moscovia,220,191,4	duplicate(Healer)	¿×é¹¿Ù¾ÅÑ§ªÕÇÔµ#mos	10301
 niflheim,212,182,5	duplicate(Healer)	¿×é¹¿Ù¾ÅÑ§ªÕÇÔµ#nif	10301
 payon,179,106,4	duplicate(Healer)	¿×é¹¿Ù¾ÅÑ§ªÕÇÔµ#pay	10301

@@ -12,27 +12,27 @@
 glast_01,210,273,5	script	Hugin's Butler#pa0829	1_F_04,{
 	disable_items;
 	if (MaxWeight - Weight < 1000) {
-		mes "Your bag is too heavy. Reduce some weight and come back.";
+		mes "กระเป๋ามีน้ำหนักเกิน. ลดน้ำหนักก่อนแล้วค่อยมาใหม่.";
 		close;
 	}
 	mes "[Hugin's Butler]";
-	mes "Bring Temporal Crystal items for various Temporal boots items. Pick something you want.";
+	mes "นำ Temporal Crystal มาแลกรองเท้า Temporal boots ได้. เลือกอันที่เจ้าต้องการสิ.";
 	next;
-	switch( select( "Cancel", "Buy Temporal Boots (Need 1 Temporal Crystal)", "Upgrade Temporal Boots (Need 5 Temporal Crystals)", "Upgrade Modified Boots (Need 5 Temporal Crystals)" ) ) {
+	switch( select( "ยกเลิก", "ซื้อ Temporal Boots (ต้องการ 1 Temporal Crystal)", "อัพเกรด Temporal Boots (ต้องการ 5 Temporal Crystals)", "อัพเกรด Modified Boots (ต้องการ 5 Temporal Crystals)" ) ) {
 	case 1:
 		mes "[Hugin's Butler]";
-		mes "Come back whenever you want.";
+		mes "กลับมาหาได้ทุกเมื่อที่เจ้าต้องการ.";
 		close;
 	case 2:
 		if (countitem(6607) > 0) {
 			mes "[Hugin's Butler]";
-			mes "Take these Temporal Boots. We can upgrade your Temporal Boots with 5 Temporal Crystals.";
+			mes "ส่งมอบ Temporal Boots ให้. พวกเราสามารถอัพเกรด Temporal Boots ของเจ้าได้โดยใช้ 5 Temporal Crystals.";
 			delitem 6607,1;// Temporal_Crystal
 			getitem 2499,1;// Temporal_Boots
 			close;
 		}
 		mes "[Hugin's Butler]";
-		mes "You need more Temporal Crystals. Come back when you get some more Temporal Crystals during your travel through Old Glast Heim.";
+		mes "เจ้าต้องมี Temporal Crystals. กลับมาใหม่เมื่อเจ้ามี Temporal Crystals มาด้วยโดยเจ้าหามันได้ใน Old Glast Heim.";
 		close;
 	case 3:
 		setarray .@equip_type[0],
@@ -55,40 +55,40 @@ glast_01,210,273,5	script	Hugin's Butler#pa0829	1_F_04,{
 	}
 	if (!getequipisequiped(EQI_SHOES)) {
 		mes "[Hugin's Butler]";
-		mes "Only the item you are wearing can be upgraded.";
-		mes "Wear the ^0000FFTemporal Boots^000000 you want to upgrade, and then talk to me once again.";
+		mes "รองเท้าของเจ้าไม่สามารถอัพเกรดได้.";
+		mes "สวมใส่ ^0000FFTemporal Boots^000000 ที่เจ้าต้องการอัพเกรดมา, และค่อยคุยกับข้าใหม่อีกครั้ง.";
 		close;
 	}
 	if (getequipid(EQI_SHOES) != 2499) {
 		mes "[Hugin's Butler]";
-		mes "You are not wearing the Temporal Boots. Talk to me once you're wearing them.";
+		mes "เจ้าไม่ได้สวมใส่ Temporal Boots มา. ค่อยคุยกับข้าอีกครั้งหลังจากสวมใส่มันมาแล้ว.";
 		close;
 	}
 	if (countitem(6607) < 5) {
 		mes "[Hugin's Butler]";
-		mes "Not enough Temporal Crystals. You need 5 Temporal Crystals to upgrade your item.";
+		mes "มี Temporal Crystals ไม่พอ. เจ้าต้องมี 5 Temporal Crystals สำหรับการอัพเกรด.";
 		close;
 	}
 	mes "[Hugin's Butler]";
-	mes "You can trade ^0000FF1 Temporal Boots and 5 Temporal Crystals^000000 for 1 of the following items. ^FF0000Previous refine rate will not be retained with these new ones^000000.";
+	mes "เจ้าสามารถแลก ^0000FF1 Temporal Boots และ 5 Temporal Crystals^000000 กับ 1 อย่างต่อไปนี้ได้. ^FF0000ค่าตีบวกก่อนหน้านี้จะหายไปเมื่อเจ้าได้แลกเปลี่ยนไปแล้ว^000000.";
 	next;
-	.@s = select( "Cancel", "Str Boots", "Int Boots", "Agi Boots", "Vit Boots", "Dex Boots", "Luk Boots" ) - 2;
+	.@s = select( "ยกเลิก", "รองเท้า Str", "รองเท้า Int", "รองเท้า Agi", "รองเท้า Vit", "รองเท้า Dex", "รองเท้า Luk" ) - 2;
 	if (.@s == -1) {
 		mes "[Hugin's Butler]";
-		mes "Come back anytime you want.";
+		mes "กลับมาหาได้ทุกเมื่อที่เจ้าต้องการ.";
 		close;
 	}
 	setarray .@type$[0], "Strength", "Intelligence", "Agility", "Vitality", "Dexterity", "Lucky";
 	mes "[Hugin's Butler]";
-	mes "Are you sure about buying Temporal ^FF0000" + .@type$[.@s] + "^000000 Boots? There's no refunds.";
+	mes "เจ้าแน่ใจที่จะซื้อ Temporal ^FF0000" + .@type$[.@s] + "^000000 Boots? ไม่มีการคืนเงินน่ะ.";
 	next;
-	if (select( "Think again", "Yes, I am sure." ) == 1) {
+	if (select( "ขอคิดก่อน", "ใช่, ข้าแน่ใจ." ) == 1) {
 		mes "[Hugin's Butler]";
-		mes "Ok, come back again when you are sure.";
+		mes "Ok, กลับมาหาได้ทุกเมื่อที่เจ้าต้องการ.";
 		close;
 	}
 	mes "[Hugin's Butler]";
-	mes "The boots have been upgraded as you want.";
+	mes "รองเท้าของเจ้าได้ถูกอัพเกรดแล้ว.";
 	if (getequipid(EQI_SHOES) == 2499) {
 		delequip EQI_SHOES;
 		delitem 6607,5;// Temporal_Crystal
@@ -102,45 +102,45 @@ glast_01,210,273,5	script	Hugin's Butler#pa0829	1_F_04,{
 glast_01,212,273,4	script	Hugin's Magician#pa0829	1_F_01,{
 	disable_items;
 	if (MaxWeight - Weight < 1000) {
-		mes "Your bag is too heavy. Reduce some weight and come back.";
+		mes "กระเป๋ามีน้ำหนักเกิน. ลดน้ำหนักก่อนแล้วค่อยมาใหม่.";
 		close;
 	}
 	mes "[Hugin's Magician]";
-	mes "So you came to enchant the Temporal Boots. Be aware that Boots with sockets cannot be enchanted, and this upgrade is only possible for the boots you are wearing.";
+	mes "เจ้าสามารถออฟรองเท้า Temporal Boots ได้. โปรดระวังถ้ารองเท้ามีช่องใส่การ์ดจะไม่สามารถออฟได้, และจะสามารถอัพเกรดรองเท้าเฉพาะที่สวมใส่อยู่เท่านั้น.";
 	next;
-	if (select( "How does the enchanting work?", "Give effect to my Temporal Boots" ) == 1) {
+	if (select("สอบถามวิธีการออฟ ?","เพิ่มความสามารถให้รองเท้า Temporal Boots") == 1) {
 		mes "[Hugin's Magician]";
-		mes "You can keep obtain ^0000FFCoagulated Spell^000000 through your travel times.";
+		mes "เจ้าสามารถเก็บ ^0000FFCoagulated Spell^000000 ได้เวลาเจ้าลงดันเจี้ยน.";
 		next;
 		mes "[Hugin's Magician]";
-		mes "I can enchant your Temporal Boots items depands on the amount of that item. ^0000FFNot normal type boots^000000. Only possible for those 6 expanded version boots.";
+		mes "ข้าสามารถออฟรองเท้า Temporal Boots ได้แค่ 6 แบบเท่านั้น. โดยที่รองเท้านั้นต้องไม่ใช่^0000FFรองเท้าแบบธรรมดา^000000.";
 		next;
 		mes "[Hugin's Magician]";
-		mes "But, once you put a socket into the item, you cannot enchant it. Make sure to remember that.";
+		mes "กรุณาจำไว้ถ้าเจ้าเพิ่มช่องใส่การ์ดให้รองเท้าแล้ว, มันจะออฟไม่ได้อีกเลย.";
 		next;
 		mes "[Hugin's Magician]";
-		mes "I don't give out effect randomly. You can pick which effect you want for the item.";
+		mes "ข้าจะไม่สุ่มความสามารถให้. แต่เจ้าสามารถเลือกความสามารถเองได้เลย.";
 		next;
 		mes "[Hugin's Magician]";
-		mes "Of course it is for 4th slot only. You can have small effect at the start, and then the effect gets stronger.";
+		mes "เฉพาะในช่องที่ 4 เท่านั้น, ที่ความสามารถจะเริ่มจากอ่อนไปหาความสามารถที่แข็งแกร่งยิ่งขึ้น.";
 		next;
 		mes "[Hugin's Magician]";
-		mes "To get to the final option upgrade, it will require way more Coagulated Spell items. Don't forget that.";
+		mes "ในการอัพเกรดครั้งสุดท้าย, มันต้องใช้ไอเท็ม Coagulated Spell จำนวนมาก. อย่าลืมในจุดนี้ล่ะ.";
 		next;
 		mes "[Hugin's Magician]";
-		mes "Once the 4th slot completes the best option, you get to have a random bonus effect to the 3rd slot. With.. certain payment~";
+		mes "เมื่อเจ้าอัพเกรดช่อง 4 เต็มขั้นแล้ว, ถ้าเจ้าจ่ายเพิ่มเจ้าจะได้สุ่มโบนัสความสามารถในช่องที่ 3.";
 		next;
 		mes "[Hugin's Magician]";
-		mes "Also, you don't lose the item even if the enchant fails, we also guarantee keeping card and refine rate. But we can't initialize enchanting.";
+		mes "อย่างไรก็ตามถ้าออฟล้มเหลวไอเท็มจะไม่สูญหายไป, พวกข้าขอการันตีว่าการ์ดและค่าตีบวกจะคงเดิม. แต่พวกข้าไม่สามารถลบออฟได้.";
 		next;
 		mes "[Hugin's Magician]";
-		mes "Phew...";
-		mes "Anyways, that's all for basic enchant information. Now you should see for yourself.";
+		mes "ฟิ้ววว...";
+		mes "ข้าได้บอกพื้นฐานในการออฟแก่เจ้าแล้ว. หวังว่าจะได้เจอกันอีก.";
 		close;
 	}
 	if (!getequipisequiped(EQI_SHOES)) {
 		mes "[Hugin's Magician]";
-		mes "Are you wearing the item?";
+		mes "ได้ใส่รองเท้ามาหรือเปล่า ?";
 		close;
 	}
 	.@equip_id = getequipid(EQI_SHOES);
@@ -176,19 +176,19 @@ glast_01,212,273,4	script	Hugin's Magician#pa0829	1_F_01,{
 
 		if (.@card[2] > 0) {
 			mes "[Hugin's Magician]";
-			mes "These boots have already passed the enchanting limit. We can't enchant them any more.";
+			mes "รองเท้าของเจ้าอัพเกรดเต็มขั้นแล้ว. พวกเราคงทำอะไรไปมากกว่านี้ไม่ได้แล้ว.";
 			close;
 		}
 		if (.@card[3] == 0) {// 4th slot 1st try enchanting
 			.@cost = .@enchant_cost[0];
 			mes "[Hugin's Magician]";
-			mes "Want to enchant ^0000FF" + .@equip_name$ + "^000000?";
-			mes "For the 1st enchanting, you need ^0000FF" + .@cost + "^000000 Coagulated Spell items.";
+			mes "ต้องการที่จะออฟ ^0000FF" + .@equip_name$ + "^000000?";
+			mes "สำหรับการออฟครั้งแรก, เจ้าต้องมี ^0000FF" + .@cost + "^000000 Coagulated Spell มาด้วย.";
 			next;
-			.@s = select( "Quit", "Fighting Spirit", "Archery", "Spell", "Vitality", "Attack Speed", "Lucky" ) - 2;
+			.@s = select( "ออก", "Fighting Spirit", "Archery", "Spell", "Vitality", "Attack Speed", "Lucky" ) - 2;
 			if (.@s == -1) {
 				mes "[Hugin's Magician]";
-				mes "Ok, come back when you are ready.";
+				mes "Ok, กลับมาใหม่เมื่อเจ้าพร้อม.";
 				close;
 			}
 			.@card[3] = .@enchant_1[.@s];
@@ -203,7 +203,7 @@ glast_01,212,273,4	script	Hugin's Magician#pa0829	1_F_01,{
 			}
 			if (.@enchant_num == 5) {
 				mes "[Hugin's Magician]";
-				mes "Something wrong happened.";
+				mes "มีบางอย่างผิดพลาด.";
 				close;
 			}
 			.@cost = .@enchant_cost[.@enchant_num];
@@ -212,24 +212,24 @@ glast_01,212,273,4	script	Hugin's Magician#pa0829	1_F_01,{
 			if (.@enchant_num == 4) {
 				.@card[2] = callfunc("F_Rand",4875,4876,4877,4878,4879,4880);// Bear's_Power, Runaway_Magic, Speed_Of_Light, Muscle_Fool, Hawkeye, Lucky_Day
 				.@string$ = "^990000Bonus effect ^000000 upgrade.";
-				mes "4th slot is already upgraded to the final option. Would you like a random bonus effect for the 3rd slot? You need ^0000ff" + .@cost + "^000000 Coagulated Spell items.";
+				mes "ในช่องที่ 4 ได้อัพเกรดออฟจนสุดแล้ว. เจ้าอยากจะสุ่มโบนัสออฟพิเศษในช่องที่ 3 ไหม ? เจ้าต้องมี ^0000ff" + .@cost + "^000000 Coagulated Spell มาด้วย.";
 			}
 			else {
 				.@number = .@enchant_num + 1;
 				.@card[3] = getd( ".@enchant_" + (.@enchant_num+1) + "[" + .@enchant_type + "]" );
-				.@string$ = "enchant number ^630000" + .@number + "^000000.";
-				mes "Enchanting ^0000FF" + .@equip_name$ + "^000000's 4th slot as ^0000FF" + .@number + "^000000 level effect. Requires ^0000FF" + .@cost + "^000000 Coagulated Spell items.";
+				.@string$ = "enchant ครั้งที่ ^630000" + .@number + "^000000.";
+				mes "การออฟ ^0000FF" + .@equip_name$ + "^000000's ในช่องที่ 4 ครั้งที่ ^0000FF" + .@number + "^000000 นั้น. ต้องการ ^0000FF" + .@cost + "^000000 Coagulated Spell.";
 			}
 			next;
-			if (select("Quit","Effect Upgrade!") == 1) {
+			if (select("ออก","อัพเกรดความสามารถ!") == 1) {
 				mes "[Hugin's Magician]";
-				mes "Ok, come back when you are ready.";
+				mes "Ok, กลับมาใหม่เมื่อเจ้าพร้อม.";
 				close;
 			}
 		}
 		if (countitem(6608) < .@cost) {
 			mes "[Hugin's Magician]";
-			mes "Hmm, you are missing " + (.@cost - countitem(6608)) + " Coagulated Spell items. Go get more, and then we can talk about more enchants.";
+			mes "หืมม, เจ้าขาดอีก " + (.@cost - countitem(6608)) + " Coagulated Spell. ไปหามาเพิ่ม, แล้วค่อยกลับมาคุยกับข้า.";
 			close;
 		}
 		specialeffect2 EF_REPAIRWEAPON;
@@ -241,13 +241,13 @@ glast_01,212,273,4	script	Hugin's Magician#pa0829	1_F_01,{
 
 		delequip EQI_SHOES;
 		mes "[Hugin's Magician]";
-		mes "Trying for " + .@string$;
+		mes "พยายามที่จะ " + .@string$;
 		getitem2 .@equip_id,1,1,.@equip_refine,0,0,0,.@card[2],.@card[3];
 		close;
 	default:
 		mes "[Hugin's Magician]";
-		mes "This is not the right item for this enchant.";
-		mes "Remember, only those 6 types of Temporal Boots are available for enchanting.";
+		mes "ไอเท็มไม่ถูกต้อง.";
+		mes "จำไว้, ข้าออฟ Temporal Boots ได้แค่ 6 แบบเท่านั้น.";
 		close;
 	}
 }
@@ -255,26 +255,26 @@ glast_01,212,273,4	script	Hugin's Magician#pa0829	1_F_01,{
 glast_01,210,270,0	script	Hugin's Craftsman#pa0829	4_F_JOB_BLACKSMITH,{
 	disable_items;
 	if (MaxWeight - Weight < 1000) {
-		mes "Your bag is too heavy. Reduce some weight and come back.";
+		mes "กระเป๋ามีน้ำหนักเกิน. ลดน้ำหนักก่อนแล้วค่อยมาใหม่.";
 		close;
 	}
 	mes "[Hugin's Craftsman]";
-	mes "That Magician always says that enchanting Temporal Boots is the best. But, I think quite different.";
+	mes "Magic Master ชอบอวดว่าการออฟรองเท้า Temporal Boots นั้นดีที่สุด. แต่, ข้ามีความคิดอีกอย่าง.";
 	next;
 	mes "[Hugin's Craftsman]";
-	mes "I think putting a slot into the item would be the best. Even with some risk of failing.";
+	mes "ข้าคิดว่าการเพิ่มช่องใส่การ์ดนั่นแหล่มกว่า.";
 	next;
 	mes "[Hugin's Craftsman]";
-	mes "Bring me ^0000FF5 Temporal Crystals^000000, and I will try to put a slot into your advanced Temporal Boots. But, it's possible to ^FF0000fail and break the item^000000. Is that ok?";
+	mes "แค่นำ ^0000FF5 Temporal Crystals^000000 มาให้ข้า, และข้าจะเพิ่มช่องใส่การ์ดในรองเท้า Temporal Boots ให้เจ้า. แต่, มันอาจจะ ^FF0000ล้มเหลวและสูญหายได้^000000. ยังอยากทำอยู่ไหม?";
 	next;
-	if (select( "Cancel", "Take the risk and try to add a slot" ) == 1) {
+	if (select( "ยกเลิก", "ลองเสี่ยงเพิ่มช่องใส่การ์ด" )  == 1) {
 		mes "[Hugin's Craftsman]";
-		mes "Ok, come back anytime you want.";
+		mes "Ok, กลับมาหาได้ทุกเมื่อที่เจ้าต้องการ.";
 		close;
 	}
 	if (!getequipisequiped(EQI_SHOES)) {
 		mes "[Hugin's Craftsman]";
-		mes "Are you sure you are wearing the item?";
+		mes "เจ้าแน่ใจนะ ว่าใส่รองเท้ามาด้วย ?";
 		close;
 	}
 	.@equip_id = getequipid(EQI_SHOES);
@@ -294,33 +294,33 @@ glast_01,210,270,0	script	Hugin's Craftsman#pa0829	4_F_JOB_BLACKSMITH,{
 	case 22112:	callsub( S_Slot,22118 );	// Modified_LUK_Boots
 	default:
 		mes "[Hugin's Craftsman]";
-		mes "This is not it! We need ^0000FFAdvanced Temporal Boots^000000 items! The item ^0000FFwith a stat effect and without a slot^000000!";
+		mes "นี่มันไม่ถูกต้อง! พวกเราต้องการ ^0000FFAdvanced Temporal Boots^000000 เท่านั้น! ^0000FFต้องเป็นรองเท้าที่มีค่าสเตตัสและไม่มีรู^000000!";
 		close;
 	}
 
 S_Slot:
 	.@equip_id = getequipid(EQI_SHOES);
 	mes "[Hugin's Craftsman]";
-	mes "And ^FF0000all enchant or refine rates will be lost if you fail this.^000000";
-	mes "Still want to risk it?";
+	mes "^FF0000ออฟและค่าตีบวกทั้งหมดจะหายไปเมื่อมันล้มเหลว.^000000";
+	mes "ยังอยากเสี่ยงอยู่ไหม ?";
 	next;
-	if (select( "Cancel", "I am ok with it!" ) == 1) {
+	if (select( "ยกเลิก", "ข้าโอเคกับมันน่ะ!" ) == 1) {
 		mes "[Hugin's Craftsman]";
-		mes "Ok, come back anytime you want.";
+		mes "Ok, กลับมาหาได้ทุกเมื่อที่เจ้าต้องการ.";
 		close;
 	}
 	mes "[Hugin's Craftsman]";
-	mes "Once again, ^FF0000That Magician won't enchant any item with a slot.^000000";
-	mes "Still want to proceed?";
+	mes "ขอบอกอีกครั้ง, ^FF0000ถ้ารองเท้ามีรูจะไม่สามารถออฟได้.^000000";
+	mes "ยังอยากทำต่อไหม ?";
 	next;
-	if (select( "Cancel", "I understand. Try to slot it." ) == 1) {
+	if (select( "ยกเลิก", "ข้ารู้แล้ว. ลองเจาะรูเลย." ) == 1) {
 		mes "[Hugin's Craftsman]";
-		mes "Ok, come back anytime you want.";
+		mes "Ok, กลับมาหาได้ทุกเมื่อที่เจ้าต้องการ.";
 		close;
 	}
 	if (countitem(6607) < 5) {
 		mes "[Hugin's Craftsman]";
-		mes "You must bring ^0000FF5 Temporal Crystal items^000000. Nothing is free you know...";
+		mes "เจ้าต้องนำ ^0000FF5 Temporal Crystal^000000มาด้วย. เจ้าก็รู้ว่าไม่มีของฟรีในโลก...";
 		close;
 	}
 	delitem 6607,5;// Temporal_Crystal
@@ -328,12 +328,12 @@ S_Slot:
 		delequip EQI_SHOES;
 		if (rand(1,100) < 50) {
 			mes "[Hugin's Craftsman]";
-			mes "Arrggg, we failed. Better luck next time.";
+			mes "อ้ากกกก, มันล้มเหลว. ครั้งหน้าจะทำให้ดีกว่านี้.";
 			specialeffect2 EF_PHARMACY_FAIL;
 			close;
 		}
 		mes "[Hugin's Craftsman]";
-		mes "Successful! Here you go.";
+		mes "สำเร็จ! มันเป็นของเจ้า.";
 		specialeffect2 EF_MAXPOWER;
 		getitem getarg(0),1;
 	}
@@ -344,11 +344,11 @@ S_Slot:
 glast_01,184,283,4	script	Dark magic master#pa082	1_F_01,{
 	disable_items;
 	if ((MaxWeight - Weight) < 1000) {
-		mes "Your bag is too heavy. Reduce some weight and come back.";
+		mes "กระเป๋ามีน้ำหนักเกิน. ลดน้ำหนักก่อนแล้วค่อยมาใหม่.";
 		close;
 	}
 	if (checkweight(1201,1) == 0) {
-		mes "You seem to be carrying too many items. Put some items in storage and come back again.";
+		mes "เจ้าแบกของมาเยอะเกิน. ไปลดของก่อนแล้วค่อยกลับมาใหม่.";
 		close;
 	}
 	// requirements
@@ -357,23 +357,23 @@ glast_01,184,283,4	script	Dark magic master#pa082	1_F_01,{
 	.@cost_zeny = 100000;
 
 	mes "[Dark magic master]";
-	mes "I deal with the Temporal Boots with socket only.";
+	mes "ข้าจัดการกับ Temporal Boots ที่มีรูเท่านั้น.";
 	next;
-	if (select( "How does the enchanting work?", "Give effect to my Temporal Boots" ) == 1) {
+	if (select( "กรรมวิธีการออฟ ?", "เพิ่มความสามารถให้กับ Temporal Boots" ) == 1) {
 		mes "[Dark magic master]";
-		mes "You should ask Hugin's magic master all the basic things. I want deeper conversation about enchating work.";
+		mes "เจ้าควรไปถาม Hugin's magic master ในเรื่องทั่วไป. ส่วนข้าจะบอกเกี่ยวกับการออฟที่ลึกซึ้งกว่า.";
 		next;
 		mes "[Dark magic master]";
-		mes "I need 4 items. ^0000ff" + callfunc("F_InsertComma",.@cost_zeny) + ", " + getitemname(.@polluted_id) + ", " + getitemname(.@coagulated_id) + ", Temporal Boots(Socket) Series^000000. If you don't have any of these, I cannot help you.";
+		mes "ข้าต้องการ 4 อย่าง. ^0000ff" + callfunc("F_InsertComma",.@cost_zeny) + "z, " + getitemname(.@polluted_id) + ", " + getitemname(.@coagulated_id) + ", Temporal Boots(รู) Series^000000. ถ้าเจ้ามีไม่ครบ, ข้าก็ช่วยเจ้าไม่ได้.";
 		next;
 		mes "[Dark magic master]";
-		mes "It's my small hobby.. To enchant Socketed Temporal Boots using polluted and coagulated spell.";
+		mes "มันเป็นงานอดิเรกยามว่าง ของข้า.. ในการออฟ Temporal Boots ที่มีรูจะใช้ polluted และ coagulated spell.";
 		next;
 		mes "[Dark magic master]";
-		mes "Of course, you must cope with bigger risk of destruction whenever you'd like to enchant again and again.";
+		mes "แน่นอนว่า, เจ้าต้องยอมรับความเสี่ยงที่ของจะถูกทำลายในเมื่อเจ้าออฟซ้ำแล้วซ้ำเล่า.";
 		next;
 		mes "[Dark magic master]";
-		mes "The enchant order is same as Hugin's magic master's enchantment. Please refer to his explanation.";
+		mes "ลำดับการออฟจะเหมือนกับ Hugin's magic master. โดยอ้างอิงจากคำอธิบายของเขา.";
 		close;
 	}
 	.@equip_id = getequipid(EQI_SHOES);
@@ -394,11 +394,11 @@ glast_01,184,283,4	script	Dark magic master#pa082	1_F_01,{
 		break;
 	case -1:
 		mes "[Dark magic master]";
-		mes "Are you wearing the item?";
+		mes "เจ้าไม่ได้สวมใส่รองเท้ามา?";
 		close;
 	default:
 		mes "[Dark magic master]";
-		mes "This is not the right item for this enchant. Remember, only those 6 types of Temporal Boots with socket are available for hidden enchanting..";
+		mes "นี่มันไม่ใช่รองเท้าที่ถูกต้อง. จำเอาไว้, ข้าออฟแค่ Temporal Boots ที่มีรู 6 ประเภทเท่านั้น..";
 		close;
 	}
 	// enchants ID
@@ -426,7 +426,7 @@ glast_01,184,283,4	script	Dark magic master#pa082	1_F_01,{
 
 	if (.@card[2] > 0) {
 		mes "[Dark magic master]";
-		mes "These boots have already passed the enchanting limit. We can't enchant them any more.";
+		mes "รองเท้าได้ผ่านการอัพเกรดเต็มที่แล้ว. พวกเราคงทำอะไรไปมากกว่านี้ไม่ได้.";
 		close;
 	}
 	if (.@card[3] == 0) {// 4th slot 1st try enchanting
@@ -434,17 +434,17 @@ glast_01,184,283,4	script	Dark magic master#pa082	1_F_01,{
 		.@amount_poll = .@en_amount_polluted[0];
 
 		mes "[Dark magic master]";
-		mes "Want to enchant ^0000ff" + .@equip_name$ + " (Socket)^000000? For the 1st enchanting, you need ^0000ff" + .@amount_poll + " " + getitemname(.@polluted_id) + ", " + .@amount_coag + " " + getitemname(.@coagulated_id) + ", and " + callfunc("F_InsertComma",.@cost_zeny) + " zeny^000000.";
-		mes "It has some risk of failing..";
+		mes "ต้องการที่จะออฟ ^0000ff" + .@equip_name$ + " (รู)^000000? สำหรับการออฟครั้งแรก, เจ้าต้องมี ^0000ff" + .@amount_poll + " " + getitemname(.@polluted_id) + ", " + .@amount_coag + " " + getitemname(.@coagulated_id) + ", และ " + callfunc("F_InsertComma",.@cost_zeny) + " zeny^000000.";
+		mes "มันมีความเสี่ยงที่จะล้มเหลว..";
 		next;
-		.@s = select( "Quit", "Fighting Spirit", "Archery", "Spell", "Vitality", "Attack Speed", "Lucky" ) - 2;
+		.@s = select( "ออก", "Fighting Spirit", "Archery", "Spell", "Vitality", "Attack Speed", "Lucky" ) - 2;
 		if (.@s == -1) {
 			mes "[Dark magic master]";
-			mes "Ok, come back when you are ready.";
+			mes "Ok, กลับมาใหม่เมื่อเจ้าพร้อม.";
 			close;
 		}
 		.@card[3] = .@enchant_1[.@s];
-		.@string$ = "enchant number ^6300001^000000.";
+		.@string$ = "enchant ครั้งที่ ^6300001^000000.";
 		.@num = 0;
 	}
 	else {
@@ -456,7 +456,7 @@ glast_01,184,283,4	script	Dark magic master#pa082	1_F_01,{
 		}
 		if (.@num == 5) {
 			mes "[Dark magic master]";
-			mes "Something wrong happened.";
+			mes "มีบางอย่างผิดพลาด.";
 			close;
 		}
 		.@amount_coag = .@en_amount_coag[.@num];
@@ -466,34 +466,34 @@ glast_01,184,283,4	script	Dark magic master#pa082	1_F_01,{
 		if (.@num == 4) {
 			.@card[2] = callfunc("F_Rand",4875,4876,4877,4878,4879,4880);// Bear's_Power, Runaway_Magic, Speed_Of_Light, Muscle_Fool, Hawkeye, Lucky_Day
 			.@string$ = "^990000 Bonus effect ^000000 upgrade.";
-			mes "Would you like a random bonus effect for the 3rd slot? You need ^0000ff" + .@amount_poll + " " + getitemname(.@polluted_id) + ", " + .@amount_coag + " " + getitemname(.@coagulated_id) + ", and " + callfunc("F_InsertComma",.@cost_zeny) + " zeny^000000. But it has high risk of failing..";
+			mes "เจ้าอยากจะสุ่มโบนัสออฟพิเศษในช่องที่ 3 ไหม ? เจ้าต้องมี ^0000ff" + .@amount_poll + " " + getitemname(.@polluted_id) + ", " + .@amount_coag + " " + getitemname(.@coagulated_id) + ", และ " + callfunc("F_InsertComma",.@cost_zeny) + " zeny^000000. แต่มีความเสี่ยงสูงที่จะล้มเหลว..";
 		}
 		else {
 			.@level = .@num + 1;
 			.@card[3] = getd( ".@enchant_" + (.@num+1) + "[" + .@type + "]" );
-			.@string$ = "enchant number ^990000" + .@level + "^000000.";
-			mes "Enchanting ^0000ff" + .@equip_name$ + " (Socket)^000000's 4th slot as ^0000ff" + .@level + "^000000 level effect. Requires ^0000ff" + .@amount_poll + " " + getitemname(.@polluted_id) + ", " + .@amount_coag + " " + getitemname(.@coagulated_id) + ", and " + callfunc("F_InsertComma",.@cost_zeny) + " z^000000. It has some risk of failing..";
+			.@string$ = "enchant ครั้งที่ ^990000" + .@level + "^000000.";
+			mes "การออฟ ^0000ff" + .@equip_name$ + " (รู)^000000's ช่องที่ 4 ในครั้งที่ ^0000ff" + .@level + "^000000. ต้องการ ^0000ff" + .@amount_poll + " " + getitemname(.@polluted_id) + ", " + .@amount_coag + " " + getitemname(.@coagulated_id) + ", และ " + callfunc("F_InsertComma",.@cost_zeny) + " z^000000. มันมีความเสี่ยงที่จะล้มเหลว..";
 		}
 		next;
-		if (select( "Quit", "Effect Upgrade!" ) == 1) {
+		if (select( "ออก", "อัพเกรดความสามารถ!" ) == 1) {
 			mes "[Dark magic master]";
-			mes "Ok, come back when you are ready.";
+			mes "Ok, กลับมาใหม่เมื่อเจ้าพร้อม.";
 			close;
 		}
 	}
 	if (countitem(.@coagulated_id) < .@amount_coag) {
 		mes "[Dark magic master]";
-		mes "Hmm, you are missing " + (.@amount_coag - countitem(.@coagulated_id)) + " " + getitemname(.@coagulated_id) + " items. Go get more, and then we can talk about more enchants.";
+		mes "หืมม, เจ้าไม่มี " + (.@amount_coag - countitem(.@coagulated_id)) + " " + getitemname(.@coagulated_id) + " มากพอ, ที่จะออฟมากกว่านี้.";
 		close;
 	}
 	if (countitem(.@polluted_id) < .@amount_poll) {
 		mes "[Dark magic master]";
-		mes "Hmm, you are missing " + (.@amount_poll - countitem(.@polluted_id)) + " " + getitemname(.@polluted_id) + " items. Go get more, and then we can talk about more enchants.";
+		mes "หืมม, เจ้าไม่มี " + (.@amount_poll - countitem(.@polluted_id)) + " " + getitemname(.@polluted_id) + " มากพอ, ที่จะออฟมากกว่านี้.";
 		close;
 	}
 	if (Zeny < .@cost_zeny) {
 		mes "[Dark magic master]";
-		mes "You must bring ^0000ff" + callfunc("F_InsertComma",.@cost_zeny) + " zeny^000000. Nothing is free you know...";
+		mes "เจ้าต้องมี ^0000ff" + callfunc("F_InsertComma",.@cost_zeny) + " zeny^000000. ไม่มีของฟรีเจ้าก็รู้...";
 		close;
 	}
 	delitem .@coagulated_id, .@amount_coag;
@@ -508,12 +508,12 @@ glast_01,184,283,4	script	Dark magic master#pa082	1_F_01,{
 	if (.@chances[.@num] < rand(1,100)) {
 		specialeffect2 EF_LORD;
 		mes "[Dark magic master]";
-		mes "Arrggg, we failed. Better luck next time.";
+		mes "อ้ากกกก, มันล้มเหลว. ครั้งหน้าน่าจะดีกว่านี้.";
 		close;
 	}
 	specialeffect2 EF_REPAIRWEAPON;
 	mes "[Hugin's Magician]";
-	mes "Trying for " + .@string$;
+	mes "พยายามที่จะ " + .@string$;
 	getitem2 .@equip_id,1,1,.@equip_refine,0,0,0,.@card[2],.@card[3];
 	close;
 }
@@ -522,11 +522,11 @@ glast_01,184,283,4	script	Dark magic master#pa082	1_F_01,{
 glast_01,216,292,5	script	Portrait collector#0002	4_M_OILMAN,{
 	disable_items;
 	if ((MaxWeight - Weight) < 1000) {
-		mes "Your bag is too heavy. Reduce some weight and come back.";
+		mes "กระเป๋ามีน้ำหนักเกิน. ลดน้ำหนักก่อนแล้วค่อยมาใหม่.";
 		close;
 	}
 	if (checkweight(1201,1) == 0) {
-		mes "You seem to be carrying too many items. Put some items in storage and come back again.";
+		mes "เจ้าแบกของมาเยอะเกิน. ไปลดของก่อนแล้วค่อยกลับมาใหม่.";
 		close;
 	}
 	.@coagulated_id = 6608;		// Coagulated_Spell
@@ -535,15 +535,15 @@ glast_01,216,292,5	script	Portrait collector#0002	4_M_OILMAN,{
 	.@khalitzburg_card = 4609;	// Khaliz_Knightage_Card
 
 	mes "[Portrait collector]";
-	mes "I have been collecting portraits for an year already. Now it's time to show people my collection.";
+	mes "ข้าได้สะสมศิลปะมาเป็นเวลาหนึ่งปีแล้ว. ถึงเวลาที่ข้าจะเอาออกมาโชว์ให้ผู้คนได้ดูแล้ว.";
 	next;
 	mes "[Portrait collector]";
-	mes "Hey, do you have a lot of " + getitemname(.@polluted_id) + " or " + getitemname(.@coagulated_id) + "? If so, why don't you trade a nice portrait that I have?";
+	mes "เฮ้, เจ้าพอจะมี " + getitemname(.@polluted_id) + " หรือ " + getitemname(.@coagulated_id) + " เยอะไหม ? ถ้าพอมี, เจ้าไม่สนที่จะทำการแลกเปลี่ยนศิลปะกับข้าดูหรอ ?";
 	next;
-	switch( select( "Cancel", "Exchange for " + getitemname(.@white_card), "Exchange for " + getitemname(.@khalitzburg_card) ) ) {
+	switch( select( "ยกเลิก", "แลกเปลี่ยนกับ " + getitemname(.@white_card), "แลกเปลี่ยนกับ " + getitemname(.@khalitzburg_card) ) ) {
 	case 1:
 		mes "[Portrait collector]";
-		mes "Well, OK. Come back when you are ready.";
+		mes "เยี่ยม, OK. กลับมาใหม่เมื่อเจ้าพร้อม.";
 		close;
 	case 2:
 		.@reward_id = .@white_card;
@@ -557,16 +557,16 @@ glast_01,216,292,5	script	Portrait collector#0002	4_M_OILMAN,{
 		break;
 	}
 	mes "[Portrait collector]";
-	mes "What would you like in exchange for the " + getitemname(.@reward_id) + "?";
+	mes "เจ้าสนใจที่จะแลกเปลี่ยนกับ " + getitemname(.@reward_id) + "?";
 	next;
 	if (countitem(.@coagulated_id) < .@amount_coag)
 		.@color$[0] = "^666666";
 	if (countitem(.@polluted_id) < .@amount_polluted)
 		.@color$[1] = "^666666";
-	switch( select( "Cancel", sprintf("%s%s %s^000000", .@color$[0], callfunc("F_InsertComma",.@amount_coag), getitemname(.@coagulated_id)), sprintf("%s%s %s^000000", .@color$[1], callfunc("F_InsertComma",.@amount_polluted), getitemname(.@polluted_id)) ) ) {
+	switch( select( "ยกเลิก", sprintf("%s%s %s^000000", .@color$[0], callfunc("F_InsertComma",.@amount_coag), getitemname(.@coagulated_id)), sprintf("%s%s %s^000000", .@color$[1], callfunc("F_InsertComma",.@amount_polluted), getitemname(.@polluted_id)) ) ) {
 	case 1:
 		mes "[Portrait collector]";
-		mes "Well, OK. Come back when you are ready.";
+		mes "เยี่ยม, OK. กลับมาใหม่เมื่อเจ้าพร้อม.";
 		close;
 	case 2:
 		.@id = .@coagulated_id;
@@ -579,19 +579,19 @@ glast_01,216,292,5	script	Portrait collector#0002	4_M_OILMAN,{
 	}
 	if (countitem(.@id) < .@amount) {
 		mes "[Portrait collector]";
-		mes "Hmm, you don't have enough Spell now. Go get more.";
+		mes "หืมม, เจ้ามีของไม่พอ. ไปเอามาเพิ่มซะ.";
 		close;
 	}
 	mes "[Portrait collector]";
-	mes "Are you sure that you won't regret it?";
+	mes "เจ้าแน่ใจแล้วใช่ไหม ?";
 	next;
-	if (select( "Cancel", "Sure" ) == 1) {
+	if (select( "ยกเลิก", "แน่นอน" ) == 1) {
 		mes "[Portrait collector]";
-		mes "Well, OK. Come back when you are ready.";
+		mes "เยี่ยม, OK. กลับมาใหม่เมื่อเจ้าพร้อม.";
 		close;
 	}
 	mes "[Portrait collector]";
-	mes "Cool, let's make a deal.";
+	mes "เป็นการแลกเปลี่ยนที่ดี.";
 	delitem .@id, .@amount;
 	getitem .@reward_id,1;
 	close;
