@@ -10794,8 +10794,13 @@ void clif_hotkeys_send( struct map_session_data *sd, int tab ){
 
 #if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
 	p.tab = tab;
+<<<<<<< HEAD
 #endif
 #endif
+=======
+#endif
+#endif
+>>>>>>> parent of 6d88b010a... Merge branch 'refactor/refine_db-2.3'
 
 	for( int i = 0, offset = tab * MAX_HOTKEYS; i < MAX_HOTKEYS_PACKET; i++ ){
 		p.hotkey[i].isSkill = sd->status.hotkeys[i + offset].type;
@@ -10842,11 +10847,19 @@ void clif_parse_Hotkey(int fd, struct map_session_data *sd) {
 #elif PACKETVER_MAIN_NUM >= 20070618 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO) || PACKETVER_AD_NUM >= 20070618 || PACKETVER_SAK_NUM >= 20070618
 	const struct PACKET_CZ_SHORTCUT_KEY_CHANGE1* p = (struct PACKET_CZ_SHORTCUT_KEY_CHANGE1*)RFIFOP( fd, 0 );
 	const unsigned short idx = p->index;
+<<<<<<< HEAD
 
 	if( idx >= MAX_HOTKEYS_DB ){
 		return;
 	}
 
+=======
+
+	if( idx >= MAX_HOTKEYS_DB ){
+		return;
+	}
+
+>>>>>>> parent of 6d88b010a... Merge branch 'refactor/refine_db-2.3'
 	sd->status.hotkeys[idx].type = p->hotkey.isSkill;
 	sd->status.hotkeys[idx].id = p->hotkey.id;
 	sd->status.hotkeys[idx].lv = p->hotkey.count;
@@ -12850,7 +12863,15 @@ void clif_parse_SelectArrow(int fd,struct map_session_data *sd) {
 		return;
 	}
 
+<<<<<<< HEAD
 	struct PACKET_CZ_REQ_MAKINGARROW* p = (struct PACKET_CZ_REQ_MAKINGARROW*)RFIFOP( fd, 0 );
+=======
+#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	int nameid = RFIFOL(fd, 2);
+#else
+	int nameid = RFIFOW(fd, 2);
+#endif
+>>>>>>> parent of 6d88b010a... Merge branch 'refactor/refine_db-2.3'
 
 	switch (sd->menuskill_id) {
 		case AC_MAKINGARROW:
@@ -16687,7 +16708,11 @@ void clif_parse_cashshop_buy( int fd, struct map_session_data *sd ){
 		return;
 	}
 
+<<<<<<< HEAD
 	cashshop_buylist( sd, p->kafraPoints, p->count, p->items );
+=======
+	cashshop_buylist( sd, 0, p->count, p->items );
+>>>>>>> parent of 6d88b010a... Merge branch 'refactor/refine_db-2.3'
 }
 
 /// Adoption System
