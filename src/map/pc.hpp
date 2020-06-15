@@ -293,6 +293,7 @@ struct map_session_data {
 		unsigned int lesseffect : 1;
 		unsigned int vending : 1;
 		unsigned int noks : 3; // [Zeph Kill Steal Protection]
+		unsigned autoattack : 1; // Keitenai
 		unsigned int changemap : 1;
 		unsigned int callshop : 1; // flag to indicate that a script used callshop; on a shop
 		short pmap; // Previous map on Map Change
@@ -401,6 +402,7 @@ struct map_session_data {
 	t_tick canskill_tick; // used to prevent abuse from no-delay ACT files
 	t_tick cansendmail_tick; // [Mail System Flood Protection]
 	t_tick ks_floodprotect_tick; // [Kill Steal Protection]
+	t_tick autoattack_delay;	// Keitenai
 	t_tick equipswitch_tick; // Equip switch
 
 	struct s_item_delay {
