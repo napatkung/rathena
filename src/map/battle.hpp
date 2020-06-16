@@ -646,7 +646,7 @@ struct Battle_Config
 	int guild_alliance_onlygm;
 	int feature_achievement;
 	int allow_bound_sell;
-	int event_refine_chance;
+	int feature_refineui;
 	int autoloot_adjust;
 	int feature_petevolution;
 	int feature_pet_autofeed;
@@ -672,15 +672,9 @@ struct Battle_Config
 	int boss_nopc_idleskill_rate;
 	int boss_nopc_move_rate;
 	int hom_idle_no_share;
-	int idletime_hom_option;
 	int devotion_standup_fix;
 	int feature_bgqueue;
-	int bgqueue_nowarp_mapflag;
 	int homunculus_exp_gain;
-	int rental_item_novalue;
-	int ping_timer_interval;
-	int ping_time;
-	int show_skill_scale;
 
 #include "../custom/battle_config_struct.inc"
 };

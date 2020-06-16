@@ -30,16 +30,18 @@ struct status_change;
 
 /// Refine type
 enum refine_type {
-	REFINE_TYPE_ARMOR	= 0,
-	REFINE_TYPE_WEAPON1	= 1,
-	REFINE_TYPE_WEAPON2	= 2,
-	REFINE_TYPE_WEAPON3	= 3,
-	REFINE_TYPE_WEAPON4	= 4,
-	REFINE_TYPE_SHADOW	= 5,
-	REFINE_TYPE_MAX		= 6
+	REFINE_TYPE_ARMOR = 0,
+	REFINE_TYPE_WEAPON1,
+	REFINE_TYPE_WEAPON2,
+	REFINE_TYPE_WEAPON3,
+	REFINE_TYPE_WEAPON4,
+	REFINE_TYPE_SHADOW,
+	REFINE_TYPE_SHADOW_WEAPON,
+	REFINE_TYPE_COSTUME,
+	REFINE_TYPE_MAX
 };
 
-/// Refine cost type
+/// Refine cost & chance type
 enum refine_cost_type {
 	REFINE_COST_NORMAL = 0,
 	REFINE_COST_OVER10,
@@ -48,17 +50,37 @@ enum refine_cost_type {
 	REFINE_COST_OVER10_HD,
 	REFINE_COST_HOLINK,
 	REFINE_COST_WAGJAK,
+	REFINE_COST_BLESSED,
+	REFINE_COST_EVT_ENRICHED,
+	REFINE_COST_EVT_OVER10_HD,
 	REFINE_COST_MAX
+};
+
+// Refine information type
+enum refine_info_type {
+	REFINE_MATERIAL_ID = 0,
+	REFINE_ZENY_COST,
+	REFINE_REFINEUI_ENABLED,
 };
 
 struct refine_cost {
 	unsigned short nameid;
 	int zeny;
+	bool refineui;
+	uint16 breaking;
+	uint16 downrefine;
+	uint16 downrefine_num;
+};
+
+struct refine_bs_blessing {
+	unsigned short nameid, count;
 };
 
 /// Get refine chance
-int status_get_refine_chance(enum refine_type wlv, int refine, bool enriched);
-int status_get_refine_cost(int weapon_lv, int type, bool what);
+int status_get_refine_chance(enum refine_type refine_type, int refine, enum refine_cost_type type);
+int status_get_refine_cost(enum refine_type refine_type, int type, enum refine_info_type what);
+bool status_get_refine_blacksmithBlessing(struct refine_bs_blessing* bs, enum refine_type type, int refine);
+struct refine_cost *status_get_refine_cost_(enum refine_type refine_type, int type);
 
 /// Weapon attack modification for size
 struct s_sizefix_db {
@@ -921,17 +943,6 @@ enum sc_type : int16 {
 	SC_SOULCURSE,
 
 	SC_HELLS_PLANT,
-	SC_INCREASE_MAXHP, // EFST_ATKER_ASPD
-	SC_INCREASE_MAXSP, // EFST_ATKER_MOVESPEED
-	SC_REF_T_POTION,
-	SC_ADD_ATK_DAMAGE,
-	SC_ADD_MATK_DAMAGE,
-
-	SC_HELPANGEL,
-	SC_SOUNDOFDESTRUCTION,
-
-	SC_LUXANIMA,
-	SC_REUSE_LIMIT_LUXANIMA,
 
 #ifdef RENEWAL
 	SC_EXTREMITYFIST2, //! NOTE: This SC should be right before SC_MAX, so it doesn't disturb if RENEWAL is disabled
@@ -2034,8 +2045,6 @@ enum efst_types : short{
 
 	EFST_JPNONLY_TACTICS = 1147,
 
-	EFST_MADOGEAR = 1149,
-
 	EFST_LUXANIMA = 1154,
 	EFST_BATH_FOAM_A,
 	EFST_BATH_FOAM_B,
@@ -2095,6 +2104,7 @@ enum e_joint_break : uint8 {
 extern short current_equip_item_index;
 extern unsigned int current_equip_combo_pos;
 extern int current_equip_card_id;
+extern bool running_npc_stat_calc_event;
 extern short current_equip_opt_index;
 
 //Status change option definitions (options are what makes status changes visible to chars
@@ -2314,15 +2324,6 @@ enum e_status_calc_weight_opt {
 	CALCWT_ITEM = 0x1,		///< Recalculate item weight
 	CALCWT_MAXBONUS = 0x2,	///< Recalculate max weight based on skill/status/configuration bonuses
 	CALCWT_CARTSTATE = 0x4,	///< Whether to check for cart state
-};
-
-// Enum for refine chance types
-enum e_refine_chance_type {
-	REFINE_CHANCE_NORMAL = 0,
-	REFINE_CHANCE_ENRICHED,
-	REFINE_CHANCE_EVENT_NORMAL,
-	REFINE_CHANCE_EVENT_ENRICHED,
-	REFINE_CHANCE_TYPE_MAX
 };
 
 ///Define to determine who gets HP/SP consumed on doing skills/etc. [Skotlex]
