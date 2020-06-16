@@ -646,7 +646,7 @@ struct Battle_Config
 	int guild_alliance_onlygm;
 	int feature_achievement;
 	int allow_bound_sell;
-	int event_refine_chance;
+	int feature_refineui;
 	int autoloot_adjust;
 	int feature_petevolution;
 	int feature_pet_autofeed;
@@ -677,11 +677,17 @@ struct Battle_Config
 	int feature_bgqueue;
 	int bgqueue_nowarp_mapflag;
 	int homunculus_exp_gain;
+<<<<<<< HEAD
 	int rental_item_novalue;
 	int ping_timer_interval;
 	int ping_time;
 	int show_skill_scale;
+<<<<<<< HEAD
 	int achievement_mob_share;
+=======
+=======
+>>>>>>> 5c726644b087d554f9cda984d03657331f2da3dd
+>>>>>>> parent of 8205e6d1a... Revert "Revert "Revert "refine ui"""
 
 #include "../custom/battle_config_struct.inc"
 };
