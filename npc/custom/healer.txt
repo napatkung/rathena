@@ -38,18 +38,29 @@
 	specialeffect2 EF_HEAL2;
 	if (.@Buffs) {
 		specialeffect2 EF_INCAGILITY;
-		sc_start SC_INCREASEAGI,1800000,10;
 		specialeffect2 EF_BLESSING;
-		sc_start SC_BLESSING,1800000,10;
+		specialeffect2 EF_ANGELUS;
+		specialeffect2 EF_MAGNIFICAT;
+		specialeffect2 EF_IMPOSITIO;
+		specialeffect2 EF_GLORIA;
+		specialeffect2 EF_HEAL;
+		
+
 		sc_start SC_STRFood,1800000,10;
         sc_start SC_AGIFood,1800000,10;
         sc_start SC_VITFood,1800000,10;
         sc_start SC_INTFood,1800000,10;
         sc_start SC_DEXFood,1800000,10;
         sc_start SC_LUKFood,1800000,10;
+
+		sc_start SC_BLESSING,1800000,10;
 		sc_start SC_INCREASEAGI,1800000,10;
 		sc_start SC_MAGNIFICAT,1800000,5;
 		sc_start SC_GLORIA,1800000,5;
+		sc_start SC_ANGELUS,1800000,10;
+		sc_start SC_IMPOSITIO,1800000,5;
+		sc_start SC_ASSUMPTIO,1800000,5;
+		
 		skilleffect 34,0;
         skilleffect 29,0;
 		
@@ -81,6 +92,23 @@
 		sc_end SC_STRIPSHIELD;
 		sc_end SC_STRIPARMOR;
 		sc_end SC_STRIPHELM;
+		
+		//----- Extra Skills Buff -----
+		sc_start SC_ENDURE,1800000,10;
+		sc_start SC_EDP,1800000,5;
+		//----- Protections -----
+		sc_start SC_CP_WEAPON,1800000,5;
+		sc_start SC_CP_SHIELD,1800000,5;
+		sc_start SC_CP_ARMOR,1800000,5;
+		sc_start SC_CP_HELM,1800000,5;
+		//----- EXP & Drops -----
+		sc_start SC_EXPBOOST,1800000,100;
+		sc_start SC_JEXPBOOST,1800000,100;
+		sc_start SC_ITEMBOOST,1800000,100;
+		sc_start SC_LIFEINSURANCE,1800000,0;
+		//----- ∫—ø∫“°‘·≈–‡´Õ«‘  -----
+		sc_start4 SC_SERVICE4U,1800000,10,40,40,0;
+		sc_start4 SC_POEMBRAGI,1800000,10,80,100,0;		
 		emotion e_kis;
 	}
 	if(.@Repair)
