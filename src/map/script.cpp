@@ -266,7 +266,6 @@ struct Script_Config script_config = {
 	"OnPCLoadMapEvent", //loadmap_event_name
 	"OnPCBaseLvUpEvent", //baselvup_event_name
 	"OnPCJobLvUpEvent", //joblvup_event_name
-	"OnPCStatCalcEvent", //stat_calc_event_name
 	// NPC related
 	"OnTouch_",	//ontouch_event_name (runs on first visible char to enter area, picks another char if the first char leaves)
 	"OnTouch",	//ontouch2_event_name (run whenever a char walks into the OnTouch area)
@@ -6936,7 +6935,7 @@ int script_countitem_sub(struct item *items, struct item_data *id, int size, boo
 		unsigned short nameid = id->nameid;
 
 		for (int i = 0; i < size; i++) {
-			if (&items[i] && items[i].nameid == nameid)
+			if (&items[i] && items[i].nameid == nameid && items[i].expire_time == 0)
 				count += items[i].amount;
 		}
 	} else { // For expanded functions
@@ -6968,7 +6967,7 @@ int script_countitem_sub(struct item *items, struct item_data *id, int size, boo
 		for (int i = 0; i < size; i++) {
 			struct item *itm = &items[i];
 
-			if (!itm || !itm->nameid || itm->amount < 1)
+			if (!itm || !itm->nameid || itm->amount < 1 || items[i].expire_time > 0)
 				continue;
 			if (itm->nameid != it.nameid || itm->identify != it.identify || itm->refine != it.refine || itm->attribute != it.attribute)
 				continue;
@@ -7709,6 +7708,7 @@ BUILDIN_FUNC(rentitem2) {
 	it.card[2] = (short)c3;
 	it.card[3] = (short)c4;
 	it.expire_time = (unsigned int)(time(NULL) + seconds);
+	it.bound = BOUND_NONE;
 
 	if (funcname[strlen(funcname)-1] == '3') {
 		int res = script_getitem_randomoption(st, sd, &it, funcname, 11);
@@ -9107,17 +9107,17 @@ BUILDIN_FUNC(getequipweaponlv)
  * return (npc)
  *	x : refine chance
  *	0 : false (max refine level or unequip..)
- * getequippercentrefinery(<equipment slot>,<type>{,<char_id>})
+ * getequippercentrefinery(<equipment slot>{,<enriched>,<char_id>})
  *------------------------------------------*/
 BUILDIN_FUNC(getequippercentrefinery)
 {
 	int i = -1,num;
-	enum refine_cost_type cost_type = REFINE_COST_NORMAL;
+	bool enriched = false;
 	TBL_PC *sd;
 
 	num = script_getnum(st,2);
-	cost_type = (enum refine_cost_type)script_getnum(st, 3);
-
+	if (script_hasdata(st, 3))
+		enriched = script_getnum(st, 3) != 0;
 
 	if (!script_charid2sd(4, sd)) {
 		script_pushint(st,0);
@@ -9127,7 +9127,10 @@ BUILDIN_FUNC(getequippercentrefinery)
 	if (equip_index_check(num))
 		i = pc_checkequip(sd,equip_bitmask[num]);
 	if (i >= 0 && sd->inventory.u.items_inventory[i].nameid && sd->inventory.u.items_inventory[i].refine < MAX_REFINE) {
-		script_pushint(st, status_get_refine_chance((enum refine_type)sd->inventory_data[i]->refine_type, (int)sd->inventory.u.items_inventory[i].refine, cost_type));
+		enum refine_type type = REFINE_TYPE_SHADOW;
+		if (sd->inventory_data[i]->type != IT_SHADOWGEAR)
+			type = (enum refine_type)sd->inventory_data[i]->wlv;
+		script_pushint(st, status_get_refine_chance(type, (int)sd->inventory.u.items_inventory[i].refine, enriched));
 	}
 	else
 		script_pushint(st,0);
@@ -14056,6 +14059,7 @@ BUILDIN_FUNC(getinventorylist)
 				sprintf(randopt_var, "@inventorylist_option_parameter%d",k+1);
 				pc_setreg(sd,reference_uid(add_str(randopt_var), j),sd->inventory.u.items_inventory[i].option[k].param);
 			}
+			pc_setreg(sd,reference_uid(add_str("@inventorylist_tradable"), j),pc_can_trade_item(sd, i));
 			j++;
 		}
 	}
@@ -15046,11 +15050,15 @@ BUILDIN_FUNC(npctalk)
 {
 	struct npc_data* nd = NULL;
 	const char* str = script_getstr(st,2);
+	int color = 0xFFFFFF;
 
 	if (script_hasdata(st, 3) && strlen(script_getstr(st,3)) > 0)
 		nd = npc_name2id(script_getstr(st, 3));
 	else
 		nd = (struct npc_data *)map_id2bl(st->oid);
+
+	if (script_hasdata(st, 5))
+		color = script_getnum(st, 5);
 
 	if (nd != NULL) {
 		send_target target = AREA;
@@ -15067,12 +15075,12 @@ BUILDIN_FUNC(npctalk)
 		}
 		safesnprintf(message, sizeof(message), "%s", str);
 		if (target != SELF)
-			clif_messagecolor(&nd->bl, color_table[COLOR_WHITE], message, false, target);
+			clif_messagecolor(&nd->bl, color, message, true, target);
 		else {
 			TBL_PC *sd = map_id2sd(st->rid);
 			if (sd == NULL)
 				return SCRIPT_CMD_FAILURE;
-			clif_messagecolor_target(&nd->bl, color_table[COLOR_WHITE], message, false, target, sd);
+			clif_messagecolor_target(&nd->bl, color, message, true, target, sd);
 		}
 	}
 	return SCRIPT_CMD_SUCCESS;
@@ -17377,6 +17385,17 @@ BUILDIN_FUNC(checkidle)
 
 	if( script_nick2sd(2,sd) )
 		script_pushint(st, DIFF_TICK(last_tick, sd->idletime));
+	else
+		script_pushint(st, 0);
+	return SCRIPT_CMD_SUCCESS;
+}
+
+BUILDIN_FUNC(checkidlehom)
+{
+	TBL_PC *sd = NULL;
+
+	if( script_nick2sd(2,sd) )
+		script_pushint(st, DIFF_TICK(last_tick, sd->idletime_hom));
 	else
 		script_pushint(st, 0);
 	return SCRIPT_CMD_SUCCESS;
@@ -19999,20 +20018,21 @@ BUILDIN_FUNC(bg_get_data)
 
 /**
  * Reserves a slot for the given Battleground.
- * bg_reserve(<"bg_name">);
+ * bg_reserve("<battleground_map_name>"{,<ended>});
  */
 BUILDIN_FUNC(bg_reserve)
 {
 	const char *str = script_getstr(st, 2);
+	bool ended = script_hasdata(st, 3) ? script_getnum(st, 3) != 0 : false;
 
-	if (!bg_queue_reserve(str))
+	if (!bg_queue_reserve(str, ended))
 		ShowWarning("buildin_bg_reserve: Could not reserve battleground with name %s\n", str);
 	return SCRIPT_CMD_SUCCESS;
 }
 
 /**
  * Removes a spot for the given Battleground.
- * bg_unbook(<"bg_name">);
+ * bg_unbook("<battleground_map_name>");
  */
 BUILDIN_FUNC(bg_unbook)
 {
@@ -20058,7 +20078,7 @@ BUILDIN_FUNC(bg_info)
 			size_t i;
 
 			for (i = 0; i < bg->maps.size(); i++)
-				setd_sub_str(st, nullptr, ".@bgmaps$", i, map_mapid2mapname(bg->maps[i].mapid), nullptr);
+				setd_sub_str(st, nullptr, ".@bgmaps$", i, mapindex_id2name(bg->maps[i].mapindex), nullptr);
 			setd_sub_num(st, nullptr, ".@bgmapscount", 0, i, nullptr);
 			script_pushint(st, i);
 			break;
@@ -23765,13 +23785,8 @@ BUILDIN_FUNC(achievementadd) {
 	}
 
 	if( !sd->state.pc_loaded ){
-		if( !running_npc_stat_calc_event ){
-			ShowError( "buildin_achievementadd: call was too early. Character %s(CID: '%u') was not loaded yet.\n", sd->status.name, sd->status.char_id );
-			return SCRIPT_CMD_FAILURE;
-		}else{
-			// Simply ignore it on the first call, because the status will be recalculated after loading anyway
-			return SCRIPT_CMD_SUCCESS;
-		}
+		// Simply ignore it on the first call, because the status will be recalculated after loading anyway
+		return SCRIPT_CMD_SUCCESS;
 	}
 
 	if (achievement_add(sd, achievement_id))
@@ -23802,13 +23817,8 @@ BUILDIN_FUNC(achievementremove) {
 	}
 
 	if( !sd->state.pc_loaded ){
-		if( !running_npc_stat_calc_event ){
-			ShowError( "buildin_achievementremove: call was too early. Character %s(CID: '%u') was not loaded yet.\n", sd->status.name, sd->status.char_id );
-			return SCRIPT_CMD_FAILURE;
-		}else{
-			// Simply ignore it on the first call, because the status will be recalculated after loading anyway
-			return SCRIPT_CMD_SUCCESS;
-		}
+		// Simply ignore it on the first call, because the status will be recalculated after loading anyway
+		return SCRIPT_CMD_SUCCESS;
 	}
 
 	if (achievement_remove(sd, achievement_id))
@@ -23839,13 +23849,8 @@ BUILDIN_FUNC(achievementinfo) {
 
 	if( !sd->state.pc_loaded ){
 		script_pushint(st, false);
-		if( !running_npc_stat_calc_event ){
-			ShowError( "buildin_achievementinfo: call was too early. Character %s(CID: '%u') was not loaded yet.\n", sd->status.name, sd->status.char_id );
-			return SCRIPT_CMD_FAILURE;
-		}else{
-			// Simply ignore it on the first call, because the status will be recalculated after loading anyway
-			return SCRIPT_CMD_SUCCESS;
-		}
+		// Simply ignore it on the first call, because the status will be recalculated after loading anyway
+		return SCRIPT_CMD_SUCCESS;
 	}
 
 	script_pushint(st, achievement_check_progress(sd, achievement_id, script_getnum(st, 3)));
@@ -23872,13 +23877,8 @@ BUILDIN_FUNC(achievementcomplete) {
 	}
 	
 	if( !sd->state.pc_loaded ){
-		if( !running_npc_stat_calc_event ){
-			ShowError( "buildin_achievementcomplete: call was too early. Character %s(CID: '%u') was not loaded yet.\n", sd->status.name, sd->status.char_id );
-			return SCRIPT_CMD_FAILURE;
-		}else{
-			// Simply ignore it on the first call, because the status will be recalculated after loading anyway
-			return SCRIPT_CMD_SUCCESS;
-		}
+		// Simply ignore it on the first call, because the status will be recalculated after loading anyway
+		return SCRIPT_CMD_SUCCESS;
 	}
 
 	ARR_FIND(0, sd->achievement_data.count, i, sd->achievement_data.achievements[i].achievement_id == achievement_id);
@@ -23910,13 +23910,8 @@ BUILDIN_FUNC(achievementexists) {
 
 	if( !sd->state.pc_loaded ){
 		script_pushint(st, false);
-		if( !running_npc_stat_calc_event ){
-			ShowError( "buildin_achievementexists: call was too early. Character %s(CID: '%u') was not loaded yet.\n", sd->status.name, sd->status.char_id );
-			return SCRIPT_CMD_FAILURE;
-		}else{
-			// Simply ignore it on the first call, because the status will be recalculated after loading anyway
-			return SCRIPT_CMD_SUCCESS;
-		}
+		// Simply ignore it on the first call, because the status will be recalculated after loading anyway
+		return SCRIPT_CMD_SUCCESS;
 	}
 
 	ARR_FIND(0, sd->achievement_data.count, i, sd->achievement_data.achievements[i].achievement_id == achievement_id && sd->achievement_data.achievements[i].completed > 0 );
@@ -23948,13 +23943,8 @@ BUILDIN_FUNC(achievementupdate) {
 	}
 
 	if( !sd->state.pc_loaded ){
-		if( !running_npc_stat_calc_event ){
-			ShowError( "buildin_achievementupdate: call was too early. Character %s(CID: '%u') was not loaded yet.\n", sd->status.name, sd->status.char_id );
-			return SCRIPT_CMD_FAILURE;
-		}else{
-			// Simply ignore it on the first call, because the status will be recalculated after loading anyway
-			return SCRIPT_CMD_SUCCESS;
-		}
+		// Simply ignore it on the first call, because the status will be recalculated after loading anyway
+		return SCRIPT_CMD_SUCCESS;
 	}
 
 	ARR_FIND(0, sd->achievement_data.count, i, sd->achievement_data.achievements[i].achievement_id == achievement_id);
@@ -24015,7 +24005,15 @@ BUILDIN_FUNC(getequiprefinecost) {
 		return SCRIPT_CMD_SUCCESS;
 	}
 
-	script_pushint(st, status_get_refine_cost((enum refine_type)sd->inventory_data[i]->refine_type, type, (enum refine_info_type)info));
+	int weapon_lv = sd->inventory_data[i]->wlv;
+	if (sd->inventory_data[i]->type == IT_SHADOWGEAR) {
+		if (sd->inventory_data[i]->equip == EQP_SHADOW_WEAPON)
+			weapon_lv = REFINE_TYPE_WEAPON4;
+		else
+			weapon_lv = REFINE_TYPE_SHADOW;
+	}
+
+	script_pushint(st, status_get_refine_cost(weapon_lv, type, info != 0));
 
 	return SCRIPT_CMD_SUCCESS;
 }
@@ -24066,13 +24064,8 @@ BUILDIN_FUNC(getequiptradability) {
 		return SCRIPT_CMD_FAILURE;
 	}
 
-	if (i >= 0) {
-		bool tradable = (sd->inventory.u.items_inventory[i].expire_time == 0 &&
-			(!sd->inventory.u.items_inventory[i].bound || pc_can_give_bounded_items(sd)) &&
-			itemdb_cantrade(&sd->inventory.u.items_inventory[i], pc_get_group_level(sd), pc_get_group_level(sd))
-			);
-		script_pushint(st, tradable);
-	}
+	if (i >= 0)
+		script_pushint(st, pc_can_trade_item(sd, i));
 	else
 		script_pushint(st, false);
 
@@ -24555,62 +24548,6 @@ BUILDIN_FUNC(getvariableofinstance)
 }
 
 /*
-* getblacksmithblessing(<type>,<refine>{,<var>})
-* Return info Blacksmith Blessing in (specified) an array
-* .@refinebb[0] = Blacksmith Blessing ID
-* .@refinebb[1] = Amount
-*/
-BUILDIN_FUNC(getblacksmithblessing) {
-	struct refine_bs_blessing bb;
-	int type = script_getnum(st, 2);
-	int refine = script_getnum(st, 3);
-	struct script_data *data = script_hasdata(st, 4) ? script_getdata(st, 4) : NULL;
-	char *name;
-
-	memset(&bb, 0, sizeof(struct refine_bs_blessing));
-	if (!status_get_refine_blacksmithBlessing(&bb, (enum refine_type)type, refine)) {
-		script_pushint(st, 0);
-		return SCRIPT_CMD_FAILURE;
-	}
-
-	if (data && data_isreference(data)) {
-		name = reference_getname(data);
-		setd_sub_num(st, NULL, name, 0, bb.nameid, data->ref);
-		setd_sub_num(st, NULL, name, 1, bb.count, data->ref);
-	}
-	else {
-		setd_sub_num(st, NULL, ".@refinebb", 0, bb.nameid, NULL);
-		setd_sub_num(st, NULL, ".@refinebb", 1, bb.count, NULL);
-	}
-	script_pushint(st, (bb.nameid) ? 1 : 0);
-	return SCRIPT_CMD_SUCCESS;
-}
-
-BUILDIN_FUNC(refineui){
-#if PACKETVER < 20161012
-	ShowError( "buildin_refineui: This command requires packet version 2016-10-12 or newer.\n" );
-	return SCRIPT_CMD_FAILURE;
-#else
-	struct map_session_data* sd;
-
-	if( !script_charid2sd(2,sd) ){
-		return SCRIPT_CMD_FAILURE;
-	}
-
-	if( !battle_config.feature_refineui ){
-		ShowError( "buildin_refineui: This command is disabled via configuration.\n" );
-		return SCRIPT_CMD_FAILURE;
-	}
-
-	if( !sd->state.refineui_open ){
-		clif_refineui_open(sd);
-	}
-
-	return SCRIPT_CMD_SUCCESS;
-#endif
-}
-
-/*
   convertpcinfo(<char_id>,<type>)
   convertpcinfo(<account_id>,<type>)
   convertpcinfo(<player_name>,<type>)
@@ -24838,7 +24775,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(getequipisenableref,"i?"),
 	BUILDIN_DEF(getequiprefinerycnt,"i?"),
 	BUILDIN_DEF(getequipweaponlv,"i?"),
-	BUILDIN_DEF(getequippercentrefinery,"ii?"),
+	BUILDIN_DEF(getequippercentrefinery,"i?"),
 	BUILDIN_DEF(successrefitem,"i??"),
 	BUILDIN_DEF(failedrefitem,"i?"),
 	BUILDIN_DEF(downrefitem,"i??"),
@@ -25015,7 +24952,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF2(atcommand,"charcommand","s"), // [MouseJstr]
 	BUILDIN_DEF(movenpc,"sii?"), // [MouseJstr]
 	BUILDIN_DEF(message,"ss"), // [MouseJstr]
-	BUILDIN_DEF(npctalk,"s??"), // [Valaris]
+	BUILDIN_DEF(npctalk,"s???"), // [Valaris]
 	BUILDIN_DEF(chatmes,"s?"), // [Jey]
 	BUILDIN_DEF(mobcount,"ss"),
 	BUILDIN_DEF(getlook,"i?"),
@@ -25158,6 +25095,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(checkvending,"?"),
 	BUILDIN_DEF(checkchatting,"?"),
 	BUILDIN_DEF(checkidle,"?"),
+	BUILDIN_DEF(checkidlehom,"?"),
 	BUILDIN_DEF(openmail,"?"),
 	BUILDIN_DEF(openauction,"?"),
 	BUILDIN_DEF(checkcell,"siii"),
@@ -25203,7 +25141,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(bg_updatescore,"sii"),
 	BUILDIN_DEF(bg_join,"i????"),
 	BUILDIN_DEF(bg_create,"sii??"),
-	BUILDIN_DEF(bg_reserve,"s"),
+	BUILDIN_DEF(bg_reserve,"s?"),
 	BUILDIN_DEF(bg_unbook,"s"),
 	BUILDIN_DEF(bg_info,"si"),
 
@@ -25353,14 +25291,11 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(achievementexists,"i?"),
 	BUILDIN_DEF(achievementupdate,"iii?"),
 
-	// Refine UI
-	BUILDIN_DEF(getequiprefinecost,"iii?"),
-	BUILDIN_DEF(getblacksmithblessing, "ii"),
-	BUILDIN_DEF(refineui,"?"),
 
-	BUILDIN_DEF2(round, "round", "i"),
-	BUILDIN_DEF2(round, "ceil", "i"),
-	BUILDIN_DEF2(round, "floor", "i"),
+	BUILDIN_DEF(getequiprefinecost,"iii?"),
+	BUILDIN_DEF2(round, "round", "ii"),
+	BUILDIN_DEF2(round, "ceil", "ii"),
+	BUILDIN_DEF2(round, "floor", "ii"),
 	BUILDIN_DEF(getequiptradability, "i?"),
 	BUILDIN_DEF(mail, "isss*"),
 	BUILDIN_DEF(open_roulette,"?"),
