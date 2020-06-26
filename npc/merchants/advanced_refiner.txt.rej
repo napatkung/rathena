@@ -1,0 +1,20 @@
+--- npc/merchants/advanced_refiner.txt	(revisão 65528)
++++ npc/merchants/advanced_refiner.txt	(cópia de trabalho)
+@@ -66,7 +66,7 @@
+ 
+ 	mes "[Suhnbi]";
+ 	mes "Clang! Clang! Clang!";
+-	if (getequippercentrefinery(.@part, true) > rand(100)) {
++	if (getequippercentrefinery(.@part, REFINE_COST_ENRICHED) > rand(100)) {
+ 		successrefitem .@part;
+ 		next;
+ 		emotion ET_BEST;
+@@ -113,7 +113,7 @@
+ 	mes "Would you like to continue?";
+ 	next;
+ 	if(select("Yes:No") == 1) {
+-		if (getequippercentrefinery(.@part) < 100) {
++		if (getequippercentrefinery(.@part,REFINE_COST_ENRICHED) < 100) {
+ 			if (.@weapon_lvl) {
+ 				mes "[Suhnbi]";
+ 				mes "Wow!!";

@@ -1,0 +1,11 @@
+--- npc/re/jobs/2e/kagerou_oboro.txt	(revisão 65528)
++++ npc/re/jobs/2e/kagerou_oboro.txt	(cópia de trabalho)
+@@ -2462,7 +2462,7 @@
+ 		mes "This equipment is perfectly refined. Keep it for yourself!";  //custom translation
+ 		close;
+ 	}
+-	if (getequippercentrefinery(.@part) < 100) {
++	if (getequippercentrefinery(.@part, REFINE_COST_NORMAL) < 100) {
+ 		mes "This is very well refined equipment. Do you want to continue? Refine skill decreases by 1 if refinement fails.";
+ 		next;
+ 		if(select("Continue.:Stop.") == 2) {

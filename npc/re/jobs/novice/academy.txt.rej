@@ -1,0 +1,38 @@
+--- npc/re/jobs/novice/academy.txt	(revisão 65528)
++++ npc/re/jobs/novice/academy.txt	(cópia de trabalho)
+@@ -12836,7 +12836,7 @@
+ 				mes "Cancel the refining.";
+ 				close;
+ 			}
+-			if (getequippercentrefinery(.@part) < 100) {
++			if (getequippercentrefinery(.@part, REFINE_COST_NORMAL) < 100) {
+ 				mes "[Refining Machine Wagjak]";
+ 				mes "-Ddarritt!-";
+ 				mes "The user's confirmation required.";
+@@ -12851,7 +12851,7 @@
+ 			// anti-hack
+ 			if (callfunc("F_IsEquipIDHack", .@part, .@refineitemid) || callfunc("F_IsEquipCardHack", .@part, .@card[0], .@card[1], .@card[2], .@card[3]) || callfunc("F_IsEquipRefineHack", .@part, .@refinerycnt))
+ 				close;
+-			if (getequippercentrefinery(.@part) <= rand(100)) {
++			if (getequippercentrefinery(.@part, REFINE_COST_NORMAL) <= rand(100)) {
+ 				failedrefitem .@part;
+ 				mes "[Refining Machine Wagjak]";
+ 				mes "Result : Fail";
+@@ -12889,7 +12889,7 @@
+ 		mes "Refining has been cancelled as per the user's request.";
+ 		close;
+ 	}
+-	if (getequippercentrefinery(.@part) < 100) {
++	if (getequippercentrefinery(.@part, REFINE_COST_NORMAL) < 100) {
+ 		mes "[Refining Machine Wagjak]";
+ 		mes "-Ddarritt!-";
+ 		mes "The user's confirmation required.";
+@@ -12920,7 +12920,7 @@
+ 		mes "You are short of refining price.";
+ 		close;
+ 	}
+-	if (getequippercentrefinery(.@part) <= rand(100)) {
++	if (getequippercentrefinery(.@part, REFINE_COST_NORMAL) <= rand(100)) {
+ 		failedrefitem .@part;
+ 		mes "[Refining Machine Wagjak]";
+ 		mes "Result : Fail";

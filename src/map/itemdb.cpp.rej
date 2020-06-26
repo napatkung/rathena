@@ -1,0 +1,28 @@
+--- src/map/itemdb.cpp	(revisão 65528)
++++ src/map/itemdb.cpp	(cópia de trabalho)
+@@ -1292,6 +1292,16 @@
+ 	return;
+ }
+ 
++static inline uint8 itemdb_set_refine_type(int type, int wlv, int loc) {
++	if (type == IT_WEAPON)
++		return (enum refine_type)wlv;
++	if (type == IT_ARMOR)
++		return (loc&EQP_COSTUME) ? REFINE_TYPE_COSTUME : REFINE_TYPE_ARMOR;
++	if (type == IT_SHADOWGEAR)
++		return (loc == EQP_SHADOW_WEAPON) ? REFINE_TYPE_SHADOW_WEAPON : REFINE_TYPE_SHADOW;
++	return REFINE_TYPE_MAX;
++}
++
+ /**
+ * Processes one itemdb entry
+ */
+@@ -1426,6 +1436,8 @@
+ 	if (*str[21])
+ 		id->unequip_script = parse_script(str[21], source, line, scriptopt);
+ 
++	id->refine_type = itemdb_set_refine_type(id->type, id->wlv, id->equip);
++
+ 	if (!id->nameid) {
+ 		id->nameid = nameid;
+ 		uidb_put(itemdb, nameid, id);
