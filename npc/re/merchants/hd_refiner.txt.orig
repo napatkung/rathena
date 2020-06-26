@@ -167,17 +167,6 @@
 		mes "Aiya! I am faceless now. HmHm.";
 		close;
 	}
-	if (.@bless_who == 1) {
-		specialeffect EF_HOLYHIT;
-		next;
-		emotion ET_HUK;
-		mes "[Blacksmith Mighty Hammer]";
-		mes "What?!!";
-		next;
-		mes "[Blacksmith Mighty Hammer]";
-		mes "Aiya! I am faceless now. HmHm.";
-		close;
-	}
 	downrefitem .@part;
 	next;
 	emotion ET_HUK;
