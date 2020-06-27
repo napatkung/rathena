@@ -425,4 +425,4 @@ har_in01,16,86,4	script	Armor Dealer#rockridge0	1_M_04,{
 	end;
 }
 
-har_in01,34,84,3	shop	Tool Dealer#rockridge00	1_F_03,611:40,645:800,656:10500,601:60,602:300,1065:100,610:4000
+har_in01,34,84,3	shop	Tool Dealer#rockridge00	1_F_03,611:40,645:1200,656:10500,601:60,602:300,1065:75,610:4000
