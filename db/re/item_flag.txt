@@ -23,9 +23,9 @@
 12024,1 //Red_Pouch_Of_Surprise
 
 // Item group container
-603,2 //Old_Blue_Box
-616,2 //Old_Card_Album
-617,2 //Old_Violet_Box
+603,256//Old_Blue_Box
+616,256 //Old_Card_Album
+617,256 //Old_Violet_Box
 644,2 //Gift_Box
 664,2 //Gift_Box_1
 665,2 //Gift_Box_2
