@@ -6043,7 +6043,7 @@ void getring (struct map_session_data* sd)
 	memset(&item_tmp, 0, sizeof(item_tmp));
 	item_tmp.nameid = item_id;
 	item_tmp.identify = 1;
-	item_tmp.card[0] = 255;
+	item_tmp.card[0] = CARD0_FORGE;
 	item_tmp.card[2] = sd->status.partner_id;
 	item_tmp.card[3] = sd->status.partner_id >> 16;
 
@@ -6174,6 +6174,9 @@ ACMD_FUNC(autotrade) {
 		int timeout = atoi(message);
 		status_change_start(NULL,&sd->bl, SC_AUTOTRADE, 10000, 0, 0, 0, 0, ((timeout > 0) ? min(timeout,battle_config.at_timeout) : battle_config.at_timeout) * 60000, SCSTART_NONE);
 	}
+
+	if (battle_config.at_logout_event)
+		npc_script_event(sd, NPCE_LOGOUT); //Logout Event
 
 	channel_pcquit(sd,0xF); //leave all chan
 	clif_authfail_fd(sd->fd, 15);
@@ -9029,7 +9032,7 @@ ACMD_FUNC(itemlist)
 		StringBuf_Clear(&buf);
 
 		if( it->card[0] == CARD0_PET ) { // pet egg
-			if (it->card[3])
+			if (it->card[3]&1)
 				StringBuf_Printf(&buf, msg_txt(sd,1348), (unsigned int)MakeDWord(it->card[1], it->card[2])); //  -> (pet egg, pet id: %u, named)
 			else
 				StringBuf_Printf(&buf, msg_txt(sd,1349), (unsigned int)MakeDWord(it->card[1], it->card[2])); //  -> (pet egg, pet id: %u, unnamed)
