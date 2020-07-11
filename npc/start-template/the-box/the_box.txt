@@ -121,12 +121,11 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 		close;
 	}
 	.@cashToAddSpawn = 25;
-	callfunc("IsCashEnough",.@cashToAddSpawn,.@npcName$);
+	callfunc("IsCashEnough",.@cashToAddSpawn,.@npcName$,1);
 	$addSpawnRateLevel = 1;
 	setbattleflag("mob_spawn_delay",75,false);
 	setbattleflag("plant_spawn_delay",75,false);
 	setbattleflag("boss_spawn_delay",75,false);
-	callfunc("UseMyCash",.@cashToAddSpawn);
 	callfunc("MyCash",1);
 	mes "เรียบร้อย";
 	announce "ผู้เพิ่มอัตราการเกิดมอนฯ: " +strcharinfo(0) + " เพิ่ม 1.5 เท่าภายในชั่วโมงนี้!",bc_all,0xff7130;
@@ -139,12 +138,11 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 		close;
 	}
 	.@cashToAddSpawn = 50;
-	callfunc("IsCashEnough",.@cashToAddSpawn,.@npcName$);
+	callfunc("IsCashEnough",.@cashToAddSpawn,.@npcName$,1);
 	$addSpawnRateLevel = 2;
 	setbattleflag("mob_spawn_delay",50,false);
 	setbattleflag("plant_spawn_delay",50,false);
 	setbattleflag("boss_spawn_delay",50,false);
-	callfunc("UseMyCash",.@cashToAddSpawn);
 	callfunc("MyCash",1);
 	mes "เรียบร้อย";
 	announce "ผู้เพิ่มอัตราการเกิดมอนฯ: " +strcharinfo(0) + " เพิ่ม " + $addSpawnRateLevel + " เท่าภายในชั่วโมงนี้!",bc_all,0xff7130;
@@ -165,12 +163,11 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 		close;
 	}
 	.@cashToAddDrop = 5;
-	callfunc("IsCashEnough",.@cashToAddDrop,.@npcName$);
+	callfunc("IsCashEnough",.@cashToAddDrop,.@npcName$,1);
 	$addDropRateLevel = 1;
 	setbattleflag("item_rate_common",200,true);
 	setbattleflag("item_rate_common_boss",200,true);
 	setbattleflag("item_rate_common_mvp",200,true);
-	callfunc("UseMyCash",.@cashToAddDrop);
 	callfunc("MyCash",1);
 	mes "เรียบร้อย";
 	announce "ผู้เพิ่มอัตราการ Drop: " +strcharinfo(0) + " เพิ่มอัตรา Drop " + (1 + $addDropRateLevel) + " เท่าภายในชั่วโมงนี้!",bc_all,0xff7130;
@@ -182,12 +179,11 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 		close;
 	}
 	.@cashToAddDrop = 25;
-	callfunc("IsCashEnough",.@cashToAddDrop,.@npcName$);
+	callfunc("IsCashEnough",.@cashToAddDrop,.@npcName$,1);
 	$addDropRateLevel = 2;
 	setbattleflag("item_rate_common",300,true);
 	setbattleflag("item_rate_common_boss",300,true);
 	setbattleflag("item_rate_common_mvp",300,true);
-	callfunc("UseMyCash",.@cashToAddDrop);
 	callfunc("MyCash",1);
 	mes "เรียบร้อย";
 	announce "ผู้เพิ่มอัตราการ Drop: " +strcharinfo(0) + " เพิ่มอัตรา Drop " + (1 + $addDropRateLevel) + " เท่าภายในชั่วโมงนี้!",bc_all,0xff7130;
@@ -199,12 +195,11 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 		close;
 	}
 	.@cashToAddDrop = 50;
-	callfunc("IsCashEnough",.@cashToAddDrop,.@npcName$);
+	callfunc("IsCashEnough",.@cashToAddDrop,.@npcName$,1);
 	$addDropRateLevel = 3;
 	setbattleflag("item_rate_common",400,true);
 	setbattleflag("item_rate_common_boss",400,true);
 	setbattleflag("item_rate_common_mvp",400,true);
-	callfunc("UseMyCash",.@cashToAddDrop);
 	callfunc("MyCash",1);
 	mes "เรียบร้อย";
 	announce "ผู้เพิ่มอัตราการ Drop: " +strcharinfo(0) + " เพิ่มอัตรา Drop " + (1 + $addDropRateLevel) + " เท่าภายในชั่วโมงนี้!",bc_all,0xff7130;
@@ -216,12 +211,11 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 		close;
 	}
 	.@cashToAddDrop = 100;
-	callfunc("IsCashEnough",.@cashToAddDrop,.@npcName$);
+	callfunc("IsCashEnough",.@cashToAddDrop,.@npcName$,1);
 	$addDropRateLevel = 4;
 	setbattleflag("item_rate_common",500,true);
 	setbattleflag("item_rate_common_boss",500,true);
 	setbattleflag("item_rate_common_mvp",500,true);
-	callfunc("UseMyCash",.@cashToAddDrop);
 	callfunc("MyCash",1);
 	mes "เรียบร้อย";
 	announce "ผู้เพิ่มอัตราการ Drop: " +strcharinfo(0) + " เพิ่มอัตรา Drop " + (1 + $addDropRateLevel) + " เท่าภายในชั่วโมงนี้!",bc_all,0xff7130;
@@ -233,12 +227,11 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 		close;
 	}
 	.@cashToAddDrop = 200;
-	callfunc("IsCashEnough",.@cashToAddDrop,.@npcName$);
+	callfunc("IsCashEnough",.@cashToAddDrop,.@npcName$,1);
 	$addDropRateLevel = 5;
 	setbattleflag("item_rate_common",600,true);
 	setbattleflag("item_rate_common_boss",600,true);
 	setbattleflag("item_rate_common_mvp",600,true);
-	callfunc("UseMyCash",.@cashToAddDrop);
 	callfunc("MyCash",1);
 	mes "เรียบร้อย";
 	announce "ผู้เพิ่มอัตราการ Drop: " +strcharinfo(0) + " เพิ่มอัตรา Drop " + (1 + $addDropRateLevel) + " เท่าภายในชั่วโมงนี้!",bc_all,0xff7130;
@@ -250,12 +243,11 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 		close;
 	}
 	.@cashToAddDrop = 250;
-	callfunc("IsCashEnough",.@cashToAddDrop,.@npcName$);
+	callfunc("IsCashEnough",.@cashToAddDrop,.@npcName$,1);
 	$addDropRateLevel = 6;
 	setbattleflag("item_rate_common",700,true);
 	setbattleflag("item_rate_common_boss",700,true);
 	setbattleflag("item_rate_common_mvp",700,true);
-	callfunc("UseMyCash",.@cashToAddDrop);
 	callfunc("MyCash",1);
 	mes "เรียบร้อย";
 	announce "ผู้เพิ่มอัตราการ Drop: " +strcharinfo(0) + " เพิ่มอัตรา Drop " + (1 + $addDropRateLevel) + " เท่าภายในชั่วโมงนี้!",bc_all,0xff7130;
@@ -267,12 +259,11 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 		close;
 	}
 	.@cashToAddDrop = 300;
-	callfunc("IsCashEnough",.@cashToAddDrop,.@npcName$);
+	callfunc("IsCashEnough",.@cashToAddDrop,.@npcName$,1);
 	$addDropRateLevel = 7;
 	setbattleflag("item_rate_common",800,true);
 	setbattleflag("item_rate_common_boss",800,true);
 	setbattleflag("item_rate_common_mvp",800,true);
-	callfunc("UseMyCash",.@cashToAddDrop);
 	callfunc("MyCash",1);
 	mes "เรียบร้อย";
 	announce "ผู้เพิ่มอัตราการ Drop: " +strcharinfo(0) + " เพิ่มอัตรา Drop " + (1 + $addDropRateLevel) + " เท่าภายในชั่วโมงนี้!",bc_all,0xff7130;
@@ -284,12 +275,11 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 		close;
 	}
 	.@cashToAddDrop = 350;
-	callfunc("IsCashEnough",.@cashToAddDrop,.@npcName$);
+	callfunc("IsCashEnough",.@cashToAddDrop,.@npcName$,1);
 	$addDropRateLevel = 8;
 	setbattleflag("item_rate_common",900,true);
 	setbattleflag("item_rate_common_boss",900,true);
 	setbattleflag("item_rate_common_mvp",900,true);
-	callfunc("UseMyCash",.@cashToAddDrop);
 	callfunc("MyCash",1);
 	mes "เรียบร้อย";
 	announce "ผู้เพิ่มอัตราการ Drop: " +strcharinfo(0) + " เพิ่มอัตรา Drop " + (1 + $addDropRateLevel) + " เท่าภายในชั่วโมงนี้!",bc_all,0xff7130;
@@ -301,12 +291,11 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 		close;
 	}
 	.@cashToAddDrop = 400;
-	callfunc("IsCashEnough",.@cashToAddDrop,.@npcName$);
+	callfunc("IsCashEnough",.@cashToAddDrop,.@npcName$,1);
 	$addDropRateLevel = 9;
 	setbattleflag("item_rate_common",1000,true);
 	setbattleflag("item_rate_common_boss",1000,true);
 	setbattleflag("item_rate_common_mvp",1000,true);
-	callfunc("UseMyCash",.@cashToAddDrop);
 	callfunc("MyCash",1);
 	mes "เรียบร้อย";
 	announce "ผู้เพิ่มอัตราการ Drop: " +strcharinfo(0) + " เพิ่มอัตรา Drop " + (1 + $addDropRateLevel) + " เท่าภายในชั่วโมงนี้!",bc_all,0xff7130;
@@ -516,8 +505,7 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 	,"เอาทุกอย่างเหมือนเดิม",L_BOON10;
 	
 	L_BOON1:
-	callfunc("IsCashEnough",5,.@npcName$);
-	callfunc("UseMyCash",5);
+	callfunc("IsCashEnough",5,.@npcName$,1);
 	callfunc("MyCash",1);
 	$boonType = 1;
 	sc_start SC_ITEMBOOST,3600000,200;
@@ -526,8 +514,7 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 	close;
 	
 	L_BOON2:
-	callfunc("IsCashEnough",5,.@npcName$);
-	callfunc("UseMyCash",5);
+	callfunc("IsCashEnough",5,.@npcName$,1);
 	callfunc("MyCash",1);
 	$boonType = 2;
 	sc_start SC_ITEMBOOST,3600000,200;
@@ -535,8 +522,7 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 	announce "ผู้อุทิศบุญกุศล: " +strcharinfo(0) + " | ได้อุทิศว่า: 'ข้าน้อยขอพรว่า.. ให้ภายในชั่วโมงนี้อุทิศแด่ ของที่ใช้ไม่ได้'",bc_all,0xff7130;
 	close;
 	L_BOON3:
-	callfunc("IsCashEnough",5,.@npcName$);
-	callfunc("UseMyCash",5);
+	callfunc("IsCashEnough",5,.@npcName$,1);
 	callfunc("MyCash",1);
 	$boonType = 3;
 	sc_start SC_ITEMBOOST,3600000,200;
@@ -544,8 +530,7 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 	announce "ผู้อุทิศบุญกุศล: " +strcharinfo(0) + " | ได้อุทิศว่า: 'ข้าน้อยขอพรว่า.. ให้ภายในชั่วโมงนี้อุทิศแด่ อุปกรณ์สวมใส่'",bc_all,0xff7130;
 	close;
 	L_BOON4:
-	callfunc("IsCashEnough",5,.@npcName$);
-	callfunc("UseMyCash",5);
+	callfunc("IsCashEnough",5,.@npcName$,1);
 	callfunc("MyCash",1);
 	$boonType = 4;
 	sc_start SC_ITEMBOOST,3600000,200;
@@ -553,8 +538,7 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 	announce "ผู้อุทิศบุญกุศล: " +strcharinfo(0) + " | ได้อุทิศว่า: 'ข้าน้อยขอพรว่า.. ให้ภายในชั่วโมงนี้อุทิศแด่ อาวุธ'",bc_all,0xff7130;
 	close;
 	L_BOON5:
-	callfunc("IsCashEnough",5,.@npcName$);
-	callfunc("UseMyCash",5);
+	callfunc("IsCashEnough",5,.@npcName$,1);
 	callfunc("MyCash",1);
 	$boonType = 5;
 	sc_start SC_ITEMBOOST,3600000,200;
@@ -562,8 +546,7 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 	announce "ผู้อุทิศบุญกุศล: " +strcharinfo(0) + " | ได้อุทิศว่า: 'ข้าน้อยขอพรว่า.. ให้ภายในชั่วโมงนี้อุทิศแด่ การ์ด'",bc_all,0xff7130;
 	close;
 	L_BOON6:
-	callfunc("IsCashEnough",5,.@npcName$);
-	callfunc("UseMyCash",5);
+	callfunc("IsCashEnough",5,.@npcName$,1);
 	callfunc("MyCash",1);
 	$boonType = 6;
 	sc_start SC_ITEMBOOST,3600000,200;
@@ -571,8 +554,7 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 	announce "ผู้อุทิศบุญกุศล: " +strcharinfo(0) + " | ได้อุทิศว่า: 'ข้าน้อยขอพรว่า.. ให้ภายในชั่วโมงนี้อุทิศแด่ ไข่สัตว์เลี้ยง'",bc_all,0xff7130;
 	close;
 	L_BOON7:
-	callfunc("IsCashEnough",5,.@npcName$);
-	callfunc("UseMyCash",5);
+	callfunc("IsCashEnough",5,.@npcName$,1);
 	callfunc("MyCash",1);
 	$boonType = 7;
 	sc_start SC_ITEMBOOST,3600000,200;
@@ -580,8 +562,7 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 	announce "ผู้อุทิศบุญกุศล: " +strcharinfo(0) + " | ได้อุทิศว่า: 'ข้าน้อยขอพรว่า.. ให้ภายในชั่วโมงนี้อุทิศแด่ อุปกรณ์สัตว์เลี้ยง'",bc_all,0xff7130;
 	close;
 	L_BOON8:
-	callfunc("IsCashEnough",5,.@npcName$);
-	callfunc("UseMyCash",5);
+	callfunc("IsCashEnough",5,.@npcName$,1);
 	callfunc("MyCash",1);
 	$boonType = 8;
 	sc_start SC_ITEMBOOST,3600000,200;
@@ -589,8 +570,7 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 	announce "ผู้อุทิศบุญกุศล: " +strcharinfo(0) + " | ได้อุทิศว่า: 'ข้าน้อยขอพรว่า.. ให้ภายในชั่วโมงนี้อุทิศแด่ กระสุน'",bc_all,0xff7130;
 	close;
 	L_BOON9:
-	callfunc("IsCashEnough",5,.@npcName$);
-	callfunc("UseMyCash",5);
+	callfunc("IsCashEnough",5,.@npcName$,1);
 	callfunc("MyCash",1);
 	$boonType = 9;
 	sc_start SC_ITEMBOOST,3600000,200;
@@ -598,8 +578,7 @@ prontera,147,171,6	script	กล่องปริศนาที่ 1	10033,{
 	announce "ผู้อุทิศบุญกุศล: " +strcharinfo(0) + " | ได้อุทิศว่า: 'ข้าน้อยขอพรว่า.. ให้ภายในชั่วโมงนี้อุทิศแด่ อุปกรณ์สวมใส่ Shadow'",bc_all,0xff7130;
 	close;
 	L_BOON10:
-	callfunc("IsCashEnough",5,.@npcName$);
-	callfunc("UseMyCash",5);
+	callfunc("IsCashEnough",5,.@npcName$,1);
 	callfunc("MyCash",1);
 	$boonType = 0;
 	sc_start SC_ITEMBOOST,3600000,200;

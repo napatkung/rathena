@@ -1,0 +1,39 @@
+function	script	IsZenyEnough	{
+	if(#Zeny >= getarg(0)){
+		if(getarg(2) > 0)
+		callfunc("UseMyZeny",getarg(0));
+		return;
+	}
+	else{
+		freeloop(0);
+		clear;
+		if(getarg(1) != "")
+		mes getarg(1);
+		else
+		mes "[ระบบ]";
+		mes "ต้องการ: " + getarg(0) + " Zeny";
+		mes " ";
+		callfunc("MyZeny",0);
+		cutin "",255;
+		close2;
+		end;
+	}
+}
+
+function	script	MyZeny	{
+	if(getarg(0) <= 0)
+	mes "^69149eคุณมี: " + #Zeny + " Zeny^000000";
+	dispbottom "คุณมี: " + #Zeny + " Zeny";
+	return;
+}
+
+function	script	AddMyZeny	{
+	#Zeny += getarg(0);
+	callfunc("MyZeny",1);
+	return;
+}
+
+function	script	UseMyZeny	{
+	#Zeny -= getarg(0);
+	return;
+}

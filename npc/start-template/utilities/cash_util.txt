@@ -1,6 +1,9 @@
 function	script	IsCashEnough	{
-	if(#CASHPOINTS >= getarg(0))
-	return;
+	if(#CASHPOINTS >= getarg(0)){
+		if(getarg(2) > 0)
+		callfunc("UseMyCash",getarg(0));
+		return;
+	}
 	else{
 		freeloop(0);
 		clear;
@@ -26,6 +29,7 @@ function	script	MyCash	{
 
 function	script	AddMyCash	{
 	#CASHPOINTS += getarg(0);
+	callfunc("MyCash",1);
 	return;
 }
 
